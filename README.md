@@ -123,7 +123,7 @@ Then update:
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/cinema_management
-spring.datasource.username=root
+spring.datasource.username=your_username
 spring.datasource.password=your_password
 ```
 
