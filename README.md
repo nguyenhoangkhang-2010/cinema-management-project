@@ -1,4 +1,4 @@
-# 🎬 Cinema Management Project
+# Cinema Management Project
 
 A web-based cinema management system developed with Spring Boot, Thymeleaf, Spring Security, and MySQL.
 
