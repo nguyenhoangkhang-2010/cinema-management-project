@@ -88,7 +88,7 @@ git clone https://github.com/your-username/cinema-management-project.git
 Create a MySQL database:
 
 ```sql
-CREATE DATABASE cinema_management;
+CREATE DATABASE QuanLyRapPhim;
 ```
 
 ---
@@ -122,9 +122,11 @@ application.properties
 Then update:
 
 ```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/cinema_management
+spring.datasource.url=jdbc:mysql://localhost:3306/QuanLyRapPhim
 spring.datasource.username=your_username
 spring.datasource.password=your_password
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
 ```
 
 ---
