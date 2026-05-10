@@ -1,4 +1,4 @@
-package com.example.project_web_cinema.entity;
+package com.example.project_web_cinema.entity.account;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -48,7 +48,7 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TrangThai")
-    private TrangThai trangThai = TrangThai.HoatDong;
+    private TrangThaiTaiKhoan trangThai = TrangThaiTaiKhoan.HoatDong;
 
     @PrePersist
     public void prePersist() {
