@@ -18,9 +18,9 @@ public class Cinema {
     @Column(name = "TenRap", nullable = false, length = 100)
     private String TenRap;
 
-    @Column(name = "DiaChi", nullable = false, length = 100)
+    @Column(name = "DiaChi", nullable = false, length = 255)
     private String DiaChi;
 
-    @Column(name = "SoDienThoai", nullable = false, length = 100)
+    @Column(name = "SoDienThoai", nullable = false, length = 15)
     private String SoDienThoai;
 }
