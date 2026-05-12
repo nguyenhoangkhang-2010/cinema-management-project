@@ -1,7 +1,10 @@
 package com.example.project_web_cinema.entity.cinema;
 
+import com.example.project_web_cinema.entity.movietheater.Room;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "RAPPHIM")
@@ -21,6 +24,9 @@ public class Cinema {
     @Column(name = "DiaChi", nullable = false, length = 255)
     private String diaChi;
 
-    @Column(name = "SoDienThoai", nullable = false, length = 15)
+    @Column(name = "SoDienThoai", length = 15)
     private String soDienThoai;
+
+    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL)
+    private List<Room> dsPhong;
 }

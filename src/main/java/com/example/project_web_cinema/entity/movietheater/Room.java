@@ -1,8 +1,11 @@
 package com.example.project_web_cinema.entity.movietheater;
 
 import com.example.project_web_cinema.entity.cinema.Cinema;
+import com.example.project_web_cinema.entity.moviescreening.MovieScreening;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,4 +25,6 @@ public class Room {
     @ManyToOne
     @JoinColumn(name = "MaRap", nullable = false)
     private Cinema cinema;
+    @OneToMany(mappedBy = "room")
+    private List<MovieScreening> dsSuatChieu;
 }
