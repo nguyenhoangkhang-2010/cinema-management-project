@@ -13,7 +13,7 @@ import lombok.*;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer MaPhim;
+    private Integer maPhim;
     @Column(name = "TenPhim", nullable = false, length = 255)
-    private String TenPhim;
+    private String tenPhim;
 }

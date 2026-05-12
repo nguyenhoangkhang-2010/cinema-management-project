@@ -13,14 +13,14 @@ import lombok.*;
 public class Cinema {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer MaRap;
+    private Integer maRap;
 
     @Column(name = "TenRap", nullable = false, length = 100)
-    private String TenRap;
+    private String tenRap;
 
     @Column(name = "DiaChi", nullable = false, length = 255)
-    private String DiaChi;
+    private String diaChi;
 
     @Column(name = "SoDienThoai", nullable = false, length = 15)
-    private String SoDienThoai;
+    private String soDienThoai;
 }

@@ -1,0 +1,30 @@
+package com.example.project_web_cinema.entity.seat;
+
+import com.example.project_web_cinema.entity.typeofseat.TypeOfSeat;
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "GHE",
+    uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"SoGhe", "MaPhong"})
+    }
+)
+public class Seat {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer maGhe;
+    @ManyToOne
+    @JoinColumn(name = "MaLoaiGhe", nullable = false)
+    private TypeOfSeat maLoaiGhe;
+    @Column(name = "SoGhe", nullable = false, length = 10)
+    private String soGhe;
+    @ManyToOne
+    @JoinColumn(name = "MaPhong", nullable = false)
+    private Integer maPhong;
+}
