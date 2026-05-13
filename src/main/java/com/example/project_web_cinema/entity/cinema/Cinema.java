@@ -2,6 +2,8 @@ package com.example.project_web_cinema.entity.cinema;
 
 import com.example.project_web_cinema.entity.movietheater.Room;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.util.List;
@@ -18,12 +20,14 @@ public class Cinema {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer maRap;
 
+    @NotNull
     @Column(name = "TenRap", nullable = false, length = 100)
     private String tenRap;
 
-    @Column(name = "DiaChi", nullable = false, length = 255)
+    @Column(name = "DiaChi", length = 255)
     private String diaChi;
 
+    @Pattern(regexp = "^[0-9]{10,11}$")
     @Column(name = "SoDienThoai", length = 15)
     private String soDienThoai;
 

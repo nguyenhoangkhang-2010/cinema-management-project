@@ -1,5 +1,6 @@
 package com.example.project_web_cinema.entity.promotion;
 
+import com.example.project_web_cinema.entity.booktickets.BookTickets;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -40,7 +42,13 @@ public class Promotion {
     @Column(name = "SoLuong", nullable = false)
     private Integer soLuong;
     @Enumerated(EnumType.STRING)
+    @Column(name = "LoaiTaiKhoanApDung")
+    @Builder.Default
+    private LoaiTaiKhoanToiThieu loaiTaiKhoanToiThieu = LoaiTaiKhoanToiThieu.Thuong;
+    @Enumerated(EnumType.STRING)
     @Column(name = "TrangThai")
     @Builder.Default
     private TrangThaiKhuyenMai trangThaiKhuyenMai = TrangThaiKhuyenMai.HoatDong;
+    @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL)
+    private List<BookTickets> dsDatVe;
 }

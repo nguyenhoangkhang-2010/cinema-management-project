@@ -1,9 +1,11 @@
 package com.example.project_web_cinema.entity.account;
 
+import com.example.project_web_cinema.entity.booktickets.BookTickets;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name="TAIKHOAN")
@@ -55,5 +57,14 @@ public class Account {
         if (ngayTao == null) {
             ngayTao = LocalDate.now();
         }
+        if (loaiTaiKhoan == null) {
+            loaiTaiKhoan = LoaiTaiKhoan.Thuong;
+        }
+        if (trangThai == null) {
+            trangThai = TrangThaiTaiKhoan.HoatDong;
+        }
     }
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<BookTickets> dsDatVe;
 }
