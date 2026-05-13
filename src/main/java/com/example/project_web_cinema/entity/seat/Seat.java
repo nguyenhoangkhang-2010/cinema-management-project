@@ -30,6 +30,7 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "MaPhong", nullable = false)
     private Integer maPhong;
+
     @OneToMany(mappedBy = "seat")
     private List<Tickets> dsVe;
 }

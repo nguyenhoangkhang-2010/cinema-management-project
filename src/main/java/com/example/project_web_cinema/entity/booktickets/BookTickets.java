@@ -1,6 +1,7 @@
 package com.example.project_web_cinema.entity.booktickets;
 
 import com.example.project_web_cinema.entity.account.Account;
+import com.example.project_web_cinema.entity.pay.Pay;
 import com.example.project_web_cinema.entity.promotion.Promotion;
 import com.example.project_web_cinema.entity.tickets.Tickets;
 import jakarta.persistence.*;
@@ -43,4 +44,7 @@ public class BookTickets {
 
     @OneToMany(mappedBy = "bookTickets", cascade = CascadeType.ALL)
     private List<Tickets> dsVe;
+
+    @OneToOne(mappedBy = "bookTickets", cascade = CascadeType.ALL)
+    private List<Pay> dsThanhToan;
 }
