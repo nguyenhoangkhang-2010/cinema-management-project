@@ -1,8 +1,11 @@
 package com.example.project_web_cinema.entity.seat;
 
+import com.example.project_web_cinema.entity.tickets.Tickets;
 import com.example.project_web_cinema.entity.typeofseat.TypeOfSeat;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -27,4 +30,6 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "MaPhong", nullable = false)
     private Integer maPhong;
+    @OneToMany(mappedBy = "seat")
+    private List<Tickets> dsVe;
 }

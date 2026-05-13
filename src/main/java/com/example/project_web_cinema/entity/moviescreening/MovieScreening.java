@@ -2,12 +2,14 @@ package com.example.project_web_cinema.entity.moviescreening;
 
 import com.example.project_web_cinema.entity.movie.Movie;
 import com.example.project_web_cinema.entity.movietheater.Room;
+import com.example.project_web_cinema.entity.tickets.Tickets;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,4 +45,7 @@ public class MovieScreening {
     private LocalTime gioKetThuc;
     @Column(name = "GiaVe", nullable = false)
     private BigDecimal giaVe;
+
+    @OneToMany(mappedBy = "movieScreening")
+    private List<Tickets> dsVe;
 }

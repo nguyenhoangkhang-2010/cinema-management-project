@@ -2,6 +2,7 @@ package com.example.project_web_cinema.entity.booktickets;
 
 import com.example.project_web_cinema.entity.account.Account;
 import com.example.project_web_cinema.entity.promotion.Promotion;
+import com.example.project_web_cinema.entity.tickets.Tickets;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
@@ -9,6 +10,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,7 +23,7 @@ public class BookTickets {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer maDatVe;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaTaiKhoan", nullable = false)
     private Account account;
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,4 +40,7 @@ public class BookTickets {
     @Builder.Default
     @Column(name = "TrangThai")
     private TrangThaiDatVe trangThaiDatVe = TrangThaiDatVe.ChoThanhToan;
+
+    @OneToMany(mappedBy = "bookTickets", cascade = CascadeType.ALL)
+    private List<Tickets> dsVe;
 }
