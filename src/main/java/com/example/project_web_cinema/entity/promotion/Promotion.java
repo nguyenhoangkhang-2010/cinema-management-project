@@ -22,6 +22,7 @@ import java.util.List;
 public class Promotion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaKhuyenMai")
     private Integer maKhuyenMai;
     @Column(name = "TenKhuyenMai", nullable = false, length = 100)
     private String tenKhuyenMai;
@@ -51,4 +52,6 @@ public class Promotion {
     private TrangThaiKhuyenMai trangThaiKhuyenMai = TrangThaiKhuyenMai.HoatDong;
     @OneToMany(mappedBy = "promotion", cascade = CascadeType.ALL)
     private List<BookTickets> dsDatVe;
+    @Column(name = "Poster")
+    private String poster;
 }

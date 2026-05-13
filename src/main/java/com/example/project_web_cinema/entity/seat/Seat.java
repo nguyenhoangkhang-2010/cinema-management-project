@@ -1,5 +1,6 @@
 package com.example.project_web_cinema.entity.seat;
 
+import com.example.project_web_cinema.entity.movietheater.Room;
 import com.example.project_web_cinema.entity.tickets.Tickets;
 import com.example.project_web_cinema.entity.typeofseat.TypeOfSeat;
 import jakarta.persistence.*;
@@ -27,9 +28,9 @@ public class Seat {
     private TypeOfSeat maLoaiGhe;
     @Column(name = "SoGhe", nullable = false, length = 10)
     private String soGhe;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaPhong", nullable = false)
-    private Integer maPhong;
+    private Room room;
 
     @OneToMany(mappedBy = "seat")
     private List<Tickets> dsVe;

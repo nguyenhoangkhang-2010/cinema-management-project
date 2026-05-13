@@ -12,7 +12,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "RAPPHIM",
+@Table(name = "PHIM",
     indexes = {
         @Index(name = "idx_tenphim", columnList = "TenPhim")
     }
@@ -25,6 +25,7 @@ import java.util.List;
 public class Movie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaPhim")
     private Integer maPhim;
     @Column(name = "TenPhim", nullable = false, length = 255)
     private String tenPhim;

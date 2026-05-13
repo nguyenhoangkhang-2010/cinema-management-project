@@ -1,0 +1,54 @@
+/* Đè thanh tìm kiếm lên banner */
+.search-bar-container {
+    margin-top: -50px;
+    position: relative;
+    z-index: 100;
+}
+
+/* Hiệu ứng zoom nhẹ khi hover ảnh phim */
+.card-img-top {
+    transition: transform 0.3s ease;
+}
+.card-img-top:hover {
+    transform: scale(1.03);
+    cursor: pointer;
+}
+/* Styling cho Navbar */
+.navbar {
+    border-bottom: 2px solid #f0f0f0; /* Tạo viền mỏng phía dưới */
+    background-color: #ffffff !important;
+}
+
+/* Logo Galaxy Cinema */
+.navbar-brand {
+    font-weight: 800;
+    font-size: 24px;
+    color: #003a8c !important; /* Màu xanh thương hiệu */
+    margin-right: 30px;
+}
+
+/* Các menu links */
+.nav-link {
+    color: #333 !important;
+    font-weight: 500;
+    transition: 0.3s;
+    padding: 10px 15px !important;
+}
+
+/* Hiệu ứng khi di chuột vào menu */
+.nav-link:hover {
+    color: #f7941e !important; /* Màu cam thương hiệu */
+}
+
+/* Nếu bạn có nút Đăng nhập/Đăng ký ở góc phải */
+.btn-login {
+    border: 1px solid #333;
+    padding: 5px 20px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}

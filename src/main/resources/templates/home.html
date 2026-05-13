@@ -1,10 +1,76 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chào mừng bạn đến với rạp phim</title>
-</head>
+    <title>Cinema All Star</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/home.css}"> </head>
 <body>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="#">Galaxy Cinema</a>
+        <div class="navbar-nav">
+            <a class="nav-link" href="#">Phim</a>
+            <a class="nav-link" href="#">Star Shop</a>
+            <a class="nav-link" href="#">Sự Kiện</a>
+        </div>
+
+        <div class="navbar-nav">
+            <a class="nav-link" href="#">Đăng Nhập</a>
+            <a class="nav-link btn-login" href="#">Tham Gia</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid p-0">
+    <img src="https://i.pinimg.com/1200x/cb/a2/8f/cba28fa0c8e5cc8823090c602378ec0f.jpg" class="w-100" alt="Banner">
+</div>
+
+<div class="container search-bar-container">
+    <div class="row bg-white p-3 shadow rounded">
+        <div class="col-md-3"><select class="form-select"><option>Chọn Phim</option></select></div>
+        <div class="col-md-3"><select class="form-select"><option>Chọn Rạp</option></select></div>
+        <div class="col-md-2"><select class="form-select"><option>Chọn Ngày</option></select></div>
+        <div class="col-md-2"><select class="form-select"><option>Chọn Suất</option></select></div>
+        <div class="col-md-2"><button class="btn btn-warning w-100 fw-bold">Mua vé nhanh</button></div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h3 class="mb-4">PHIM ĐANG CHIẾU</h3>
+    <div class="row">
+        <div class="col-md-3 mb-4" th:each="movie : ${movies}">
+            <div class="card border-0">
+                <img th:src="${movie.poster}" class="card-img-top rounded" style="height: 350px; object-fit: cover;">
+                <div class="card-body p-0 pt-2">
+                    <h6 class="card-title" th:text="${movie.tenPhim}">Tên phim</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h3 class="mb-4">TIN KHUYẾN MÃI</h3>
+    <div class="row">
+        <div class="col-md-3 mb-4" th:each="promo : ${promotions}">
+            <div class="card border-0">
+                <img th:src="@{'/images/' + ${promo.poster}}" class="img-fluid rounded mb-2" alt="Khuyến mãi">
+
+                <p class="fw-bold" th:text="${promo.tenKhuyenMai}">Tiêu đề khuyến mãi</p>
+
+                <small class="text-muted" th:text="${promo.moTa}">Mô tả ngắn</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="bg-dark text-light mt-5 py-5">
+    <div class="container text-center">
+        <p>Galaxy Cinema - Copyright 2026</p>
+    </div>
+</footer>
 
 </body>
 </html>
