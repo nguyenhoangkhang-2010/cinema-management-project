@@ -4,6 +4,7 @@ import com.example.project_web_cinema.entity.movie.TrangThaiPhim;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,12 +12,6 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class HomeDTO {
-    private Integer maPhim;
-    private String tenPhim;
-    private String poster;
-    private TrangThaiPhim trangThai;
-    private Integer maKhuyenMai;
-    private String tenKhuyenMai;
-    private LocalDate ngayBatDau;
-    private LocalDate ngayKetThuc;
+    private List<MovieDTO> phimDangChieu;
+    private List<PromotionDTO> khuyenMai;
 }

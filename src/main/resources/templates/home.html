@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>Cinema All Star</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/home.css}"> </head>
+    <link rel="stylesheet" th:href="@{/home.css}">
+</head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
@@ -40,7 +41,7 @@
 <div class="container mt-5">
     <h3 class="mb-4">PHIM ĐANG CHIẾU</h3>
     <div class="row">
-        <div class="col-md-3 mb-4" th:each="movie : ${movies}">
+        <div class="col-md-3 mb-4" th:each="movie : ${homePage.phimDangChieu}">
             <div class="card border-0">
                 <img th:src="${movie.poster}" class="card-img-top rounded" style="height: 350px; object-fit: cover;">
                 <div class="card-body p-0 pt-2">
@@ -54,9 +55,10 @@
 <div class="container mt-5">
     <h3 class="mb-4">TIN KHUYẾN MÃI</h3>
     <div class="row">
-        <div class="col-md-3 mb-4" th:each="promo : ${promotions}">
+        <!-- SỬA TẠI ĐÂY: Duyệt qua danh sách khuyến mãi trong homePage -->
+        <div class="col-md-3 mb-4" th:each="promo : ${homePage.khuyenMai}">
             <div class="card border-0">
-                <img th:src="@{'/images/' + ${promo.poster}}" class="img-fluid rounded mb-2" alt="Khuyến mãi">
+                <img th:src="${promo.poster}" class="img-fluid rounded mb-2" alt="Khuyến mãi">
 
                 <p class="fw-bold" th:text="${promo.tenKhuyenMai}">Tiêu đề khuyến mãi</p>
 
