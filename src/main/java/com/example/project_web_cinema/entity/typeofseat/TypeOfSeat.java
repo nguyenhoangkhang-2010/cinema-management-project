@@ -17,6 +17,7 @@ import java.util.List;
 public class TypeOfSeat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaLoaiGhe")
     private Integer maLoaiGhe;
     @Column(name = "TenLoaiGhe", nullable = false, unique = true, length = 30)
     private String tenLoaiGhe;

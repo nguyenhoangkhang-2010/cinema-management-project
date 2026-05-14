@@ -4,6 +4,8 @@ import com.example.project_web_cinema.entity.movie.Movie;
 import jakarta.persistence.*;
 import lombok.*;
 
+import javax.naming.Name;
+
 @Entity
 @Getter
 @Setter
@@ -14,6 +16,7 @@ import lombok.*;
 public class Video {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaVideo")
     private Integer maVideo;
     @OneToOne
     @JoinColumn(name = "MaPhim", nullable = false, unique = true)

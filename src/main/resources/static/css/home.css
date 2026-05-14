@@ -52,3 +52,28 @@
     top: 0;
     z-index: 1000;
 }
+.rounded-circle {
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Làm tròn avatar và hiệu ứng khi hover */
+.rounded-circle {
+    border: 2px solid #eee;
+    transition: all 0.3s ease;
+}
+
+.nav-item.dropdown:hover .rounded-circle {
+    border-color: #ffc107;
+    transform: scale(1.05);
+}
+
+/* Chỉnh dropdown menu cho đẹp hơn */
+.dropdown-menu {
+    border-radius: 10px;
+    margin-top: 10px !important;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #ffc107;
+}

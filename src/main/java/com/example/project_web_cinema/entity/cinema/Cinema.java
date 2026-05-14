@@ -18,6 +18,7 @@ import java.util.List;
 public class Cinema {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaRap")
     private Integer maRap;
 
     @NotNull

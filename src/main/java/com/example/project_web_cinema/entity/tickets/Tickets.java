@@ -24,6 +24,7 @@ import lombok.*;
 public class Tickets {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaVe")
     private Integer maVe;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaDatVe", nullable = false)

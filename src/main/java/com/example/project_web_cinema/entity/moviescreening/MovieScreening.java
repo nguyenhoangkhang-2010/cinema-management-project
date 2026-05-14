@@ -30,6 +30,7 @@ import java.util.List;
 public class MovieScreening {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaSuatChieu")
     private Integer maSuatChieu;
     @ManyToOne
     @JoinColumn(name = "MaPhim", nullable = false)

@@ -1,0 +1,36 @@
+body {
+    background: linear-gradient(135deg, #f4f7f6 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+.register-card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+    background-color: #ffffff;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    background-color: #f8f9fa;
+}
+
+.form-control:focus {
+    background-color: #fff;
+    border-color: #ffc107;
+    box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    outline: none;
+}
+
+.btn-warning {
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(224, 168, 0, 0.3);
+}

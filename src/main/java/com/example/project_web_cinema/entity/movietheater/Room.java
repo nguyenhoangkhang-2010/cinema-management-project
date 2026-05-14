@@ -17,6 +17,7 @@ import java.util.List;
 public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaPhong")
     private Integer maPhong;
     @Column(name = "TenPhong", nullable = false, length = 50)
     private String tenPhong;

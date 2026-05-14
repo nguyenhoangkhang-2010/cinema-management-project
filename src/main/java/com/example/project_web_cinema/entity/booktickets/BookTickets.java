@@ -23,6 +23,7 @@ import java.util.List;
 public class BookTickets {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaDatVe")
     private Integer maDatVe;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaTaiKhoan", nullable = false)

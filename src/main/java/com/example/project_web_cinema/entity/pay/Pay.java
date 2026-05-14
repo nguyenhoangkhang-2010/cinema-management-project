@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 public class Pay {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaThanhToan")
     private Integer maThanhToan;
     @NotNull
     @OneToOne

@@ -17,6 +17,7 @@ import java.util.List;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaTaiKhoan")
     private Integer maTaiKhoan;
 
     @Column(name = "HoTen", nullable = false, length = 100)

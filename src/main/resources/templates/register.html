@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký thành viên - Cinema All Star</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+            <div class="card register-card p-4 my-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-dark">Gia nhập <span class="text-warning">All Star</span></h2>
+                    <p class="text-muted">Đăng ký để nhận nhiều ưu đãi đặt vé hơn!</p>
+                </div>
+
+                <!-- Hiển thị lỗi nếu có (ví dụ: Email đã tồn tại) -->
+                <div th:if="${error}" class="alert alert-danger py-2 small" th:text="${error}"></div>
+
+                <form th:action="@{/register}" th:object="${registerDTO}" method="post">
+                    <!-- Họ tên -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Họ và Tên</label>
+                        <input type="text" th:field="*{hoTen}" class="form-control" placeholder="Nguyễn Văn A" required>
+                    </div>
+
+                    <div class="row">
+                        <!-- Email -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" placeholder="an@example.com" required>
+                        </div>
+                        <!-- Số điện thoại -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-bold">Số điện thoại</label>
+                            <input type="text" th:field="*{soDienThoai}" class="form-control" placeholder="09xxxxxxx">
+                        </div>
+                    </div>
+
+                    <!-- Ngày sinh -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Ngày sinh</label>
+                        <input type="date" th:field="*{ngaySinh}" class="form-control" required>
+                    </div>
+
+                    <!-- Mật khẩu -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Mật khẩu</label>
+                        <input type="password" th:field="*{matKhau}" class="form-control" placeholder="••••••••" required>
+                    </div>
+
+                    <!-- Nhập lại mật khẩu -->
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold">Xác nhận mật khẩu</label>
+                        <input type="password" th:field="*{nhapLaiMatKhau}" class="form-control" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="terms" required>
+                        <label class="form-check-label small" for="terms">Tôi đồng ý với các điều khoản sử dụng.</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-warning w-100 fw-bold py-2 mb-3">XÁC NHẬN ĐĂNG KÝ</button>
+
+                    <p class="text-center small text-muted">
+                        Đã có tài khoản?
+                        <a th:href="@{/login}" class="text-warning fw-bold text-decoration-none">Đăng nhập ngay</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

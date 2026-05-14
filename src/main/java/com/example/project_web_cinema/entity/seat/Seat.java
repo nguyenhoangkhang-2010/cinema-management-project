@@ -22,6 +22,7 @@ import java.util.List;
 public class Seat {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "MaGhe")
     private Integer maGhe;
     @ManyToOne
     @JoinColumn(name = "MaLoaiGhe", nullable = false)
