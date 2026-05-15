@@ -42,4 +42,34 @@ public class MovieService {
             )
         .toList();
     }
+
+    public List<MovieDTO> getMoviesNgungChieu(){
+        return movieRepository.findByTrangThai(TrangThaiPhim.NgungChieu)
+            .stream()
+            .map(movie -> MovieDTO.builder()
+                    .maPhim(movie.getMaPhim())
+                    .tenPhim(movie.getTenPhim())
+                    .poster(movie.getPoster())
+                    .trangThai(movie.getTrangThai())
+                    .build()
+            )
+        .toList();
+    }
+
+    public List<MovieDTO> getAllMovies() {
+        return movieRepository.findAll()
+            .stream()
+            .map(movie -> MovieDTO.builder()
+                    .maPhim(movie.getMaPhim())
+                    .tenPhim(movie.getTenPhim())
+                    .poster(movie.getPoster())
+                    .trangThai(movie.getTrangThai())
+                    .build()
+            )
+        .toList();
+    }
+
+    public long countAllMovies() {
+        return movieRepository.count();
+    }
 }

@@ -16,10 +16,13 @@ public class AdminService {
     }
 
     public AdminHomeDTO getAdminHome(){
-        AdminHomeDTO admin = new AdminHomeDTO();
-        admin.setPhimDangChieu(movieService.getMoviesDangChieu());
-        admin.setKhuyenMai(promotionService.getAllPromotions());
+        return AdminHomeDTO.builder()
+                .phimDangChieu(movieService.getMoviesDangChieu())
+                .khuyenMai(promotionService.getAllPromotions())
+                .build();
+    }
 
-        return;
+    public long totalMovies(){
+        return movieService.countAllMovies();
     }
 }

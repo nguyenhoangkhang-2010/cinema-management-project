@@ -16,7 +16,7 @@ public class HomeService {
     public HomeDTO getHome(){
         return HomeDTO.builder()
                 .phimDangChieu(movieService.getMoviesDangChieu())
-                .khuyenMai(promotionService.getAllPromotions())
+                .khuyenMai(promotionService.getPromotionsHoatDong())
                 .build();
     }
 }
