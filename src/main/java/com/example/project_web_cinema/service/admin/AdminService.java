@@ -19,6 +19,7 @@ public class AdminService {
         return AdminHomeDTO.builder()
                 .phimDangChieu(movieService.getMoviesDangChieu())
                 .khuyenMai(promotionService.getAllPromotions())
+                .totalMovies(movieService.countAllMovies())
                 .build();
     }
 

@@ -1,0 +1,97 @@
+/* Toàn bộ trang Admin */
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f9;
+}
+
+/* Khung chia 2 cột: Sidebar bên trái, Content bên phải */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* Sidebar màu tối kiểu chuyên nghiệp */
+.admin-sidebar {
+    width: 260px;
+    background-color: #1e2229;
+    color: #fff;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-brand {
+    padding: 20px;
+    font-size: 20px;
+    text-align: center;
+    border-bottom: 1px solid #2d323e;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #bc9;
+    color: #adb5bd;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.sidebar-menu li a:hover,
+.sidebar-menu li.active a {
+    background-color: #2b303c;
+    color: #ffc107;
+    border-left: 4px solid #ffc107;
+}
+
+/* Vùng nội dung chính bên phải */
+.admin-content {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* Thẻ thống kê (Dashboard Cards) */
+.stat-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Nút hành động nhanh đè lên poster phim */
+.movie-admin-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    display: flex;
+    gap: 5px;
+}
+
+.movie-admin-actions .btn {
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 6px;
+}
+
+/* Định dạng nhãn trạng thái */
+.badge-pill {
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+}
