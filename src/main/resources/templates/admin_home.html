@@ -31,10 +31,38 @@
             <div class="container-fluid p-0">
                 <h5 class="m-0 fw-bold text-secondary">HỆ THỐNG QUẢN TRỊ</h5>
                 <div class="ms-auto d-flex align-items-center">
-                    <span class="me-3 text-muted small">Xin chào, <strong class="text-dark" sec:authentication="name">Admin</strong></span>
-                    <form th:action="@{/logout}" method="post">
-                        <button type="submit" class="btn btn-outline-danger btn-sm fw-bold"><i class="bi bi-box-arrow-right me-1"></i>Đăng xuất</button>
-                    </form>
+
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center text-dark" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle fs-5 me-2 text-secondary"></i>
+                            <span class="small">Xin chào, <strong class="text-dark" sec:authentication="name">Admin</strong></span>
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 py-2" aria-labelledby="profileDropdown" style="min-width: 200px;">
+                            <li>
+                                <a class="dropdown-item py-2 small text-secondary" href="/admin/settings">
+                                    <i class="bi bi-gear me-2 text-muted"></i>Cài đặt hệ thống
+                                </a>
+                            </li>
+
+                            <li sec:authorize="hasRole('ADMIN')">
+                                <a class="dropdown-item py-2 small text-secondary" href="/admin/users/managments">
+                                    <i class="bi bi-person-plus me-2 text-muted"></i>Quản lý
+                                </a>
+                            </li>
+
+                            <li><hr class="dropdown-divider my-2"></li>
+
+                            <li>
+                                <form th:action="@{/logout}" method="post" class="m-0 p-0">
+                                    <button type="submit" class="dropdown-item py-2 small text-danger fw-bold">
+                                        <i class="bi bi-box-arrow-right me-2"></i>Đăng xuất
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
                 </div>
             </div>
         </nav>

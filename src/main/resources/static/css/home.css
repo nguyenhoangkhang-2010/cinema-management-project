@@ -13,21 +13,25 @@
     transform: scale(1.03);
     cursor: pointer;
 }
-/* Styling cho Navbar */
+
+/* Định hình thanh điều hướng Navbar */
 .navbar {
-    border-bottom: 2px solid #f0f0f0; /* Tạo viền mỏng phía dưới */
+    border-bottom: 2px solid #f0f0f0;
     background-color: #ffffff !important;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
-/* Logo Galaxy Cinema */
+/* Logo thương hiệu */
 .navbar-brand {
     font-weight: 800;
     font-size: 24px;
-    color: #003a8c !important; /* Màu xanh thương hiệu */
+    color: #003a8c !important;
     margin-right: 30px;
 }
 
-/* Các menu links */
+/* Các liên kết danh mục */
 .nav-link {
     color: #333 !important;
     font-weight: 500;
@@ -35,45 +39,97 @@
     padding: 10px 15px !important;
 }
 
-/* Hiệu ứng khi di chuột vào menu */
+/* Hiệu ứng hover đổi màu danh mục */
 .nav-link:hover {
-    color: #f7941e !important; /* Màu cam thương hiệu */
+    color: #f7941e !important;
 }
 
-/* Nếu bạn có nút Đăng nhập/Đăng ký ở góc phải */
+/* Nút đăng nhập */
 .btn-login {
     border: 1px solid #333;
     padding: 5px 20px;
     border-radius: 5px;
     margin-left: 10px;
 }
-.navbar {
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-.rounded-circle {
-    transition: transform 0.2s ease-in-out;
-}
 
-/* Làm tròn avatar và hiệu ứng khi hover */
-.rounded-circle {
+/* ========================================================
+   Khu vực 2: Xử lý logic hiển thị và hiệu ứng Dropdown Profile
+   ======================================================== */
+/* Tạo vòng tròn xám bọc icon đại diện thay cho thẻ img */
+.avatar-circle-wrap {
+    width: 38px;
+    height: 38px;
+    background-color: #e2e8f0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: 2px solid #eee;
     transition: all 0.3s ease;
 }
 
-.nav-item.dropdown:hover .rounded-circle {
+/* Kiểu chữ hiển thị Tên khách hàng */
+.user-name-text {
+    font-size: 1.05rem;
+    color: #1e293b !important;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Đổi màu viền và zoom nhẹ Avatar khi di chuột hoặc click giữ khối */
+.dropdown:hover .avatar-circle-wrap,
+.dropdown:focus-within .avatar-circle-wrap {
     border-color: #ffc107;
     transform: scale(1.05);
 }
 
-/* Chỉnh dropdown menu cho đẹp hơn */
-.dropdown-menu {
-    border-radius: 10px;
-    margin-top: 10px !important;
+/* Tạo hình khối cho bảng menu trắng đổ bóng mềm mại, bo góc lớn */
+.custom-profile-menu {
+    border-radius: 12px !important;
+    min-width: 240px;
+    background-color: #ffffff !important;
+    margin-top: 10px !important; /* Độ thoáng 10px chuẩn từ tên xuống menu theo ý sếp */
+    display: none;
+    opacity: 0;
+    visibility: hidden;
 }
 
-.dropdown-item:hover {
-    background-color: #f8f9fa;
-    color: #ffc107;
+/* Tạo một lớp đệm tàng hình cao 15px lấp đầy khoảng trống margin-top
+   Giúp sếp rê chuột mượt mà từ Tên xuống Menu mà không bao giờ lo bị mất giữa đường */
+.custom-profile-menu::before {
+    content: "";
+    position: absolute;
+    top: -15px;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    background: transparent; /* Hoàn toàn trong suốt */
+}
+
+/* - Chuột rê vào (.dropdown:hover) -> Menu tự động mở ra.
+   - Chuột click/tick vào (.dropdown:focus-within) -> Ghim chặt cố định menu tại chỗ. */
+.dropdown:hover .custom-profile-menu,
+.dropdown:focus-within .custom-profile-menu {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: absolute !important;
+    right: 0 !important;
+    left: auto !important;
+    z-index: 1050;
+}
+
+/* Kiểu chữ cho các dòng tính năng bên trong menu */
+.custom-profile-menu .menu-item-text {
+    font-size: 1.05rem;
+    color: #1e293b;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* Hiệu ứng chuyển màu nền khi trỏ chuột vào từng tính năng */
+.custom-profile-menu .dropdown-item {
+    transition: background-color 0.2s ease;
+}
+.custom-profile-menu .dropdown-item:hover {
+    background-color: #f8f9fa !important;
+    color: #ffc107 !important;
 }

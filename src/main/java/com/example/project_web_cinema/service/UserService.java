@@ -1,5 +1,6 @@
 package com.example.project_web_cinema.service;
 
+import com.example.project_web_cinema.dto.UserDTO;
 import com.example.project_web_cinema.entity.account.Account;
 import com.example.project_web_cinema.entity.account.VaiTro;
 import com.example.project_web_cinema.repository.AccountRepository;
@@ -31,7 +32,7 @@ public class UserService implements UserDetailsService {
         }
 
         return User.builder()
-                .username(account.getEmail())
+                .username(account.getHoTen())
                 .password(account.getMatKhau())
                 .authorities(vaiTro)
                 .build();
@@ -43,5 +44,22 @@ public class UserService implements UserDetailsService {
 
         account.setVaiTro(VaiTro.User);
         accountRepository.save(account);
+    }
+
+    public UserDTO getProfileByEmail(String email) {
+        Account account = accountRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy tài khoản với email: " + email));
+
+        return UserDTO.builder()
+                .hoTen(account.getHoTen())
+                .ngaySinh(account.getNgaySinh())
+                .email(account.getEmail())
+                .soDienThoai(account.getSoDienThoai())
+                .ngayTao(account.getNgayTao())
+                .capDo(account.getCapDo())
+                .vaiTro(account.getVaiTro().toString())
+                .loaiTaiKhoan(account.getLoaiTaiKhoan().toString())
+                .trangThai(account.getTrangThai().toString())
+                .build();
     }
 }

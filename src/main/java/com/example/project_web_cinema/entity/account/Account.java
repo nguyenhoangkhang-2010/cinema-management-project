@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -36,7 +37,7 @@ public class Account {
     private String matKhau;
 
     @Column(name = "NgayTao")
-    private LocalDate ngayTao;
+    private LocalDateTime ngayTao;
 
     @Column(name = "CapDo")
     private Integer capDo = 1;
@@ -56,7 +57,7 @@ public class Account {
     @PrePersist
     public void prePersist() {
         if (ngayTao == null) {
-            ngayTao = LocalDate.now();
+            ngayTao = LocalDateTime.now();
         }
         if (loaiTaiKhoan == null) {
             loaiTaiKhoan = LoaiTaiKhoan.Thuong;
