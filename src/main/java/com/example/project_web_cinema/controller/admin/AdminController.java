@@ -35,12 +35,6 @@ public class AdminController {
         return "admin/admin_dashboard";
     }
 
-    @GetMapping("/admin/promotions")
-    public String showPromotionList(Model model) {
-        model.addAttribute("promotions", adminService.getAllPromotions());
-        return "admin/promotion_list";
-    }
-
     @GetMapping("/admin/api/chart-data/{type}")
     @ResponseBody
     public Map<String, Object> getChartData(@PathVariable String type) {

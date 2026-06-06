@@ -26,23 +26,23 @@
             <div class="container-fluid p-4">
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-body p-0">
-                        <table class="table table-hover align-middle mb-0">
+                        <table class="table table-hover align-middle mb-0" style="table-layout: fixed; word-wrap: break-word;">
                             <thead class="table-dark">
-                                <tr>
-                                    <th class="ps-4 py-3 rounded-top-left">ID</th>
-                                    <th>Họ Tên</th>
-                                    <th>Email</th>
-                                    <th>Trạng Thái Đăng Nhập</th>
-                                    <th class="text-end pe-4 rounded-top-right">Thao Tác (Khóa/Mở)</th>
+                                <tr class="align-middle">
+                                    <th class="ps-4 py-3 rounded-top-left text-start" style="width: 10%;">ID</th>
+                                    <th class="py-3 text-start" style="width: 25%;">Họ Tên</th>
+                                    <th class="py-3 text-start" style="width: 30%;">Email</th>
+                                    <th class="py-3 text-center" style="width: 18%;">Trạng Thái</th>
+                                    <th class="py-3 text-end pe-4 rounded-top-right" style="width: 17%;">Thao Tác (Khóa/Mở)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- Ví dụ Render danh sách user -->
                                 <tr th:each="user : ${users}">
-                                    <td class="ps-4 fw-bold text-secondary" th:text="${user.id}">1</td>
-                                    <td class="fw-semibold text-dark" th:text="${user.hoTen}">Người dùng Demo</td>
-                                    <td th:text="${user.email}">user@example.com</td>
-                                    <td>
+                                    <td class="ps-4 fw-bold text-secondary text-start" th:text="${user.id}">1</td>
+                                    <td class="fw-semibold text-dark text-start" th:text="${user.hoTen}">Người dùng Demo</td>
+                                    <td class="text-start" th:text="${user.email}">user@example.com</td>
+                                    <td class="text-center">
                                         <span class="badge bg-success" th:if="${user.hoatDong}">Đang Hoạt Động</span>
                                         <span class="badge bg-danger" th:if="${!user.hoatDong}">Bị Khóa</span>
                                     </td>
