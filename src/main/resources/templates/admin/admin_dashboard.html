@@ -74,7 +74,7 @@
                     <div class="col-md-8">
                         <div class="card border-0 shadow-sm rounded-4">
                             <div class="card-body p-4">
-                                <h5 class="fw-bold mb-4 text-primary">Biểu Đồ Doanh Thu (Theo Tháng)</h5>
+                                <h5 class="fw-bold mb-4 text-primary">Thống Kê Doanh Thu & Số Vé (7 Ngày Gần Nhất)</h5>
                                 <!-- Thêm box giới hạn chiều cao giúp Chart hiển thị mượt và responsive -->
                                 <div style="height: 320px; position: relative;">
                                     <canvas id="revenueBarChart"></canvas>
@@ -85,7 +85,7 @@
                     <div class="col-md-4">
                         <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-body p-4 d-flex flex-column justify-content-center">
-                                <h5 class="fw-bold mb-4 text-center text-primary">Doanh Thu Theo Giới Tính</h5>
+                                <h5 class="fw-bold mb-4 text-center text-primary">Doanh Thu Theo Phương Thức</h5>
                                 <div style="height: 250px; position: relative; margin: 0 auto;">
                                     <canvas id="genderRevenuePieChart"></canvas>
                                 </div>
@@ -102,29 +102,47 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Vẽ Bar Chart cho Doanh Thu theo tháng
-            fetch('/admin/api/chart-data/doanhthu-thang')
-                .then(response => response.json())
-                .then(data => {
+            // 1. Vẽ Combo Chart: Cột (Doanh Thu) & Đường (Số Vé Bán) trong 7 Ngày
+            Promise.all([
+                fetch('/admin/api/chart-data/doanhthu').then(res => res.json()),
+                fetch('/admin/api/chart-data/ve').then(res => res.json())
+            ]).then(([revenueData, ticketData]) => {
                     const ctxBar = document.getElementById('revenueBarChart').getContext('2d');
                     new Chart(ctxBar, {
-                        type: 'bar',
+                        type: 'bar', // Kiểu chart gốc
                         data: {
-                            labels: data.labels,
+                            labels: revenueData.labels,
                             datasets: [{
+                                type: 'bar',
                                 label: 'Doanh Thu (VNĐ)',
-                                data: data.values,
+                                data: revenueData.values,
                                 backgroundColor: 'rgba(13, 110, 253, 0.85)',
                                 hoverBackgroundColor: '#0a58ca',
                                 borderRadius: 6,
-                                barPercentage: 0.6
+                                barPercentage: 0.6,
+                                yAxisID: 'y'
+                            },
+                            {
+                                type: 'line',
+                                label: 'Số Vé Bán',
+                                data: ticketData.values,
+                                borderColor: '#ffc107',
+                                backgroundColor: '#ffc107',
+                                borderWidth: 3,
+                                tension: 0.3,
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#ffc107',
+                                pointBorderWidth: 2,
+                                pointRadius: 4,
+                                yAxisID: 'y1'
                             }]
                         },
                         options: {
                             responsive: true,
                             maintainAspectRatio: false,
+                            interaction: { mode: 'index', intersect: false },
                             plugins: {
-                                legend: { display: false },
+                                legend: { display: true, position: 'top' },
                                 tooltip: {
                                     backgroundColor: 'rgba(0,0,0,0.8)',
                                     titleFont: { size: 14 },
@@ -132,15 +150,16 @@
                                 }
                             },
                             scales: {
-                                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)', borderDash: [5, 5] } },
+                                y: { type: 'linear', display: true, position: 'left', title: { display: true, text: 'Doanh Thu (VNĐ)' }, grid: { color: 'rgba(0,0,0,0.05)', borderDash: [5, 5] }, beginAtZero: true },
+                                y1: { type: 'linear', display: true, position: 'right', title: { display: true, text: 'Số Vé' }, grid: { drawOnChartArea: false }, beginAtZero: true },
                                 x: { grid: { display: false } }
                             }
                         }
                     });
                 });
 
-            // 2. Vẽ Pie Chart cho Doanh Thu Theo Giới Tính
-            fetch('/admin/api/chart-data/doanhthu-gioitinh')
+            // 2. Vẽ Pie Chart cho Doanh Thu Theo Phương Thức
+            fetch('/admin/api/chart-data/doanhthu-phuongthuc')
                 .then(response => response.json())
                 .then(data => {
                     const ctxPie = document.getElementById('genderRevenuePieChart').getContext('2d');
@@ -150,7 +169,7 @@
                             labels: data.labels,
                             datasets: [{
                                 data: data.values,
-                                backgroundColor: ['#0d6efd', '#d63384', '#6c757d'], // Xanh biển (Nam), Hồng (Nữ), Xám (Khác)
+                                backgroundColor: ['#0d6efd', '#198754', '#ffc107', '#d63384', '#6c757d'], // Mở rộng dải màu
                                 hoverOffset: 4,
                                 borderWidth: 0
                             }]

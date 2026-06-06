@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Phòng Chiếu - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/admin_home.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <div th:replace="~{admin/sidebar :: sidebar('rooms')}"></div>
+        <div class="w-100 flex-grow-1 d-flex flex-column bg-light">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
+                <h4 class="m-0 fw-bold text-primary"><i class="bi bi-door-open me-2"></i>Quản Lý Phòng Chiếu</h4>
+            </nav>
+            <div class="container-fluid p-4">
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show"><i class="bi bi-check-circle-fill me-2"></i><span th:text="${success}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show"><i class="bi bi-exclamation-triangle-fill me-2"></i><span th:text="${error}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+
+                <!-- Header hành động -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <form th:action="@{/admin/rooms}" method="get" class="d-flex gap-2">
+                        <input type="text" name="search" th:value="${search}" class="form-control" placeholder="Tìm tên phòng hoặc tên rạp...">
+                        <button type="submit" class="btn btn-dark"><i class="bi bi-search"></i> Lọc</button>
+                        <a th:href="@{/admin/rooms}" class="btn btn-outline-secondary"><i class="bi bi-arrow-clockwise"></i></a>
+                    </form>
+                    <button type="button" class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#roomModal" onclick="resetRoomForm()">
+                        <i class="bi bi-plus-circle me-1"></i> Thêm Phòng Chiếu
+                    </button>
+                </div>
+
+                <!-- Bảng Dữ Liệu -->
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-0">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="ps-4 py-3">Mã Phòng</th>
+                                    <th>Tên Phòng</th>
+                                    <th>Rạp Phim</th>
+                                    <th>Số Lượng Ghế</th>
+                                    <th class="pe-4 text-end">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${rooms.empty}">
+                                    <td colspan="5" class="text-center py-4">Không có dữ liệu phòng chiếu</td>
+                                </tr>
+                                <tr th:each="r : ${rooms.content}">
+                                    <td class="ps-4 fw-bold text-secondary">#[[${r.maPhong}]]</td>
+                                    <td class="fw-bold text-dark">[[${r.tenPhong}]]</td>
+                                    <td>[[${r.tenRap}]]</td>
+                                    <td><span class="badge bg-info text-dark">[[${r.soLuongGhe}]] Ghế</span></td>
+                                    <td class="pe-4 text-end">
+                                        <button type="button" class="btn btn-sm btn-outline-primary" 
+                                                th:attr="onclick='editRoom(' + ${r.maPhong} + ', \'' + ${r.tenPhong} + '\', ' + ${r.soLuongGhe} + ', ' + ${r.maRap} + ')'">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <a th:href="@{/admin/rooms/delete/{id}(id=${r.maPhong})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa phòng chiếu này? Mọi ghế và lịch chiếu liên quan có thể bị ảnh hưởng.');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Phân Trang -->
+                <div class="d-flex justify-content-center mt-4" th:if="${rooms.totalPages > 1}">
+                    <nav>
+                        <ul class="pagination pagination-sm">
+                            <li class="page-item" th:classappend="${rooms.number == 0 ? 'disabled' : ''}"><a class="page-link" th:href="@{/admin/rooms(page=${rooms.number}, search=${search})}">&laquo;</a></li>
+                            <li class="page-item" th:each="i : ${#numbers.sequence(1, rooms.totalPages)}" th:classappend="${rooms.number == i - 1 ? 'active' : ''}"><a class="page-link" th:href="@{/admin/rooms(page=${i}, search=${search})}" th:text="${i}"></a></li>
+                            <li class="page-item" th:classappend="${rooms.number == rooms.totalPages - 1 ? 'disabled' : ''}"><a class="page-link" th:href="@{/admin/rooms(page=${rooms.number + 2}, search=${search})}">&raquo;</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Thêm/Sửa Phòng Chiếu -->
+    <div class="modal fade" id="roomModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <form th:action="@{/admin/rooms/save}" method="post">
+                    <div class="modal-header bg-primary text-white rounded-top-4">
+                        <h5 class="modal-title fw-bold" id="roomModalTitle">Thêm Phòng Chiếu Mới</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <input type="hidden" id="maPhong" name="maPhong">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên Phòng Chiếu</label>
+                            <input type="text" class="form-control" id="tenPhong" name="tenPhong" required placeholder="VD: P01, P02...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Thuộc Rạp Phim</label>
+                            <select class="form-select" id="maRap" name="maRap" required>
+                                <option value="">-- Chọn Rạp --</option>
+                                <option th:each="c : ${cinemas}" th:value="${c.maRap}" th:text="${c.tenRap}"></option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số Lượng Ghế</label>
+                            <input type="number" min="1" class="form-control" id="soLuongGhe" name="soLuongGhe" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary fw-bold"><i class="bi bi-floppy me-1"></i> Lưu Phòng Chiếu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editRoom(maPhong, tenPhong, soLuongGhe, maRap) {
+            document.getElementById('roomModalTitle').innerText = 'Cập Nhật Phòng Chiếu';
+            document.getElementById('maPhong').value = maPhong;
+            document.getElementById('tenPhong').value = tenPhong;
+            document.getElementById('soLuongGhe').value = soLuongGhe;
+            document.getElementById('maRap').value = maRap;
+            new bootstrap.Modal(document.getElementById('roomModal')).show();
+        }
+        function resetRoomForm() {
+            document.getElementById('roomModalTitle').innerText = 'Thêm Phòng Chiếu Mới';
+            document.getElementById('maPhong').value = '';
+            document.getElementById('tenPhong').value = '';
+            document.getElementById('soLuongGhe').value = '';
+            document.getElementById('maRap').value = '';
+        }
+    </script>
+</body>
+</html>

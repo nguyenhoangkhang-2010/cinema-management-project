@@ -18,9 +18,9 @@
             
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link fw-bold" th:href="@{/}">Trang Chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Star Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Sự Kiện</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-warning" th:href="@{/}">Trang Chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/store}">Star Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/events}">Sự Kiện</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/khuyen-mai}">Khuyến Mãi</a></li>
                     <li class="nav-item"><a class="nav-link" th:href="@{/phim-online}">Phim Online</a></li>
                 </ul>
@@ -66,9 +66,30 @@
         </div>
     </nav>
 
-    <!-- Banner -->
-    <div class="container-fluid p-0">
-        <img src="https://i.pinimg.com/1200x/cb/a2/8f/cba28fa0c8e5cc8823090c602378ec0f.jpg" class="w-100" alt="Banner">
+    <!-- Banner Slider (Auto 5s) -->
+    <div id="homeBannerCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-indicators">
+            <button th:each="movie, iterStat : ${homeData.heroSlider}" type="button" data-bs-target="#homeBannerCarousel" 
+                    th:data-bs-slide-to="${iterStat.index}" th:classappend="${iterStat.index == 0} ? 'active'"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item" th:each="movie, iterStat : ${homeData.heroSlider}" th:classappend="${iterStat.index == 0} ? 'active'">
+                <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/1200x500?text=Banner'" 
+                     class="d-block w-100" style="height: 65vh; object-fit: cover; filter: brightness(0.6);" alt="Banner">
+                <div class="carousel-caption d-none d-md-block text-start" style="bottom: 20%;">
+                    <h1 class="display-4 fw-bold text-white text-uppercase" th:text="${movie.tenPhim}">Tên Phim</h1>
+                    <p class="fs-5 text-light mb-4">Khởi chiếu: <span th:text="${movie.ngayKhoiChieu != null ? #temporals.format(movie.ngayKhoiChieu, 'dd/MM/yyyy') : 'Đang cập nhật'}"></span></p>
+                    <a th:if="${movie.trailer != null}" th:href="${movie.trailer}" target="_blank" class="btn btn-danger btn-lg fw-bold px-4 rounded-pill me-2"><i class="bi bi-play-btn me-2"></i>TRAILER</a>
+                    <a th:href="@{'/movie/' + ${movie.maPhim}}" class="btn btn-warning btn-lg fw-bold px-4 rounded-pill shadow">XEM CHI TIẾT</a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#homeBannerCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#homeBannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
     </div>
 
     <!-- Thanh Tìm Kiếm & Mua Vé -->
@@ -86,31 +107,63 @@
         </div>
     </div>
 
-    <!-- PHIM ĐANG CHIẾU -->
+    <!-- PHIM ĐANG CHIẾU NỔI BẬT -->
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="m-0 fw-bold border-start border-warning border-4 ps-3">PHIM ĐANG CHIẾU</h3>
+            <h3 class="m-0 fw-bold border-start border-warning border-4 ps-3">PHIM ĐANG CHIẾU NỔI BẬT</h3>
+            <a th:href="@{/store}" class="text-decoration-none text-danger fw-bold">Xem tất cả <i class="bi bi-chevron-right"></i></a>
         </div>
 
-        <div class="row">
-            <!-- Dữ liệu lấy từ Model attribute: phimDangChieu -->
-            <th:block th:if="${phimDangChieu != null and !#lists.isEmpty(phimDangChieu)}">
-                <div class="col-md-3 mb-4" th:each="movie : ${phimDangChieu}">
-                    <div class="card border-0 bg-transparent movie-card h-100">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="movie : ${homeData.hotMovies}">
+                <div class="card border-0 bg-transparent movie-card h-100 shadow-sm">
+                    <div class="position-relative">
                         <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/350x500?text=No+Poster'"
-                             class="card-img-top rounded shadow-sm custom-movie-poster" alt="Poster Phim">
+                             class="card-img-top rounded-top" alt="Poster Phim" style="height: 450px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-2">
+                            <span class="badge bg-warning text-dark fs-6"><i class="bi bi-star-fill me-1"></i><span th:text="${#numbers.formatDecimal(movie.avgRating, 1, 1)}"></span></span>
+                        </div>
+                    </div>
 
-                        <div class="card-body p-0 pt-3 text-center d-flex flex-column">
-                            <h6 class="card-title fw-bold text-dark text-truncate mb-2" th:text="${movie.tenPhim}">Tên phim</h6>
+                    <div class="card-body bg-white rounded-bottom d-flex flex-column">
+                        <h5 class="card-title fw-bold text-dark text-truncate mb-2" th:text="${movie.tenPhim}">Tên phim</h5>
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-clock me-1"></i><span th:text="${movie.thoiLuong != null ? movie.thoiLuong + ' phút' : 'N/A'}"></span>
+                            <span class="mx-2">|</span>
+                            <i class="bi bi-people me-1"></i><span th:text="${movie.voteCount} + ' đánh giá'"></span>
+                        </p>
                             
-                            <div class="mt-auto">
-                                <a th:href="@{'/book/' + ${movie.maPhim}}" class="btn btn-outline-danger btn-sm fw-bold w-100" sec:authorize="isAuthenticated()">ĐẶT VÉ</a>
-                                <a th:href="@{/login}" class="btn btn-outline-secondary btn-sm fw-bold w-100" sec:authorize="!isAuthenticated()">ĐĂNG NHẬP ĐỂ ĐẶT VÉ</a>
-                            </div>
+                        <div class="mt-auto">
+                            <a th:href="@{'/book/' + ${movie.maPhim}}" class="btn btn-outline-danger fw-bold w-100">ĐẶT VÉ</a>
                         </div>
                     </div>
                 </div>
-            </th:block>
+            </div>
+            <div class="col-12 text-center py-4 text-muted" th:if="${homeData.hotMovies == null or #lists.isEmpty(homeData.hotMovies)}">
+                <p class="fw-medium mb-0">Hệ thống hiện tại chưa có phim nổi bật!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PHIM SẮP CHIẾU -->
+    <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="m-0 fw-bold border-start border-info border-4 ps-3">PHIM SẮP CHIẾU</h3>
+        </div>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col" th:each="movie : ${homeData.upcomingMovies}">
+                <div class="card border-0 bg-transparent movie-card h-100">
+                    <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/350x500?text=No+Poster'"
+                         class="card-img-top rounded shadow-sm" alt="Poster Phim" style="height: 350px; object-fit: cover;">
+                    <div class="card-body p-0 pt-3 text-center d-flex flex-column">
+                        <h6 class="card-title fw-bold text-dark text-truncate mb-2" th:text="${movie.tenPhim}">Tên phim</h6>
+                        <p class="text-primary fw-bold small mb-0" th:if="${movie.daysUntilRelease > 0}">Khởi chiếu sau <span th:text="${movie.daysUntilRelease}"></span> ngày</p>
+                        <p class="text-success fw-bold small mb-0" th:if="${movie.daysUntilRelease <= 0}">Sắp công chiếu</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
             <div class="col-12 text-center py-4 text-muted" th:if="${phimDangChieu == null or #lists.isEmpty(phimDangChieu)}">
                 <p class="fw-medium mb-0">Hệ thống hiện tại chưa có lịch chiếu phim nào mới!</p>

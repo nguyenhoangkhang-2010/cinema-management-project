@@ -17,17 +17,4 @@ public class HomeController {
         this.homeService = homeService;
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
-        var dataHome = homeService.getHome();
-
-        if (dataHome != null) {
-            model.addAttribute("phimDangChieu",
-                    dataHome.getPhimDangChieu() != null ? dataHome.getPhimDangChieu() : new ArrayList<>());
-            model.addAttribute("khuyenMai",
-                    dataHome.getKhuyenMai() != null ? dataHome.getKhuyenMai() : new ArrayList<>());
-        }
-
-        return "user/home";
-    }
 }

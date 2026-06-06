@@ -2,6 +2,7 @@ package com.example.project_web_cinema.entity.movie;
 
 import com.example.project_web_cinema.entity.category.Category;
 import com.example.project_web_cinema.entity.moviescreening.MovieScreening;
+import com.example.project_web_cinema.entity.rate.Rate;
 import com.example.project_web_cinema.entity.video.Video;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -72,4 +73,7 @@ public class Movie {
 
     @OneToMany(mappedBy = "movie")
     private List<MovieScreening> dsSuatChieu;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rate> rates;
 }

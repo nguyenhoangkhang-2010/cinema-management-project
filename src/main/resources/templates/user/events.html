@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sự Kiện - Cinema All Star</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">Cinema <span class="text-warning">All Star</span></a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang Chủ</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/store}">Star Shop</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-warning" th:href="@{/events}">Sự Kiện</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/khuyen-mai}">Khuyến Mãi</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/phim-online}">Phim Online</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <h2 class="fw-bold mb-5 text-primary text-center">SỰ KIỆN ĐẶC BIỆT</h2>
+        
+        <!-- KHUYẾN MÃI NỔI BẬT (FEATURED) -->
+        <h4 class="fw-bold mb-4 border-start border-warning border-4 ps-3">TOP 3 KHUYẾN MÃI SỐC</h4>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col" th:each="promo : ${featuredPromos}">
+                <div class="card bg-dark text-white border-0 shadow-lg rounded-4 overflow-hidden h-100">
+                    <img th:src="${promo.poster}" class="card-img-top opacity-50" style="height: 200px; object-fit: cover;" alt="Promo">
+                    <div class="card-img-overlay d-flex flex-column justify-content-center text-center">
+                        <h4 class="fw-bold text-warning" th:text="${promo.tenKhuyenMai}"></h4>
+                        <h1 class="display-5 fw-bold text-danger my-3">GIẢM <span th:text="${#numbers.formatDecimal(promo.phanTramGiam, 0, 0)}"></span>%</h1>
+                        <p class="text-light small">Áp dụng từ: <span th:text="${#temporals.format(promo.ngayBatDau, 'dd/MM')}"></span> đến <span th:text="${#temporals.format(promo.ngayKetThuc, 'dd/MM')}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- KHUYẾN MÃI ĐANG DIỄN RA -->
+        <h4 class="fw-bold mb-4 border-start border-success border-4 ps-3">KHUYẾN MÃI ĐANG DIỄN RA</h4>
+        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+            <div class="col" th:each="promo : ${activePromos}">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body p-4 text-center">
+                        <h5 class="fw-bold text-primary mb-3" th:text="${promo.tenKhuyenMai}"></h5>
+                        <h2 class="text-danger fw-bold mb-3">GIẢM <span th:text="${#numbers.formatDecimal(promo.phanTramGiam, 0, 0)}"></span>%</h2>
+                        <p class="text-muted small">Hạn cuối: <span th:text="${#temporals.format(promo.ngayKetThuc, 'dd/MM/yyyy')}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const timerEl = document.querySelector('.countdown-timer');
+        if(timerEl) {
+            const endDate = new Date(timerEl.getAttribute('data-endtime') + "T23:59:59").getTime();
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = endDate - now;
+                if(distance >= 0) {
+                    document.getElementById('days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
+                    document.getElementById('hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
+                    document.getElementById('minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+                    document.getElementById('seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

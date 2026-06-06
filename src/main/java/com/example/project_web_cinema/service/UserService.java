@@ -22,7 +22,8 @@ public class UserService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final TicketRepository ticketRepository;
 
-    public UserService(AccountRepository accountRepository, PasswordEncoder passwordEncoder, TicketRepository ticketRepository){
+    public UserService(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
+            TicketRepository ticketRepository) {
         this.accountRepository = accountRepository;
         this.ticketRepository = ticketRepository;
     }

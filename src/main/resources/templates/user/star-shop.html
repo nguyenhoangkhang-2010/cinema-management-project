@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Star Shop - Kho Phim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" th:href="@{/}">Cinema <span class="text-warning">All Star</span></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang Chủ</a></li>
+                    <li class="nav-item"><a class="nav-link fw-bold text-warning" th:href="@{/star-shop}">Star Shop</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/events}">Sự Kiện</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/khuyen-mai}">Khuyến Mãi</a></li>
+                    <li class="nav-item"><a class="nav-link" th:href="@{/phim-online}">Phim Online</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <h2 class="fw-bold mb-4 border-start border-warning border-4 ps-3">STAR SHOP - KHO PHIM ĐANG CHIẾU</h2>
+        
+        <div class="card border-0 shadow-sm rounded-4 mb-5">
+            <div class="card-body p-4">
+                <form th:action="@{/star-shop}" method="get" class="row g-3">
+                    <div class="col-md-4"><input type="text" name="search" th:value="${search}" class="form-control" placeholder="Tìm kiếm tên phim..."></div>
+                    <div class="col-md-2"><select class="form-select"><option>Thể loại</option></select></div>
+                    <div class="col-md-2"><select class="form-select"><option>Quốc gia</option></select></div>
+                    <div class="col-md-2"><select class="form-select"><option>Độ tuổi</option></select></div>
+                    <div class="col-md-2"><button class="btn btn-warning w-100 fw-bold" type="submit">Lọc Phim</button></div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+            <div class="col" th:each="movie : ${movies}">
+                <div class="card border-0 bg-transparent movie-card h-100 shadow-sm">
+                    <div class="position-relative">
+                        <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/350x500?text=No+Poster'" class="card-img-top rounded-top" alt="Poster" style="height: 350px; object-fit: cover;">
+                        <div class="position-absolute top-0 end-0 m-2"><span class="badge bg-warning text-dark fs-6"><i class="bi bi-star-fill me-1"></i><span th:text="${movie.diemDanhGia}"></span></span></div>
+                    </div>
+                    <div class="card-body bg-white rounded-bottom d-flex flex-column">
+                        <h6 class="card-title fw-bold text-dark text-truncate mb-2" th:text="${movie.tenPhim}">Tên phim</h6>
+                        <p class="text-muted small mb-2"><i class="bi bi-globe me-1"></i><span th:text="${movie.quocGia}"></span> | <i class="bi bi-clock me-1"></i><span th:text="${movie.thoiLuong}"></span>'</p>
+                        <div class="mt-auto d-flex gap-2">
+                            <a th:href="@{'/book/' + ${movie.maPhim}}" class="btn btn-danger fw-bold w-50">ĐẶT VÉ</a>
+                            <a href="#" class="btn btn-outline-secondary fw-bold w-50">CHI TIẾT</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Phân trang -->
+        <div class="d-flex justify-content-center" th:if="${totalPages > 1}">
+            <nav>
+                <ul class="pagination pagination-lg shadow-sm">
+                    <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                        <a class="page-link" th:href="@{/star-shop(page=${currentPage - 1})}">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i ? 'active bg-warning border-warning text-dark' : ''}">
+                        <a class="page-link text-dark" th:href="@{/star-shop(page=${i})}" th:text="${i}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                        <a class="page-link" th:href="@{/star-shop(page=${currentPage + 1})}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</body>
+</html>

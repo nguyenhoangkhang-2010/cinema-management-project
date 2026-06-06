@@ -13,14 +13,23 @@
             <li th:classappend="${activeMenu == 'dashboard' ? 'active' : ''}">
                 <a th:href="@{/admin/dashboard}"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a>
             </li>
+            <li th:classappend="${activeMenu == 'cinemas' ? 'active' : ''}">
+                <a th:href="@{/admin/cinemas}"><i class="bi bi-building me-2"></i> Quản Lý Rạp Phim</a>
+            </li>
             <li th:classappend="${activeMenu == 'movies' ? 'active' : ''}">
                 <a th:href="@{/admin/movies}"><i class="bi bi-film me-2"></i> Quản Lý Phim</a>
             </li>
             <li th:classappend="${activeMenu == 'showtimes' ? 'active' : ''}">
                 <a th:href="@{/admin/showtimes}"><i class="bi bi-calendar3 me-2"></i> Quản Lý Suất Chiếu</a>
             </li>
+            <li th:classappend="${activeMenu == 'rooms' ? 'active' : ''}">
+                <a th:href="@{/admin/rooms}"><i class="bi bi-door-open me-2"></i> Quản Lý Phòng Chiếu</a>
+            </li>
             <li th:classappend="${activeMenu == 'bookings' ? 'active' : ''}">
                 <a th:href="@{/admin/bookings}"><i class="bi bi-bookmark-check me-2"></i> Quản Lý Vé Đã Đặt</a>
+            </li>
+            <li th:classappend="${activeMenu == 'payments' ? 'active' : ''}">
+                <a th:href="@{/admin/payments}"><i class="bi bi-credit-card me-2"></i> Quản Lý Thanh Toán</a>
             </li>
             <li th:classappend="${activeMenu == 'users' ? 'active' : ''}">
                 <a th:href="@{/admin/users}"><i class="bi bi-people me-2"></i> Quản Lý Người Dùng</a>

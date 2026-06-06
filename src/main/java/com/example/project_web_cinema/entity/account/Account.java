@@ -1,6 +1,7 @@
 package com.example.project_web_cinema.entity.account;
 
 import com.example.project_web_cinema.entity.booktickets.BookTickets;
+import com.example.project_web_cinema.entity.rate.Rate;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -69,4 +70,7 @@ public class Account {
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<BookTickets> dsDatVe;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Rate> rates;
 }

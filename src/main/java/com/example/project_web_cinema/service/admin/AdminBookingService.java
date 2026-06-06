@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.example.project_web_cinema.entity.pay.Pay;
+import com.example.project_web_cinema.entity.tickets.Tickets;
+import com.example.project_web_cinema.entity.moviescreening.MovieScreening;
 
 import java.util.stream.Collectors;
 
@@ -82,8 +84,9 @@ public class AdminBookingService {
                 : null;
 
         // Lấy thông tin suất chiếu từ vé đầu tiên thuộc đơn đặt vé này
-        var firstTicket = (entity.getDsVe() != null && !entity.getDsVe().isEmpty()) ? entity.getDsVe().get(0) : null;
-        var suatChieu = (firstTicket != null) ? firstTicket.getMovieScreening() : null;
+        Tickets firstTicket = (entity.getDsVe() != null && !entity.getDsVe().isEmpty()) ? entity.getDsVe().get(0)
+                : null;
+        MovieScreening suatChieu = (firstTicket != null) ? firstTicket.getMovieScreening() : null;
 
         return BookingResponseDTO.builder()
                 .maDatVe(entity.getMaDatVe())
