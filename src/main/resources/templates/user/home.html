@@ -75,7 +75,7 @@
         <div class="carousel-inner">
             <!-- Hiển thị banner mặc định nếu hệ thống chưa có phim sắp chiếu -->
             <div class="carousel-item active" th:if="${homeData.heroSlider == null or #lists.isEmpty(homeData.heroSlider)}">
-                <img src="https://i.pinimg.com/1200x/ed/22/b8/ed22b86af2fe8489e037f5bc2f9ad106.jpg" 
+                <img src="https://i.pinimg.com/1200x/cb/a2/8f/cba28fa0c8e5cc8823090c602378ec0f.jpg" 
                      class="d-block w-100" style="height: 65vh; object-fit: cover; filter: brightness(0.6);" alt="Default Banner">
                 <div class="carousel-caption d-none d-md-block text-start" style="bottom: 20%;">
                     <h1 class="display-4 fw-bold text-white text-uppercase">Hệ Thống Rạp Phim Hiện Đại</h1>
@@ -153,8 +153,11 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 text-center py-4 text-muted" th:if="${homeData.hotMovies == null or #lists.isEmpty(homeData.hotMovies)}">
-                <p class="fw-medium mb-0">Hệ thống hiện tại chưa có phim nổi bật!</p>
+            <div class="container py-5" th:if="${homeData.hotMovies == null or #lists.isEmpty(homeData.hotMovies)}">
+                <div class="d-flex justify-content-center align-items-center flex-column py-5">
+                    <i class="bi bi-film fs-1 text-muted mb-3"></i>
+                    <p class="fw-bold text-muted fs-5">Hệ thống hiện tại chưa có phim nổi bật!</p>
+                </div>
             </div>
         </div>
     </div>
@@ -177,8 +180,13 @@
                 </div>
             </div>
 
-            <div class="col-12 text-center py-4 text-muted" th:if="${homeData.upcomingMovies == null or #lists.isEmpty(homeData.upcomingMovies)}">
-                <p class="fw-medium mb-0">Hệ thống hiện tại chưa có lịch chiếu phim nào mới!</p>
+            <div class="container py-5" th:if="${homeData.upcomingMovies == null or #lists.isEmpty(homeData.upcomingMovies)}">
+                <div class="d-flex justify-content-center align-items-center flex-column py-5">
+                    <i class="bi bi-calendar-event fs-1 text-muted mb-3"></i>
+                    <p class="fw-bold text-muted fs-5 mb-0" style="white-space: nowrap;">
+                        Hệ thống hiện tại chưa có lịch chiếu phim nào mới!
+                    </p>
+                </div>
             </div>
         </div>
     </div>
