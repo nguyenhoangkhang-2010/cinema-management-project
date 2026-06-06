@@ -20,20 +20,32 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/home", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/register", "/login", "/css/**", "/js/**", "/images/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("Admin")
-                        .anyRequest().authenticated()
-                )
+                        .anyRequest().authenticated())
                 .formLogin(login -> login
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/home", true)
-                        .permitAll()
-                )
-                .logout(logout -> logout.logoutSuccessUrl("/home").permitAll());
+                        .successHandler((request, response, authentication) -> {
+                            var authorities = authentication.getAuthorities();
 
+                            boolean isAdmin = authorities.stream()
+                                    .anyMatch(a -> a.getAuthority().equals("ROLE_Admin"));
+
+                            if (isAdmin) {
+                                response.sendRedirect("/admin/home");
+                            } else {
+                                response.sendRedirect("/");
+                            }
+                        })
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .permitAll());
         return http.build();
     }
 }

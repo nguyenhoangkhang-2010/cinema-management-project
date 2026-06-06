@@ -1,3 +1,7 @@
+debug=false
+logging.level.org.springframework=INFO
+logging.level.org.hibernate.SQL=DEBUG
+
 spring.application.name=project-web-cinema
 spring.datasource.url=your-url
 spring.datasource.username=your-username

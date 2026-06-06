@@ -1,97 +1,83 @@
-/* Toàn bộ trang Admin */
+/* 1. Reset & Layout */
 html, body {
     height: 100%;
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f4f6f9;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f4f6f9; /* Màu nền xám nhẹ chuyên nghiệp */
 }
 
-/* Khung chia 2 cột: Sidebar bên trái, Content bên phải */
-.admin-container {
-    display: flex;
-    min-height: 100vh;
-    width: 100%;
-}
+.admin-container { display: flex; min-height: 100vh; width: 100%; }
 
-/* Sidebar màu tối kiểu chuyên nghiệp */
+/* 2. Sidebar - Tông đen huyền bí Cinema All Star */
 .admin-sidebar {
     width: 260px;
-    background-color: #1e2229;
+    background-color: #212529; /* Đen chuẩn Bootstrap */
     color: #fff;
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .sidebar-brand {
-    padding: 20px;
-    font-size: 20px;
+    padding: 25px 20px;
+    font-size: 22px;
     text-align: center;
-    border-bottom: 1px solid #2d323e;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 20px 0;
+    background-color: #1a1e21;
 }
 
 .sidebar-menu li a {
     display: flex;
     align-items: center;
-    padding: 12px 20px;
-    color: #bc9;
+    padding: 15px 20px;
     color: #adb5bd;
     text-decoration: none;
-    transition: all 0.3s;
+    transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .sidebar-menu li a:hover,
 .sidebar-menu li.active a {
-    background-color: #2b303c;
+    background-color: rgba(255, 193, 7, 0.1);
     color: #ffc107;
     border-left: 4px solid #ffc107;
 }
 
-/* Vùng nội dung chính bên phải */
-.admin-content {
-    flex-grow: 1;
-    overflow-y: auto;
+.sidebar-menu li a .badge {
+    margin-left: auto;
 }
 
-/* Thẻ thống kê (Dashboard Cards) */
+/* 3. Stat Cards - Tông màu nhấn mạnh */
 .stat-card {
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
 }
 
-/* Nút hành động nhanh đè lên poster phim */
+/* 4. Movie & Promo Actions - Nút bấm nổi bật */
 .movie-admin-actions {
     position: absolute;
     top: 10px;
     right: 10px;
     z-index: 5;
     display: flex;
-    gap: 5px;
+    gap: 8px;
 }
 
 .movie-admin-actions .btn {
-    padding: 4px 8px;
-    font-size: 12px;
-    border-radius: 6px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Định dạng nhãn trạng thái */
-.badge-pill {
-    padding: 5px 12px;
-    border-radius: 50px;
-    font-size: 11px;
-    font-weight: 600;
-}
+/* 5. Nhãn trạng thái - Đồng bộ với bảng màu của User */
+.badge { font-weight: 500; font-size: 0.75rem; }
+.bg-success { background-color: #198754 !important; }
+.bg-warning { background-color: #ffc107 !important; color: #000; }
+.bg-secondary { background-color: #6c757d !important; }

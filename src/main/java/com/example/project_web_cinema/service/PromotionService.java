@@ -24,6 +24,9 @@ public class PromotionService {
                     .tenKhuyenMai(p.getTenKhuyenMai())
                     .ngayBatDau(p.getNgayBatDau())
                     .ngayKetThuc(p.getNgayKetThuc())
+                    .moTa(p.getMoTa())
+                    .phanTramGiam(p.getPhanTramGiam())
+                    .poster(p.getPoster())
                     .build()
             )
         .toList();
@@ -37,6 +40,9 @@ public class PromotionService {
                     .tenKhuyenMai(p.getTenKhuyenMai())
                     .ngayBatDau(p.getNgayBatDau())
                     .ngayKetThuc(p.getNgayKetThuc())
+                    .moTa(p.getMoTa())
+                    .poster(p.getPoster())
+                    .phanTramGiam(p.getPhanTramGiam())
                     .build()
             )
         .toList();

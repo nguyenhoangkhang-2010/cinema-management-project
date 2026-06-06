@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface PromotionRepository extends JpaRepository<Promotion, Integer> {
     List<Promotion> findByTrangThaiKhuyenMai(TrangThaiKhuyenMai trangThaiKhuyenMai);
+    List<Promotion> findAllByOrderByMaKhuyenMaiDesc();
 }

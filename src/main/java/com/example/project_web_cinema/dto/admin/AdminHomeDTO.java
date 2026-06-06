@@ -16,6 +16,7 @@ public class AdminHomeDTO {
     private long totalUsers;
     private long totalTickets;
     private double totalRevenue;
+    private long totalPromotions;
 
     private List<MovieDTO> phimDangChieu;
     private List<PromotionDTO> khuyenMai;

@@ -2,6 +2,7 @@ package com.example.project_web_cinema.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -14,4 +15,9 @@ public class PromotionDTO {
     private String tenKhuyenMai;
     private LocalDate ngayBatDau;
     private LocalDate ngayKetThuc;
+
+    private String moTa;
+    private String poster;
+
+    private BigDecimal phanTramGiam;
 }

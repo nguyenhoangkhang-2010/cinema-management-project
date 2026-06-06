@@ -46,6 +46,6 @@ public class BookTickets {
     @OneToMany(mappedBy = "bookTickets", cascade = CascadeType.ALL)
     private List<Tickets> dsVe;
 
-    @OneToOne(mappedBy = "bookTickets", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bookTickets", cascade = CascadeType.ALL)
     private List<Pay> dsThanhToan;
 }

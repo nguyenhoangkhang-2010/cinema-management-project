@@ -4,6 +4,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +22,6 @@ public class UserDTO {
     private String vaiTro;
     private String loaiTaiKhoan;
     private String trangThai;
+    @Builder.Default
+    private List<?> danhSachVe = new ArrayList<>();
 }

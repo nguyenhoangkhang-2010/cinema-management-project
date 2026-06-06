@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
+
 @Controller
 public class ProfileController {
     private final UserService userService;
@@ -26,24 +28,31 @@ public class ProfileController {
         }
 
         String currentHoTen = authentication.getName();
-
         String currentEmail = accountRepository.findAll().stream()
                 .filter(acc -> acc.getHoTen().equals(currentHoTen))
                 .map(acc -> acc.getEmail())
                 .findFirst()
-                .orElse(null);
-
-        if (currentEmail == null) {
-            currentEmail = currentHoTen;
-        }
-
+                .orElse(currentHoTen);
         try {
             UserDTO userProfile = userService.getProfileByEmail(currentEmail);
+
+            if (userProfile.getDanhSachVe() == null) {
+                userProfile.setDanhSachVe(new ArrayList<>());
+            }
+
             model.addAttribute("user", userProfile);
         } catch (Exception e) {
-            model.addAttribute("user", new UserDTO());
-        }
+            UserDTO fallbackUser = UserDTO.builder()
+                    .hoTen(currentHoTen)
+                    .email("chua_co_email@cinema.com")
+                    .vaiTro("User")
+                    .loaiTaiKhoan("Thuong")
+                    .trangThai("HoatDong")
+                    .danhSachVe(new ArrayList<>())
+                    .build();
 
-        return "profile";
+            model.addAttribute("user", fallbackUser);
+        }
+        return "user/profile";
     }
 }

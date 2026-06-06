@@ -1,0 +1,4 @@
+/* Khóa tràn thanh cuộn ngang */
+body {
+    overflow-x: hidden;
+}

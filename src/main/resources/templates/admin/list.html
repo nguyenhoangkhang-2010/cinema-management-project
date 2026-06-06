@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Danh Sách Phim - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/admin_home.css}">
+</head>
+<body>
+    <div class="admin-container">
+        
+        <!-- CỘT BÊN TRÁI: SIDEBAR MENU -->
+        <div th:replace="~{admin/sidebar :: sidebar('movies')}"></div>
+
+        <!-- CỘT BÊN PHẢI: NỘI DUNG CHÍNH -->
+        <div class="w-100 flex-grow-1 d-flex flex-column bg-light">
+            <!-- Header -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
+                <div class="d-flex align-items-center">
+                    <h4 class="m-0 fw-bold text-primary"><i class="bi bi-camera-reels me-2"></i>Quản Lý Danh Sách Phim</h4>
+                </div>
+                <div class="ms-auto d-flex align-items-center">
+                    <span class="me-3 fw-medium text-secondary">Xin chào, <b class="text-dark">Quản Trị Viên</b></span>
+                </div>
+            </nav>
+
+            <!-- Bảng danh sách Phim -->
+            <div class="container-fluid p-4">
+                <div class="d-flex justify-content-end align-items-center mb-4">
+                    <a th:href="@{/admin/movies/add}" class="btn btn-primary fw-bold shadow-sm">
+                        <i class="bi bi-plus-circle me-1"></i> Thêm Phim Mới
+                    </a>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-0">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="ps-4 py-3 rounded-top-left">ID</th>
+                                    <th>Tên Phim</th>
+                                    <th>Phân Loại</th>
+                                    <th>Thời Lượng</th>
+                                    <th>Ngày Khởi Chiếu</th>
+                                    <th>Trạng Thái</th>
+                                    <th class="text-end pe-4 rounded-top-right">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Render danh sách phim -->
+                                <tr th:each="movie : ${movies}">
+                                    <td class="ps-4 fw-bold text-secondary" th:text="${movie.maPhim}">1</td>
+                                    <td class="fw-semibold text-dark" th:text="${movie.tenPhim}">Avenger: Hồi Kết</td>
+                                    <td><span class="badge bg-info text-dark" th:text="${movie.loaiPhim != null ? movie.loaiPhim : 'Chiếu Rạp'}">Chiếu Rạp</span></td>
+                                    <td th:text="${movie.thoiLuong != null ? movie.thoiLuong + ' phút' : 'N/A'}">180 phút</td>
+                                    <td>
+                                        <!-- Tránh lỗi 500 khi phim (vd: phim online) không có ngày khởi chiếu -->
+                                        <span th:if="${movie.ngayKhoiChieu != null}" th:text="${#temporals.format(movie.ngayKhoiChieu, 'dd/MM/yyyy')}">20/05/2026</span>
+                                        <span th:if="${movie.ngayKhoiChieu == null}" class="text-muted">Chưa cập nhật</span>
+                                    </td>
+                                    <td>
+                                        <!-- Hiển thị màu sắc theo từng trạng thái -->
+                                        <span class="badge" 
+                                              th:classappend="${movie.trangThai == 'DangChieu' ? 'bg-success' : 
+                                                             (movie.trangThai == 'SapChieu' ? 'bg-warning text-dark' : 
+                                                             (movie.trangThai == 'NgungChieu' ? 'bg-danger' : 
+                                                             (movie.trangThai == 'Online' ? 'bg-primary' : 'bg-secondary')))}"
+                                              th:text="${movie.trangThai}">Đang Chiếu</span>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <a th:href="@{/admin/movies/edit/{id}(id=${movie.maPhim})}" class="btn btn-sm btn-outline-primary me-2"><i class="bi bi-pencil-square"></i> Sửa</a>
+                                        <a th:href="@{/admin/movies/delete/{id}(id=${movie.maPhim})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa phim này?');"><i class="bi bi-trash"></i> Xóa</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
