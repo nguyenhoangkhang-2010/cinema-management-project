@@ -1,6 +1,7 @@
 package com.example.project_web_cinema.controller.admin;
 
 import com.example.project_web_cinema.entity.movie.Movie;
+import com.example.project_web_cinema.entity.movie.TrangThaiPhim;
 import com.example.project_web_cinema.repository.MovieRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,25 +19,59 @@ public class AdminMovieController {
 
     // 1. Hiển thị danh sách phim
     @GetMapping
-    public String listMovies(Model model) {
-        // Lấy danh sách phim thật từ database
-        model.addAttribute("movies", movieRepository.findAll());
+    public String listMovies(Model model,
+                             @RequestParam(value = "search", required = false) String search,
+                             @RequestParam(value = "page", defaultValue = "0") int page) {
+        int pageSize = 5; // Số lượng phim hiển thị trên 1 trang
+        org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(page, pageSize);
+        org.springframework.data.domain.Page<Movie> moviePage;
+
+        // Xử lý tìm kiếm nếu có từ khóa nhập vào
+        if (search != null && !search.trim().isEmpty()) {
+            moviePage = movieRepository.findByTenPhimContainingIgnoreCaseOrQuocGiaContainingIgnoreCase(search, search, pageable);
+            model.addAttribute("searchKeyword", search);
+        } else {
+            moviePage = movieRepository.findAll(pageable);
+            model.addAttribute("searchKeyword", "");
+        }
+
+        model.addAttribute("movies", moviePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", moviePage.getTotalPages());
+
         return "admin/list";
     }
 
     // 2. Hiển thị giao diện Form thêm phim mới
     @GetMapping("/add")
-    public String showAddForm() {
-        return "admin/movie/add";
+    public String showAddForm(Model model) {
+        model.addAttribute("movie", new Movie());
+        return "admin/add_movie";
     }
 
     // 3. Xử lý lưu thông tin phim mới (Submit Form)
     @PostMapping("/add")
-    public String addMovie(@ModelAttribute Movie movie) {
-        movieRepository.save(movie); // Lưu trực tiếp vào MySQL
-        return "redirect:/admin/movies";
-    }
+    public String addMovie(@ModelAttribute("movie") Movie movie) {
+        try {
+            if (movie.getNgayKhoiChieu() != null && movie.getNgayKetThucChieu() == null) {
+                movie.setNgayKetThucChieu(movie.getNgayKhoiChieu().plusMonths(2));
+            }
+            if (movie.getDoTuoi() == null) {
+                movie.setDoTuoi(0);
+            }
+            if (movie.getCapDoYeuCau() == null) {
+                movie.setCapDoYeuCau(1);
+            }
+            if (movie.getTrangThai() == null) {
+                movie.setTrangThai(TrangThaiPhim.SapChieu);
+            }
 
+            movieRepository.save(movie);
+            return "redirect:/admin/movies";
+        } catch (Exception e) {
+            return "redirect:/admin/movies?error=SaveFailed";
+        }
+    }
     // 4. Hiển thị giao diện Form sửa phim
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model) {
@@ -59,4 +94,14 @@ public class AdminMovieController {
         movieRepository.deleteById(id);
         return "redirect:/admin/movies";
     }
+
+    // 7. Xử lý xóa hàng loạt phim được tích chọn
+    @PostMapping("/delete-multiple")
+    public String deleteMultipleMovies(@RequestParam(value = "movieIds", required = false) java.util.List<Integer> ids) {
+        if (ids != null && !ids.isEmpty()) {
+            movieRepository.deleteAllById(ids);
+        }
+        return "redirect:/admin/movies";
+    }
+
 }

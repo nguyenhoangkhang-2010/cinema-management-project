@@ -2,6 +2,8 @@ package com.example.project_web_cinema.repository;
 
 import com.example.project_web_cinema.entity.movie.Movie;
 import com.example.project_web_cinema.entity.movie.TrangThaiPhim;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,7 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
+    Page<Movie> findByTenPhimContainingIgnoreCaseOrQuocGiaContainingIgnoreCase(String tenPhim, String quocGia, Pageable pageable);
     List<Movie> findByTrangThai(TrangThaiPhim trangThai);
 
     @Query(value = "SELECT COUNT(ma_phim) FROM phim GROUP BY trang_thai ORDER BY trang_thai", nativeQuery = true)
