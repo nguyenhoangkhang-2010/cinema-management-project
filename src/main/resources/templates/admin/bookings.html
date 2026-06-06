@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Vé Đã Đặt - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/admin_home.css}">
+</head>
+<body>
+<div class="admin-container">
+    <!-- SIDEBAR GỌI TỪ FRAGMENT -->
+    <div th:replace="~{admin/sidebar :: sidebar('bookings')}"></div>
+
+    <div class="w-100 flex-grow-1 d-flex flex-column bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
+            <div class="d-flex align-items-center">
+                <h4 class="m-0 fw-bold text-primary"><i class="bi bi-bookmark-check me-2"></i>Quản Lý Vé Đã Đặt</h4>
+            </div>
+        </nav>
+
+        <div class="container-fluid p-4">
+            <!-- BỘ LỌC VÀ TÌM KIẾM -->
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-body p-4">
+                    <form th:action="@{/admin/bookings}" method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold small text-muted">Tìm kiếm</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" th:value="${search}" class="form-control" placeholder="Mã vé, Tên KH, Phim, Email...">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold small text-muted">Trạng Thái Đơn</label>
+                            <select name="statusOrder" class="form-select">
+                                <option value="" th:selected="${statusOrder == null or statusOrder == ''}">Tất cả</option>
+                                <option value="ChoThanhToan" th:selected="${statusOrder == 'ChoThanhToan'}">Chờ thanh toán</option>
+                                <option value="DaThanhToan" th:selected="${statusOrder == 'DaThanhToan'}">Đã thanh toán</option>
+                                <option value="DaHuy" th:selected="${statusOrder == 'DaHuy'}">Đã hủy</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label fw-bold small text-muted">Trạng Thái Thanh Toán</label>
+                            <select name="statusPayment" class="form-select">
+                                <option value="" th:selected="${statusPayment == null or statusPayment == ''}">Tất cả</option>
+                                <option value="ThanhCong" th:selected="${statusPayment == 'ThanhCong'}">Thành công</option>
+                                <option value="ThatBai" th:selected="${statusPayment == 'ThatBai'}">Thất bại</option>
+                                <option value="DangXuLy" th:selected="${statusPayment == 'DangXuLy'}">Đang xử lý</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-bold small text-muted">Sắp Xếp</label>
+                            <select name="sort" class="form-select">
+                                <option value="newest" th:selected="${sort == 'newest' or sort == null}">Ngày đặt mới nhất</option>
+                                <option value="oldest" th:selected="${sort == 'oldest'}">Ngày đặt cũ nhất</option>
+                                <option value="price_asc" th:selected="${sort == 'price_asc'}">Tổng tiền tăng dần</option>
+                                <option value="price_desc" th:selected="${sort == 'price_desc'}">Tổng tiền giảm dần</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="bi bi-funnel-fill me-1"></i> Lọc Dữ Liệu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- BẢNG DANH SÁCH VÉ -->
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                            <tr>
+                                <th class="ps-4 py-3 text-start">Mã Đặt Vé</th>
+                                <th class="py-3">Khách Hàng</th>
+                                <th class="py-3">Phim & Suất Chiếu</th>
+                                <th class="py-3">Ghế Đặt</th>
+                                <th class="py-3 text-center">Tổng Tiền</th>
+                                <th class="py-3 text-center">Trạng Thái Đơn</th>
+                                <th class="py-3 text-center">Thanh Toán</th>
+                                <th class="py-3 pe-4 text-end">Thao Tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${#lists.isEmpty(bookings)}">
+                                <td colspan="8" class="text-center py-4 text-muted fw-medium">Không tìm thấy vé nào phù hợp.</td>
+                            </tr>
+                            <tr th:each="booking : ${bookings}">
+                                <td class="ps-4 fw-bold text-primary">#[[${booking.maDatVe}]]</td>
+                                <td>
+                                    <div class="fw-bold text-dark">[[${booking.hoTenKhachHang}]]</div>
+                                    <div class="small text-muted">[[${booking.email}]]</div>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark">[[${booking.tenPhim}]]</div>
+                                    <div class="small text-muted"><i class="bi bi-clock me-1"></i>[[${booking.gioBatDau}]] - [[${booking.ngayChieu}]] | [[${booking.tenPhong}]]</div>
+                                </td>
+                                <td class="fw-semibold text-danger">[[${booking.danhSachGhe}]]</td>
+                                <td class="text-center fw-bold text-success" th:text="${#numbers.formatDecimal(booking.tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                <td class="text-center">
+                                    <span class="badge bg-warning text-dark" th:if="${booking.trangThaiDatVe == 'ChoThanhToan'}">Chờ thanh toán</span>
+                                    <span class="badge bg-success" th:if="${booking.trangThaiDatVe == 'DaThanhToan'}">Đã thanh toán</span>
+                                    <span class="badge bg-danger" th:if="${booking.trangThaiDatVe == 'DaHuy'}">Đã hủy</span>
+                                </td>
+                                <td class="text-center">
+                                    <span class="badge bg-success" th:if="${booking.trangThaiThanhToan == 'ThanhCong'}">Thành công</span>
+                                    <span class="badge bg-danger" th:if="${booking.trangThaiThanhToan == 'ThatBai'}">Thất bại</span>
+                                    <span class="badge bg-warning text-dark" th:if="${booking.trangThaiThanhToan == 'DangXuLy'}">Đang xử lý</span>
+                                    <span class="badge bg-secondary" th:if="${booking.trangThaiThanhToan == null or booking.trangThaiThanhToan == 'N/A'}">N/A</span>
+                                </td>
+                                <td class="pe-4 text-end">
+                                    <button class="btn btn-sm btn-outline-info fw-bold btn-detail" th:data-id="${booking.maDatVe}" onclick="openDetailModal(this.getAttribute('data-id'))">
+                                        <i class="bi bi-eye-fill"></i> Chi tiết
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHÂN TRANG (Pagination) -->
+            <div class="d-flex justify-content-center mt-4" th:if="${totalPages > 1}">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination pagination-sm shadow-sm">
+                        <li class="page-item" th:classappend="${currentPage == 1 ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/bookings(page=${currentPage - 1}, search=${search}, statusOrder=${statusOrder}, statusPayment=${statusPayment}, sort=${sort})}">&laquo;</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/admin/bookings(page=${i}, search=${search}, statusOrder=${statusOrder}, statusPayment=${statusPayment}, sort=${sort})}" th:text="${i}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${currentPage == totalPages ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/bookings(page=${currentPage + 1}, search=${search}, statusOrder=${statusOrder}, statusPayment=${statusPayment}, sort=${sort})}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CHI TIẾT VÉ (Load dữ liệu JSON qua Fetch API REST Controller) -->
+<div class="modal fade" id="bookingDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow">
+            <div class="modal-header bg-primary text-white rounded-top-4">
+                <h5 class="modal-title fw-bold"><i class="bi bi-receipt me-2"></i>Chi Tiết Đơn Đặt Vé <span id="modalMaVe"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row g-4">
+                    <div class="col-md-4 text-center">
+                        <img id="modalPoster" src="" class="img-fluid rounded shadow-sm mb-3" style="max-height: 250px; object-fit: cover;" alt="Poster">
+                        <h6 class="fw-bold text-dark mb-1" id="modalTenPhim"></h6>
+                        <p class="text-muted small mb-0"><i class="bi bi-clock me-1"></i><span id="modalThoiGian"></span></p>
+                        <p class="text-muted small fw-bold"><i class="bi bi-shop-window me-1"></i><span id="modalPhong"></span></p>
+                    </div>
+                    <div class="col-md-8">
+                        <h6 class="border-bottom pb-2 fw-bold text-primary">Thông Tin Khách Hàng</h6>
+                        <div class="row mb-3 small">
+                            <div class="col-4 text-muted">Họ Tên:</div><div class="col-8 fw-semibold" id="modalHoTen"></div>
+                            <div class="col-4 text-muted">Email:</div><div class="col-8 fw-semibold" id="modalEmail"></div>
+                            <div class="col-4 text-muted">Số ĐT:</div><div class="col-8 fw-semibold" id="modalSDT"></div>
+                        </div>
+
+                        <h6 class="border-bottom pb-2 fw-bold text-primary">Thông Tin Vé & Thanh Toán</h6>
+                        <div class="row mb-3 small">
+                            <div class="col-4 text-muted">Ghế Đã Đặt:</div><div class="col-8 fw-bold text-danger" id="modalGhe"></div>
+                            <div class="col-4 text-muted">Khuyến Mãi:</div><div class="col-8 fw-semibold text-success" id="modalKhuyenMai"></div>
+                            <div class="col-4 text-muted">Phương Thức:</div><div class="col-8 fw-semibold" id="modalPhuongThuc"></div>
+                            <div class="col-4 text-muted">Tổng Tiền:</div><div class="col-8 fw-bold fs-6 text-success" id="modalTongTien"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function openDetailModal(id) {
+        fetch(`/admin/bookings/${id}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('modalMaVe').innerText = '#' + data.maDatVe;
+                document.getElementById('modalPoster').src = data.poster || 'https://placehold.co/300x450?text=No+Poster';
+                document.getElementById('modalTenPhim').innerText = data.tenPhim;
+                document.getElementById('modalThoiGian').innerText = data.gioBatDau + ' - ' + data.ngayChieu;
+                document.getElementById('modalPhong').innerText = data.tenPhong;
+                document.getElementById('modalHoTen').innerText = data.hoTenKhachHang;
+                document.getElementById('modalEmail').innerText = data.email;
+                document.getElementById('modalSDT').innerText = data.soDienThoai || 'N/A';
+                document.getElementById('modalGhe').innerText = data.danhSachGhe;
+                document.getElementById('modalKhuyenMai').innerText = data.tenKhuyenMai || 'Không áp dụng';
+                document.getElementById('modalPhuongThuc').innerText = data.phuongThucThanhToan || 'N/A';
+                document.getElementById('modalTongTien').innerText = new Intl.NumberFormat('vi-VN').format(data.tongTien) + ' đ';
+                new bootstrap.Modal(document.getElementById('bookingDetailModal')).show();
+            })
+            .catch(error => {
+                console.error('Lỗi khi tải chi tiết vé:', error);
+                alert("Không thể tải thông tin vé. Vui lòng thử lại!");
+            });
+    }
+</script>
+</body>
+</html>
