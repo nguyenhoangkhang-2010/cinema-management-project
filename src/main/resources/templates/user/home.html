@@ -73,12 +73,26 @@
                     th:data-bs-slide-to="${iterStat.index}" th:classappend="${iterStat.index == 0} ? 'active'"></button>
         </div>
         <div class="carousel-inner">
+            <!-- Hiển thị banner mặc định nếu hệ thống chưa có phim sắp chiếu -->
+            <div class="carousel-item active" th:if="${homeData.heroSlider == null or #lists.isEmpty(homeData.heroSlider)}">
+                <img src="https://i.pinimg.com/1200x/ed/22/b8/ed22b86af2fe8489e037f5bc2f9ad106.jpg" 
+                     class="d-block w-100" style="height: 65vh; object-fit: cover; filter: brightness(0.6);" alt="Default Banner">
+                <div class="carousel-caption d-none d-md-block text-start" style="bottom: 20%;">
+                    <h1 class="display-4 fw-bold text-white text-uppercase">Hệ Thống Rạp Phim Hiện Đại</h1>
+                    <p class="fs-5 text-light mb-4">Trải nghiệm điện ảnh đỉnh cao cùng Cinema All Star</p>
+                    <a th:href="@{/store}" class="btn btn-warning btn-lg fw-bold px-4 rounded-pill shadow">ĐẶT VÉ NGAY</a>
+                </div>
+            </div>
+
             <div class="carousel-item" th:each="movie, iterStat : ${homeData.heroSlider}" th:classappend="${iterStat.index == 0} ? 'active'">
                 <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/1200x500?text=Banner'" 
                      class="d-block w-100" style="height: 65vh; object-fit: cover; filter: brightness(0.6);" alt="Banner">
                 <div class="carousel-caption d-none d-md-block text-start" style="bottom: 20%;">
                     <h1 class="display-4 fw-bold text-white text-uppercase" th:text="${movie.tenPhim}">Tên Phim</h1>
-                    <p class="fs-5 text-light mb-4">Khởi chiếu: <span th:text="${movie.ngayKhoiChieu != null ? #temporals.format(movie.ngayKhoiChieu, 'dd/MM/yyyy') : 'Đang cập nhật'}"></span></p>
+                    <p class="fs-5 text-light mb-4">
+                        <span th:if="${movie.ngayKhoiChieu != null}">Khởi chiếu: <span th:text="${#temporals.format(movie.ngayKhoiChieu, 'dd/MM/yyyy')}"></span></span>
+                        <span th:if="${movie.ngayKhoiChieu == null}" class="text-warning fw-bold"><i class="bi bi-fire me-1"></i> ĐANG CHIẾU TẠI RẠP</span>
+                    </p>
                     <a th:if="${movie.trailer != null}" th:href="${movie.trailer}" target="_blank" class="btn btn-danger btn-lg fw-bold px-4 rounded-pill me-2"><i class="bi bi-play-btn me-2"></i>TRAILER</a>
                     <a th:href="@{'/movie/' + ${movie.maPhim}}" class="btn btn-warning btn-lg fw-bold px-4 rounded-pill shadow">XEM CHI TIẾT</a>
                 </div>
@@ -162,10 +176,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-            <div class="col-12 text-center py-4 text-muted" th:if="${phimDangChieu == null or #lists.isEmpty(phimDangChieu)}">
+            <div class="col-12 text-center py-4 text-muted" th:if="${homeData.upcomingMovies == null or #lists.isEmpty(homeData.upcomingMovies)}">
                 <p class="fw-medium mb-0">Hệ thống hiện tại chưa có lịch chiếu phim nào mới!</p>
             </div>
         </div>
