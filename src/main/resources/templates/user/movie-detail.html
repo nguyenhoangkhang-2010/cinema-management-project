@@ -4,12 +4,62 @@
     <meta charset="UTF-8">
     <title>Chi Tiết Phim</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 <body class="bg-light">
-    <div class="container py-5 text-center">
-        <h2 class="fw-bold text-dark">TRANG CHI TIẾT PHIM</h2>
-        <p class="text-muted">Tính năng lấy chi tiết phim và bình luận đang được hoàn thiện ở Phase tiếp theo!</p>
-        <a th:href="@{/store}" class="btn btn-warning fw-bold mt-3">Quay Lại Cửa Hàng</a>
+    <div th:replace="~{user/home :: nav}"></div> <!-- Tái sử dụng Navbar nếu được cấu hình dạng Fragment -->
+    
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-md-4 text-center">
+                <img th:src="${movie.poster}" class="img-fluid rounded-4 shadow-lg w-100 mb-3" style="max-height: 550px; object-fit: cover;">
+                <a th:if="${movie.trailer != null}" th:href="${movie.trailer}" target="_blank" class="btn btn-outline-danger fw-bold w-100 rounded-pill"><i class="bi bi-youtube me-2"></i>Xem Trailer</a>
+            </div>
+            
+            <div class="col-md-8">
+                <h1 class="fw-bold text-dark mb-2" th:text="${movie.tenPhim}">Tên Phim</h1>
+                <div class="d-flex align-items-center gap-3 mb-4 text-muted">
+                    <span><i class="bi bi-clock me-1"></i> <span th:text="${movie.thoiLuong}"></span> phút</span>
+                    <span><i class="bi bi-globe me-1"></i> <span th:text="${movie.quocGia}"></span></span>
+                    <span class="badge bg-secondary rounded-pill px-3 py-2 text-white">T1<span th:text="${movie.doTuoi}"></span></span>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-6"><p class="mb-1"><span class="fw-bold text-dark">Đạo diễn:</span> <span th:text="${movie.daoDien}"></span></p></div>
+                    <div class="col-6"><p class="mb-1"><span class="fw-bold text-dark">Khởi chiếu:</span> <span th:text="${#temporals.format(movie.ngayKhoiChieu, 'dd/MM/yyyy')}"></span></p></div>
+                </div>
+                
+                <h5 class="fw-bold text-dark border-bottom pb-2">Nội Dung Phim</h5>
+                <p class="text-secondary lh-lg mb-5" th:text="${movie.moTa}"></p>
+                
+                <!-- SECTION NGHIỆP VỤ MUA VÉ/XEM ONLINE -->
+                <div class="p-4 bg-white rounded-4 shadow-sm border border-light">
+                    <h5 class="fw-bold mb-3 text-danger"><i class="bi bi-ticket-perforated-fill me-2"></i>Kế Hoạch Mua Vé</h5>
+                    
+                    <!-- ĐANG CHIẾU: Hiển thị suất chiếu gom theo ngày -->
+                    <div th:if="${movie.trangThai.name() == 'DangChieu' or (movie.trangThai.name() == 'SapChieu' and showtimes != null and !showtimes.isEmpty())}">
+                        <div th:if="${movie.trangThai.name() == 'SapChieu'}" class="alert alert-info py-2"><i class="bi bi-info-circle-fill me-2"></i>Đặt vé suất chiếu sớm đặc biệt!</div>
+                        <ul class="nav nav-pills mb-3" role="tablist">
+                            <li class="nav-item" th:each="entry, stat : ${showtimes}">
+                                <button class="nav-link fw-bold border" th:classappend="${stat.index == 0 ? 'active btn-danger text-white' : 'text-dark'}" data-bs-toggle="pill" th:data-bs-target="'#date-' + ${stat.index}" th:text="${#temporals.format(entry.key, 'dd/MM')}"></button>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div th:each="entry, stat : ${showtimes}" class="tab-pane fade" th:classappend="${stat.index == 0 ? 'show active' : ''}" th:id="'date-' + ${stat.index}">
+                                <div class="d-flex flex-wrap gap-2 mt-3">
+                                    <a th:each="st : ${entry.value}" th:href="@{'/book/showtime/' + ${st.maSuatChieu}}" class="btn btn-outline-dark fw-medium px-4" th:text="${st.gioBatDau}">10:00</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div th:if="${movie.trangThai.name() == 'SapChieu' and (showtimes == null or showtimes.isEmpty())}" class="text-muted fst-italic"><i class="bi bi-calendar-x me-2"></i>Phim chưa khởi chiếu. Vui lòng quay lại sau!</div>
+                    <div th:if="${movie.trangThai.name() == 'Online'}"><a th:href="@{'/watch/' + ${movie.maPhim}}" class="btn btn-success btn-lg w-100 fw-bold shadow"><i class="bi bi-play-circle-fill me-2"></i>Xem Trực Tuyến Ngay</a></div>
+                    <div th:if="${movie.trangThai.name() == 'NgungChieu'}" class="alert alert-secondary mb-0"><i class="bi bi-archive-fill me-2"></i>Phim đã ngừng chiếu tại hệ thống rạp.</div>
+                </div>
+            </div>
+        </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

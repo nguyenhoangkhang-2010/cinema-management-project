@@ -19,6 +19,9 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
         List<Movie> findByTrangThai(TrangThaiPhim trangThai);
 
+        // Lấy đúng 4 phim theo trạng thái, sắp xếp mới nhất (Tránh kéo toàn bộ DB)
+        List<Movie> findTop4ByTrangThaiOrderByNgayKhoiChieuDesc(TrangThaiPhim trangThai);
+
         @Query(value = "SELECT COUNT(ma_phim) FROM phim GROUP BY trang_thai ORDER BY trang_thai", nativeQuery = true)
         List<Long> getMovieCountByStatus();
 

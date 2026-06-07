@@ -180,3 +180,38 @@
     margin-bottom: 5px;
     min-width: 60px;
 }
+
+/* ========================================================
+   Khu vực 5: Mega Menu & Homepage Tabs
+   ======================================================== */
+.mega-menu-container.position-static { position: static !important; }
+.mega-menu {
+    top: 100%; left: 0; right: 0;
+    padding: 20px; border-radius: 0 0 16px 16px;
+    background-color: #fff;
+    transition: all 0.3s ease; opacity: 0; visibility: hidden; display: block; transform: translateY(10px);
+}
+.mega-menu-container:hover .mega-menu {
+    opacity: 1; visibility: visible; transform: translateY(0);
+}
+.mega-img { height: 220px; object-fit: cover; border-radius: 8px; transition: 0.3s; }
+.mega-card:hover .mega-img { transform: scale(1.05); }
+.mega-card-title { font-size: 0.9rem; font-weight: bold; color: #333; margin-top: 10px; }
+
+/* Custom Tab Styling */
+.custom-movie-tabs .nav-link {
+    font-size: 1.2rem; font-weight: bold; color: #6c757d; border: none; background: none; padding: 10px 20px; position: relative;
+}
+.custom-movie-tabs .nav-link.active { color: #dc3545; background: none; }
+.custom-movie-tabs .nav-link.active::after {
+    content: ''; position: absolute; bottom: 0; left: 20%; width: 60%; height: 4px; background-color: #dc3545; border-radius: 2px;
+}
+.card-hover-actions {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7); display: flex; flex-direction: column; justify-content: center; align-items: center;
+    opacity: 0; transition: 0.3s ease; border-radius: 12px;
+}
+.movie-card:hover .card-hover-actions { opacity: 1; }
+.loading-spinner {
+    display: flex; justify-content: center; align-items: center; height: 200px;
+}

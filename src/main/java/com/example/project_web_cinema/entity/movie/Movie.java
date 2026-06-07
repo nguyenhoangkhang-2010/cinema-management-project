@@ -30,9 +30,9 @@ public class Movie {
     private Integer maPhim;
     @Column(name = "TenPhim", nullable = false, length = 255)
     private String tenPhim;
-    @Column(name = "Poster", length = 255)
+    @Column(name = "Poster", columnDefinition = "TEXT")
     private String poster;
-    @Column(name = "Trailer", length = 255)
+    @Column(name = "Trailer", columnDefinition = "TEXT")
     private String trailer;
     @Column(name = "DaoDien", length = 100)
     private String daoDien;
@@ -46,7 +46,7 @@ public class Movie {
     @Column(name = "QuocGia", length = 50)
     private String quocGia;
     @Lob
-    @Column(name = "MoTa")
+    @Column(name = "MoTa", columnDefinition = "TEXT")
     private String moTa;
     @Min(0)
     @Column(name = "DoTuoi")
