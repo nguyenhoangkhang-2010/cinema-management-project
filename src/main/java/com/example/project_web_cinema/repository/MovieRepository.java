@@ -14,12 +14,10 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Integer> {
-<<<<<<< HEAD
+        Page<Movie> findByTenPhimContainingIgnoreCaseOrQuocGiaContainingIgnoreCase(String tenPhim, String quocGia,
+                        Pageable pageable);
+
         List<Movie> findByTrangThai(TrangThaiPhim trangThai);
-=======
-    Page<Movie> findByTenPhimContainingIgnoreCaseOrQuocGiaContainingIgnoreCase(String tenPhim, String quocGia, Pageable pageable);
-    List<Movie> findByTrangThai(TrangThaiPhim trangThai);
->>>>>>> origin/feature-them-phim
 
         @Query(value = "SELECT COUNT(ma_phim) FROM phim GROUP BY trang_thai ORDER BY trang_thai", nativeQuery = true)
         List<Long> getMovieCountByStatus();
