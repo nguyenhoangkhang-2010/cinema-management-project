@@ -13,11 +13,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "PHIM",
-    indexes = {
+@Table(name = "PHIM", indexes = {
         @Index(name = "idx_tenphim", columnList = "TenPhim")
-    }
-)
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,7 +39,7 @@ public class Movie {
     private Integer thoiLuong;
     @Column(name = "NgayKhoiChieu", nullable = false)
     private LocalDate ngayKhoiChieu;
-    @Column(name = "NgayKetThucChieu", nullable = false)
+    @Column(name = "NgayKetThucChieu")
     private LocalDate ngayKetThucChieu;
     @Column(name = "QuocGia", length = 50)
     private String quocGia;
@@ -51,12 +49,12 @@ public class Movie {
     @Min(0)
     @Column(name = "DoTuoi")
     @Builder.Default
-    private Integer doTuoi=0;
+    private Integer doTuoi = 0;
     @Min(1)
     @Max(3)
     @Column(name = "CapDoYeuCau")
     @Builder.Default
-    private Integer capDoYeuCau=1;
+    private Integer capDoYeuCau = 1;
     @Enumerated(EnumType.STRING)
     @Column(name = "TrangThai")
     @Builder.Default
@@ -66,9 +64,7 @@ public class Movie {
     private Video video;
 
     @ManyToMany
-    @JoinTable(name = "PHIM_THELOAI",
-            joinColumns = @JoinColumn(name = "MaPhim"),
-            inverseJoinColumns = @JoinColumn(name = "MaTheLoai"))
+    @JoinTable(name = "PHIM_THELOAI", joinColumns = @JoinColumn(name = "MaPhim"), inverseJoinColumns = @JoinColumn(name = "MaTheLoai"))
     private List<Category> dsTheLoai;
 
     @OneToMany(mappedBy = "movie")

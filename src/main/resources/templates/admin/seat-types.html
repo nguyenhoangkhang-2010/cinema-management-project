@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Loại Ghế</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/admin_home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-common.css}">
+</head>
+<body>
+    <div class="admin-container">
+        <div th:replace="~{admin/sidebar :: sidebar('seat-types')}"></div>
+        <div class="w-100 flex-grow-1 d-flex flex-column bg-light">
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
+                <h4 class="m-0 fw-bold text-primary"><i class="bi bi-grid-3x3-gap-fill me-2"></i>Quản Lý Loại Ghế</h4>
+            </nav>
+            <div class="container-fluid p-4">
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script th:inline="javascript">
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const successMsg = /*[[${success}]]*/ null; const errorMsg = /*[[${error}]]*/ null;
+                        if (successMsg) Swal.fire({ icon: 'success', title: 'Thành công!', text: successMsg, showConfirmButton: false, timer: 2500, toast: true, position: 'top-end' });
+                        if (errorMsg) Swal.fire({ icon: 'error', title: 'Thất bại!', text: errorMsg, confirmButtonColor: '#0d6efd' });
+                    });
+                </script>
+
+                <div class="d-flex justify-content-end mb-4">
+                    <button type="button" class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#seatTypeModal" onclick="resetForm()">
+                        <i class="bi bi-plus-circle me-1"></i> Thêm Loại Ghế
+                    </button>
+                </div>
+
+                <div class="card border-0 shadow-sm table-container">
+                    <div class="card-body p-0">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th class="ps-4 py-3">Mã Loại Ghế</th>
+                                    <th>Tên Loại Ghế</th>
+                                    <th>Giá Phụ Thu (VNĐ)</th>
+                                    <th class="pe-4 text-end">Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="s : ${seatTypes}">
+                                    <td class="ps-4 fw-bold text-secondary">#[[${s.maLoaiGhe}]]</td>
+                                    <td class="fw-bold text-dark" th:text="${s.tenLoaiGhe}"></td>
+                                    <td class="text-danger fw-bold" th:text="${#numbers.formatDecimal(s.giaPhuThu, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+                                    <td class="pe-4 text-end">
+                                        <button type="button" class="btn btn-sm btn-outline-primary btn-action me-1" 
+                                                th:attr="onclick='editSeatType(' + ${s.maLoaiGhe} + ', \'' + ${s.tenLoaiGhe} + '\', ' + ${s.giaPhuThu} + ')'">
+                                            <i class="bi bi-pencil-square"></i> Sửa
+                                        </button>
+                                        <a th:href="@{/admin/seat-types/delete/{id}(id=${s.maLoaiGhe})}" class="btn btn-sm btn-outline-danger btn-action" th:onclick="confirmDeleteAction(event, this.href, 'Xóa loại ghế?', 'Dữ liệu này không thể khôi phục!')">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Form -->
+    <div class="modal fade" id="seatTypeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <form th:action="@{/admin/seat-types/save}" th:object="${seatTypeDTO}" method="post">
+                    <div class="modal-header bg-primary text-white rounded-top-4">
+                        <h5 class="modal-title fw-bold" id="modalTitle">Thêm Loại Ghế</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <input type="hidden" id="maLoaiGhe" name="maLoaiGhe">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên Loại Ghế <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="tenLoaiGhe" name="tenLoaiGhe" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Giá Phụ Thu (VNĐ)</label>
+                            <input type="number" class="form-control" id="giaPhuThu" name="giaPhuThu" min="0" step="1000" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary fw-bold">Lưu Dữ Liệu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function editSeatType(id, name, price) {
+            document.getElementById('modalTitle').innerText = 'Sửa Loại Ghế';
+            document.getElementById('maLoaiGhe').value = id;
+            document.getElementById('tenLoaiGhe').value = name;
+            document.getElementById('giaPhuThu').value = price;
+            new bootstrap.Modal(document.getElementById('seatTypeModal')).show();
+        }
+        function resetForm() {
+            document.getElementById('modalTitle').innerText = 'Thêm Loại Ghế';
+            document.getElementById('maLoaiGhe').value = '';
+            document.getElementById('tenLoaiGhe').value = '';
+            document.getElementById('giaPhuThu').value = '0';
+        }
+        function confirmDeleteAction(event, url, titleText, messageText) {
+            event.preventDefault();
+            Swal.fire({ title: titleText, text: messageText, icon: 'warning', showCancelButton: true, confirmButtonColor: '#ef4444', confirmButtonText: 'Đồng ý xóa' })
+                .then((result) => { if (result.isConfirmed) window.location.href = url; });
+        }
+    </script>
+</body>
+</html>

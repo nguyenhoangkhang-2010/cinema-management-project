@@ -1,4 +1,4 @@
-package com.example.project_web_cinema.controller;
+package com.example.project_web_cinema.controller.api;
 
 import com.example.project_web_cinema.dto.user.CinemaResponseDTO;
 import com.example.project_web_cinema.dto.user.ShowtimeDateResponseDTO;

@@ -91,7 +91,7 @@
                                     <td><span class="badge bg-info text-dark">[[${c.soLuongPhong}]] Phòng</span></td>
                                     <td class="pe-4 text-end">
                                         <button type="button" class="btn btn-sm btn-outline-primary btn-action me-1" 
-                                                th:attr="onclick='editCinema(' + ${c.maRap} + ', \'' + ${c.tenRap} + '\', \'' + ${c.diaChi} + '\', \'' + ${c.soDienThoai} + '\')'">
+                                                th:attr="onclick='editCinema(' + ${c.maRap} + ', \'' + ${c.tenRap} + '\', \'' + ${c.diaChi} + '\', \'' + ${c.soDienThoai} + '\', ' + ${c.soLuongPhong} + ')'">
                                             <i class="bi bi-pencil-square"></i> Sửa
                                         </button>
                                         <a th:href="@{/admin/cinemas/delete/{id}(id=${c.maRap})}" class="btn btn-sm btn-outline-danger btn-action" th:onclick="confirmDeleteAction(event, this.href, 'Xóa rạp phim?', 'Bạn có chắc chắn muốn xóa rạp phim này không? Mọi phòng chiếu trực thuộc cũng sẽ bị xóa.')">
@@ -144,6 +144,11 @@
                             <input type="text" class="form-control" id="soDienThoai" th:field="*{soDienThoai}" pattern="^(0[0-9]{9,10})$" title="Vui lòng nhập 10-11 số">
                             <div class="text-danger small mt-1" th:if="${#fields.hasErrors('soDienThoai')}" th:errors="*{soDienThoai}"></div>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số Lượng Phòng</label>
+                            <input type="number" class="form-control bg-light" id="soLuongPhong" th:field="*{soLuongPhong}" readonly>
+                            <small class="text-muted fst-italic">Được hệ thống tự động tính toán từ Quản Lý Phòng Chiếu.</small>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -156,12 +161,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function editCinema(maRap, tenRap, diaChi, soDienThoai) {
+        function editCinema(maRap, tenRap, diaChi, soDienThoai, soLuongPhong) {
             document.getElementById('modalTitle').innerText = 'Cập Nhật Thông Tin Rạp';
             document.getElementById('maRap').value = maRap;
             document.getElementById('tenRap').value = tenRap;
             document.getElementById('diaChi').value = diaChi !== 'null' ? diaChi : '';
             document.getElementById('soDienThoai').value = soDienThoai !== 'null' ? soDienThoai : '';
+            document.getElementById('soLuongPhong').value = soLuongPhong;
             new bootstrap.Modal(document.getElementById('cinemaModal')).show();
         }
         function resetForm() {
@@ -170,6 +176,7 @@
             document.getElementById('tenRap').value = '';
             document.getElementById('diaChi').value = '';
             document.getElementById('soDienThoai').value = '';
+            document.getElementById('soLuongPhong').value = '0';
         }
 
         function confirmDeleteAction(event, url, titleText, messageText) {

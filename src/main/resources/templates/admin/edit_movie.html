@@ -50,11 +50,11 @@
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div class="card-body p-4 p-md-5">
                     <div class="border-bottom pb-3 mb-4">
-                        <h5 class="fw-bold m-0 text-dark" th:text="${'Cập nhật bộ phim: ' + movie.tenPhim}">Chỉnh sửa phim</h5>
+                        <h5 class="fw-bold m-0 text-dark" th:text="${'Cập nhật bộ phim: ' + movieDTO.tenPhim}">Chỉnh sửa phim</h5>
                         <p class="text-muted small m-0">Thay đổi các thông tin cần thiết và bấm lưu để cập nhật vào hệ thống.</p>
                     </div>
 
-                    <form th:action="@{/admin/movies/edit/{id}(id=${movie.maPhim})}" th:object="${movie}" method="post">
+                    <form th:action="@{/admin/movies/edit/{id}(id=${movieDTO.maPhim})}" th:object="${movieDTO}" method="post">
                         <div class="row g-4">
 
                             <div class="col-lg-8">
@@ -62,6 +62,22 @@
                                     <label for="tenPhim" class="form-label fw-semibold">Tên Bộ Phim <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="tenPhim" th:field="*{tenPhim}" required>
                                 </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Thể loại phim (Có thể chọn nhiều) <span class="text-danger">*</span></label>
+                                    
+                                    <!-- Dropdown dạng Multiple Select -->
+                                    <select class="form-select" multiple="multiple" th:field="*{categoryIds}" style="height: 150px;" required>
+                                        <option th:each="cat : ${allCategories}" 
+                                                th:value="${cat.maTheLoai}" 
+                                                th:text="${cat.tenLoai}">
+                                        </option>
+                                    </select>
+                                    
+                                    <!-- Hướng dẫn người dùng cách chọn nhiều -->
+                                    <small class="text-muted"><i class="bi bi-info-circle me-1"></i>Nhấn giữ phím <b>Ctrl</b> (hoặc <b>Cmd</b> trên Mac) và click chuột để chọn nhiều thể loại cùng lúc.</small>
+                                </div>
+
 
                                 <div class="row g-3">
                                     <div class="col-md-6 mb-3">
@@ -98,12 +114,12 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="ngayKhoiChieu" class="form-label fw-semibold">Ngày Khởi Chiếu <span class="text-danger">*</span></label>
                                         <input type="date" class="form-control" id="ngayKhoiChieu" name="ngayKhoiChieu"
-                                               th:value="${movie.ngayKhoiChieu != null ? #temporals.format(movie.ngayKhoiChieu, 'yyyy-MM-dd') : ''}">
+                                               th:value="${movieDTO.ngayKhoiChieu != null ? #temporals.format(movieDTO.ngayKhoiChieu, 'yyyy-MM-dd') : ''}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="ngayKetThucChieu" class="form-label fw-semibold">Ngày Kết Thúc Dự Kiến</label>
                                         <input type="date" class="form-control" id="ngayKetThucChieu" name="ngayKetThucChieu"
-                                               th:value="${movie.ngayKetThucChieu != null ? #temporals.format(movie.ngayKetThucChieu, 'yyyy-MM-dd') : ''}">
+                                               th:value="${movieDTO.ngayKetThucChieu != null ? #temporals.format(movieDTO.ngayKetThucChieu, 'yyyy-MM-dd') : ''}">
                                     </div>
                                 </div>
 

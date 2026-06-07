@@ -120,7 +120,7 @@
                             <span class="fw-bold d-block text-dark user-name-text" sec:authentication="name">Tên User</span>
                         </li>
                         <li><a class="dropdown-item py-2 fw-medium" th:href="@{/profile}"><i class="bi bi-person-lines-fill me-2 text-secondary"></i>Hồ Sơ Của Tôi</a></li>
-                        <li><a class="dropdown-item py-2 fw-medium" href="#"><i class="bi bi-ticket-perforated me-2 text-secondary"></i>Lịch Sử Đặt Vé</a></li>
+                        <li><a class="dropdown-item py-2 fw-medium" th:href="@{/user/history}"><i class="bi bi-ticket-perforated me-2 text-secondary"></i>Lịch Sử Đặt Vé</a></li>
                         <!-- Chỉ hiện nút này nếu Role là Admin -->
                         <li sec:authorize="hasRole('Admin')">
                             <a class="dropdown-item py-2 fw-bold text-primary" th:href="@{/admin/dashboard}">

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt Vé - Cinema All Star</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f1f5f9; }
+        .screen-curve { width: 100%; height: 50px; background: #d1d5db; border-radius: 50% / 100% 100% 0 0; box-shadow: 0 15px 20px rgba(0,0,0,0.05); margin-bottom: 50px; text-align: center; line-height: 50px; color: #64748b; font-weight: bold; letter-spacing: 5px; }
+        .seat-grid { display: flex; flex-wrap: wrap; justify-content: center; max-width: 650px; gap: 8px; margin: 0 auto; }
+        .seat { width: 42px; height: 42px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+        /* Các trạng thái ghế */
+        .seat.available { background-color: #ffffff; color: #475569; border-color: #cbd5e1; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .seat.available:hover { background-color: #f8fafc; border-color: #94a3b8; transform: translateY(-2px); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .seat.selected { background-color: #f59e0b; color: white; border-color: #d97706; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4); transform: scale(1.08); }
+        .seat.booked { background-color: #334155; color: #64748b; cursor: not-allowed; opacity: 0.95; border-color: #1e293b; }
+        /* Ghế VIP */
+        .seat.vip { background-color: #fef3c7; color: #b45309; border-color: #fcd34d; }
+        .seat.vip.selected { background-color: #f59e0b; color: white; border-color: #d97706; }
+        .legend-box { width: 20px; height: 20px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div th:replace="~{user/home :: nav}"></div>
+
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 h-100">
+                    <div class="screen-curve">MÀN HÌNH CHÍNH</div>
+                    
+                    <!-- Vùng vẽ ghế bằng JS -->
+                    <div class="mb-5">
+                        <div class="seat-grid" id="seat-map">
+                            <p class="text-muted text-center w-100">Vui lòng chọn Rạp và Phòng chiếu để xem sơ đồ ghế.</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center gap-4 flex-wrap border-top pt-4 mt-auto">
+                        <div class="d-flex align-items-center gap-2"><div class="legend-box available border"></div> <small>Ghế thường</small></div>
+                        <div class="d-flex align-items-center gap-2"><div class="legend-box vip border border-warning"></div> <small>Ghế VIP</small></div>
+                        <div class="d-flex align-items-center gap-2"><div class="legend-box bg-warning"></div> <small>Đang chọn</small></div>
+                        <div class="d-flex align-items-center gap-2"><div class="legend-box booked"></div> <small>Đã đặt</small></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Khung Thanh Toán -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 sticky-top" style="top: 20px;">
+                    <h5 class="fw-bold border-bottom pb-3 mb-4">Thông tin đặt vé</h5>
+                    
+                    <!-- Form Bộ Lọc để Test API Flow -->
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">Chọn Rạp Phim</label>
+                        <select id="select-cinema" class="form-select mb-3" onchange="loadRooms()"><option value="">-- Chọn rạp --</option></select>
+                        
+                        <label class="form-label small fw-bold text-muted">Chọn Phòng & Suất (Ví dụ SC=1)</label>
+                        <select id="select-room" class="form-select" onchange="loadSeats()"><option value="">-- Chọn phòng --</option></select>
+                    </div>
+
+                    <div class="bg-light rounded-3 p-3 mb-4 border">
+                        <p class="text-muted fw-bold small mb-2">Ghế đang chọn:</p>
+                        <div id="selected-seats-list" class="fw-bold text-dark fs-5" style="min-height: 30px;">-</div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-end mb-4 border-top pt-3">
+                        <span class="text-muted fw-bold">Tổng thanh toán:</span>
+                        <span class="fs-3 fw-black text-danger" id="total-price">0 đ</span>
+                    </div>
+
+                    <button class="btn btn-danger w-100 py-3 fw-bold fs-6 rounded-3 shadow" id="btn-pay" disabled>
+                        Tiến Hành Thanh Toán <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // MOCK MovieId = 1, ShowtimeId = 1 (Tích hợp thực tế sẽ truyền từ Controller Model xuống)
+        const movieId = 1;
+        const showtimeId = 1;
+        const baseTicketPrice = 50000; // Mặc định hoặc lấy từ API
+        
+        let selectedSeats = [];
+        let totalPrice = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch(`/api/v1/checkout/cinemas/${movieId}`)
+                .then(res => res.json())
+                .then(data => {
+                    const sel = document.getElementById('select-cinema');
+                    data.forEach(c => sel.innerHTML += `<option value="${c.id}">${c.name}</option>`);
+                });
+        });
+
+        function loadRooms() {
+            const cinemaId = document.getElementById('select-cinema').value;
+            const sel = document.getElementById('select-room');
+            sel.innerHTML = '<option value="">-- Chọn phòng --</option>';
+            if(cinemaId) {
+                fetch(`/api/v1/checkout/rooms/${cinemaId}`)
+                    .then(res => res.json())
+                    .then(data => data.forEach(r => sel.innerHTML += `<option value="${r.id}">${r.name}</option>`));
+            }
+        }
+
+        function loadSeats() {
+            const roomId = document.getElementById('select-room').value;
+            const container = document.getElementById('seat-map');
+            
+            selectedSeats = []; totalPrice = 0; updateUI(); // Reset
+
+            if(!roomId) { container.innerHTML = '<p class="text-muted w-100 text-center">Vui lòng chọn phòng.</p>'; return; }
+            
+            container.innerHTML = '<p class="text-center w-100"><span class="spinner-border text-danger"></span></p>';
+            
+            fetch(`/api/v1/checkout/seats/${roomId}/${showtimeId}`)
+                .then(res => res.json())
+                .then(seats => {
+                    container.innerHTML = '';
+                    if (seats.length === 0) {
+                        container.innerHTML = '<p class="text-danger fw-bold w-100 text-center"><i class="bi bi-exclamation-triangle-fill me-2"></i>Phòng chiếu này chưa được thiết lập sơ đồ ghế thực tế trong cơ sở dữ liệu.</p>';
+                        return;
+                    }
+                    seats.forEach(seat => {
+                        const div = document.createElement('div');
+                        div.className = `seat ${seat.daDat ? 'booked' : (seat.loaiGhe === 'VIP' ? 'vip available' : 'available')}`;
+                        div.innerText = seat.soGhe;
+                        
+                        if(!seat.daDat) {
+                            const finalPrice = baseTicketPrice + seat.phuThu;
+                            div.title = `${seat.loaiGhe} - ${new Intl.NumberFormat('vi-VN').format(finalPrice)} đ`;
+                            div.onclick = () => toggleSeat(div, seat.maGhe, seat.soGhe, finalPrice);
+                        } else {
+                            div.title = "Đã có người đặt";
+                        }
+                        container.appendChild(div);
+                    });
+                });
+        }
+
+        function toggleSeat(element, id, name, price) {
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedSeats = selectedSeats.filter(s => s.id !== id);
+                totalPrice -= price;
+            } else {
+                if (selectedSeats.length >= 8) {
+                    Swal.fire({icon: 'warning', title: 'Giới hạn', text: 'Chỉ được chọn tối đa 8 ghế'}); return;
+                }
+                element.classList.add('selected');
+                selectedSeats.push({id, name});
+                totalPrice += price;
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            document.getElementById('selected-seats-list').innerText = selectedSeats.map(s => s.name).join(', ') || '-';
+            document.getElementById('total-price').innerText = new Intl.NumberFormat('vi-VN').format(totalPrice) + ' đ';
+            document.getElementById('btn-pay').disabled = selectedSeats.length === 0;
+        }
+    </script>
+</body>
+</html>
