@@ -3,15 +3,12 @@ package com.example.project_web_cinema.service;
 import com.example.project_web_cinema.dto.TicketDTO;
 import com.example.project_web_cinema.dto.UserDTO;
 import com.example.project_web_cinema.entity.account.Account;
-import com.example.project_web_cinema.entity.account.VaiTro;
-import com.example.project_web_cinema.entity.tickets.Tickets;
 import com.example.project_web_cinema.repository.AccountRepository;
 import com.example.project_web_cinema.repository.TicketRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,8 +19,7 @@ public class UserService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final TicketRepository ticketRepository;
 
-    public UserService(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
-            TicketRepository ticketRepository) {
+    public UserService(AccountRepository accountRepository, TicketRepository ticketRepository) {
         this.accountRepository = accountRepository;
         this.ticketRepository = ticketRepository;
     }
@@ -38,10 +34,13 @@ public class UserService implements UserDetailsService {
             vaiTro = "ROLE_" + vaiTro;
         }
 
+        boolean isEnabled = account.getTrangThai() != null && account.getTrangThai().name().equals("HoatDong");
+
         return User.builder()
-                .username(account.getHoTen())
+                .username(account.getEmail())
                 .password(account.getMatKhau())
                 .authorities(vaiTro)
+                .disabled(!isEnabled)
                 .build();
     }
 

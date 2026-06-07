@@ -2,36 +2,151 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: #f4f7f6;
+    background: linear-gradient(rgba(10, 11, 16, 0.65), rgba(10, 11, 16, 0.85)),
+    url('https://i.pinimg.com/1200x/ea/62/2d/ea622daa97869d34ef4e119d41355de3.jpg') no-repeat center center/cover;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
+/* Hiệu ứng Glassmorphism mờ kính */
 .login-card {
     width: 100%;
-    max-width: 400px;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    background-color: #fff;
-    margin: auto;
+    max-width: 420px;
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 20px !important;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    padding: 2rem !important;
 }
 
-.btn-warning {
-    background-color: #ffc107;
-    border: none;
-    transition: all 0.3s;
+/* Chỉnh chữ trắng sáng nổi bật */
+.login-card h2, .form-label {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
+
+.login-card p.text-muted {
+    color: #cbd5e1 !important;
+}
+
+/* Ô nhập liệu tối giản dạng gạch chân */
+.input-group {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+    transition: border-color 0.3s;
+}
+
+.input-group:focus-within {
+    border-color: #ffc107 !important;
+}
+
+.input-group-text {
+    background: transparent !important;
+    border: none !important;
+    color: #ffc107 !important;
+    border-radius: 0 !important;
+    padding-left: 0 !important;
+}
+
+.form-control {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    border-radius: 0 !important;
+    padding: 0.6rem 0.5rem !important;
+}
+
+/* Triệt tiêu hoàn toàn nền trắng/xám đè của Bootstrap */
+.form-control:focus, .form-control.bg-light, .form-control.bg-light:focus {
+    background: transparent !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Checkbox & Links */
+.form-check-label {
+    color: #cbd5e1;
+    font-size: 0.9rem;
+}
+
+.form-check-input {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.form-check-input:checked {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.text-warning, .login-card a {
+    color: #ffc107 !important;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.login-card a:hover {
+    color: #ffe082 !important;
+    text-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
+}
+
+/* Nút bấm trắng vuông vắn cao cấp */
+.btn-warning {
+    background-color: #ffffff !important;
+    border: none !important;
+    color: #11131c !important;
+    border-radius: 8px !important;
+    font-weight: 700 !important;
+    padding: 0.75rem !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
 .btn-warning:hover {
-    background-color: #e0a800;
-    transform: translateY(-2px);
+    background-color: #e2e8f0 !important;
+    transform: translateY(-1px);
+}
+
+.text-muted.text-decoration-none {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.text-muted.text-decoration-none:hover {
+    color: #ffc107 !important;
+}
+
+.text-light-muted {
+    color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.password-wrapper {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+.password-wrapper .form-control {
+    border-bottom: none !important;
+}
+.password-wrapper .input-group-text {
+    background: transparent !important;
+    border: none !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    padding-right: 0 !important;
 }
