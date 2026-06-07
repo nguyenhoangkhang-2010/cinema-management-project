@@ -122,8 +122,8 @@
                 .then(res => res.json())
                 .then(seats => {
                     container.innerHTML = '';
-                    if (seats.length === 0) {
-                        container.innerHTML = '<p class="text-danger fw-bold w-100 text-center"><i class="bi bi-exclamation-triangle-fill me-2"></i>Phòng chiếu này chưa được thiết lập sơ đồ ghế thực tế trong cơ sở dữ liệu.</p>';
+                    if (!seats || seats.length === 0) {
+                        container.innerHTML = '<p class="text-muted text-center">Đang tạo sơ đồ ghế...</p>';
                         return;
                     }
                     seats.forEach(seat => {
