@@ -33,11 +33,15 @@
             
             <div class="collapse navbar-collapse" id="mainNav">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link fw-bold text-warning" th:href="@{/}">Trang Chủ</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'home')} ? 'text-warning' : ''" th:href="@{/}">Trang Chủ</a>
+                    </li>
                     
                     <!-- MEGA MENU PHIM -->
                     <li class="nav-item dropdown position-static mega-menu-container">
-                        <a class="nav-link fw-bold" href="#" id="megaMenuPhim">PHIM <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i></a>
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'movie')} ? 'text-warning' : ''" href="#" id="megaMenuPhim">
+                            PHIM <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i>
+                        </a>
                         <div class="dropdown-menu mega-menu shadow-lg border-0 mt-0 p-0 overflow-hidden">
                             <div class="container-fluid p-0">
                                 <div class="row g-0">
@@ -80,10 +84,21 @@
                         </div>
                     </li>
 
-                    <li class="nav-item"><a class="nav-link" th:href="@{/store}">Star Shop</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/events}">Sự Kiện</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/khuyen-mai}">Khuyến Mãi</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/phim-online}">Phim Online</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'store') or #strings.contains(#execInfo.templateName, 'shop')} ? 'text-warning' : ''" th:href="@{/star-shop}">Star Shop</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'events')} ? 'text-warning' : ''" th:href="@{/events}">Sự Kiện</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'promotion') or #strings.contains(#execInfo.templateName, 'khuyen-mai')} ? 'text-warning' : ''" th:href="@{/khuyen-mai}">Khuyến Mãi</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'online')} ? 'text-warning' : ''" th:href="@{/phim-online}">Phim Online</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'contact')} ? 'text-warning' : ''" href="#">Liên Hệ</a>
+                    </li>
                 </ul>
                 
                 <!-- GIAO DIỆN CHƯA ĐĂNG NHẬP -->
@@ -130,12 +145,12 @@
     <!-- Banner Slider (Auto 5s) -->
     <div id="homeBannerCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-indicators">
-            <button th:each="movie, iterStat : ${homeData.heroSlider}" type="button" data-bs-target="#homeBannerCarousel" 
+            <button th:each="movie, iterStat : ${homeData?.heroSlider}" type="button" data-bs-target="#homeBannerCarousel" 
                     th:data-bs-slide-to="${iterStat.index}" th:classappend="${iterStat.index == 0} ? 'active'"></button>
         </div>
         <div class="carousel-inner">
             <!-- Hiển thị banner mặc định nếu hệ thống chưa có phim sắp chiếu -->
-            <div class="carousel-item active" th:if="${homeData.heroSlider == null or #lists.isEmpty(homeData.heroSlider)}">
+            <div class="carousel-item active" th:if="${homeData == null or #lists.isEmpty(homeData?.heroSlider)}">
                 <img src="https://i.pinimg.com/1200x/cb/a2/8f/cba28fa0c8e5cc8823090c602378ec0f.jpg" 
                      class="d-block w-100" style="height: 65vh; object-fit: cover; filter: brightness(0.6);" alt="Default Banner">
                 <div class="carousel-caption d-none d-md-block text-start" style="bottom: 20%;">
@@ -145,7 +160,7 @@
                 </div>
             </div>
 
-            <div class="carousel-item" th:each="movie, iterStat : ${homeData.heroSlider}" th:classappend="${iterStat.index == 0} ? 'active'">
+            <div class="carousel-item" th:each="movie, iterStat : ${homeData?.heroSlider}" th:classappend="${iterStat.index == 0} ? 'active'">
                 <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/1200x500?text=Banner'" 
                      class="d-block w-100" style="height: 65vh; object-fit: cover; filter: brightness(0.6);" alt="Banner">
                 <div class="carousel-caption d-none d-md-block text-start" style="bottom: 20%;">
@@ -170,13 +185,17 @@
     <!-- Thanh Tìm Kiếm & Mua Vé -->
     <div class="container search-bar-container">
         <div class="row bg-white p-3 shadow rounded">
-            <div class="col-md-3"><select class="form-select"><option>Chọn Phim</option></select></div>
-            <div class="col-md-3"><select class="form-select"><option>Chọn Rạp</option></select></div>
-            <div class="col-md-2"><select class="form-select"><option>Chọn Ngày</option></select></div>
-            <div class="col-md-2"><select class="form-select"><option>Chọn Suất</option></select></div>
+            <div class="col-md-3">
+                <select id="qb-movie" class="form-select fw-semibold text-secondary">
+                    <option value="">Chọn Phim</option>
+                </select>
+            </div>
+            <div class="col-md-3"><select id="qb-cinema" class="form-select fw-semibold text-secondary" disabled><option value="">Chọn Rạp</option></select></div>
+            <div class="col-md-2"><select id="qb-date" class="form-select fw-semibold text-secondary" disabled><option value="">Chọn Ngày</option></select></div>
+            <div class="col-md-2"><select id="qb-showtime" class="form-select fw-semibold text-secondary" disabled><option value="">Chọn Suất</option></select></div>
             <div class="col-md-2">
                 <!-- Nút hiển thị tùy theo trạng thái đăng nhập -->
-                <button class="btn btn-warning w-100 fw-bold" sec:authorize="isAuthenticated()">Mua vé nhanh</button>
+                <button id="qb-btn-submit" onclick="submitQuickBooking()" class="btn btn-warning w-100 fw-bold" sec:authorize="isAuthenticated()" disabled>Mua vé nhanh</button>
                 <a th:href="@{/login}" class="btn btn-outline-danger w-100 fw-bold" sec:authorize="!isAuthenticated()">Đăng nhập mua vé</a>
             </div>
         </div>
@@ -229,11 +248,17 @@
             });
 
             // 2. Load Default Tab (Đang Chiếu)
-            loadTabMovies('DangChieu', document.querySelector('.custom-movie-tabs .nav-link.active'));
+            const defaultTab = document.querySelector('.custom-movie-tabs .nav-link.active');
+            if (defaultTab) {
+                loadTabMovies('DangChieu', defaultTab);
+            }
         });
 
         function renderMegaMenu(containerId, movies) {
-            const container = document.getElementById(containerId).querySelector('.mega-content');
+            const tabElement = document.getElementById(containerId);
+            if (!tabElement) return;
+            const container = tabElement.querySelector('.mega-content');
+            if (!container) return;
             container.innerHTML = movies.slice(0, 4).map(m => `
                 <div class="col-lg-6 col-md-12">
                     <a href="/movies/detail/${m.maPhim}" class="text-decoration-none d-flex align-items-start gap-3 p-2 rounded-3 hover-card-mega">
@@ -253,9 +278,10 @@
         function loadTabMovies(status, element) {
             // UI Update
             document.querySelectorAll('.custom-movie-tabs .nav-link').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
+            if (element) element.classList.add('active');
             
             const content = document.getElementById('ajaxTabContent');
+            if (!content) return;
             content.innerHTML = '<div class="loading-spinner w-100"><div class="spinner-border text-danger"></div></div>';
 
             fetch(`/api/movies/tab?status=${status}`)
@@ -281,6 +307,115 @@
                         </div>
                     `).join('');
                 });
+        }
+
+        // ==========================================
+        // LOGIC XỬ LÝ QUICK BOOKING (MUA VÉ NHANH)
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            const qbMovie = document.getElementById('qb-movie');
+            const qbCinema = document.getElementById('qb-cinema');
+            const qbDate = document.getElementById('qb-date');
+            const qbShowtime = document.getElementById('qb-showtime');
+            const qbBtn = document.getElementById('qb-btn-submit');
+
+            if (!qbMovie || !qbCinema || !qbDate || !qbShowtime) return;
+
+            function resetSelect(element, defaultText) {
+                element.innerHTML = `<option value="">${defaultText}</option>`;
+                element.disabled = true;
+                element.classList.add('text-secondary');
+                element.classList.remove('text-dark');
+            }
+
+            function unlockSelect(element) {
+                element.disabled = false;
+                element.classList.remove('text-secondary');
+                element.classList.add('text-dark');
+            }
+
+            // BƯỚC 2: Load danh sách phim ban đầu từ REST API
+            fetch('/api/quick-booking/movies')
+                .then(res => res.json())
+                .then(movies => {
+                    movies.forEach(m => qbMovie.insertAdjacentHTML('beforeend', `<option value="${m.movieId}">${m.movieName}</option>`));
+                    unlockSelect(qbMovie);
+                })
+                .catch(err => console.error("Lỗi tải danh sách phim:", err));
+
+            // BƯỚC 3: Chọn Phim -> Load Rạp
+            qbMovie.addEventListener('change', function() {
+                resetSelect(qbCinema, 'Chọn Rạp');
+                resetSelect(qbDate, 'Chọn Ngày');
+                resetSelect(qbShowtime, 'Chọn Suất');
+                if(qbBtn) qbBtn.disabled = true;
+                
+                if(this.value) {
+                    this.classList.replace('text-secondary', 'text-dark');
+                    fetch(`/api/quick-booking/cinemas/${this.value}`)
+                        .then(res => res.json())
+                        .then(cinemas => {
+                            cinemas.forEach(c => qbCinema.insertAdjacentHTML('beforeend', `<option value="${c.cinemaId}">${c.cinemaName}</option>`));
+                            unlockSelect(qbCinema);
+                        });
+                } else {
+                    this.classList.replace('text-dark', 'text-secondary');
+                }
+            });
+
+            // BƯỚC 4: Chọn Rạp -> Load Ngày
+            qbCinema.addEventListener('change', function() {
+                resetSelect(qbDate, 'Chọn Ngày');
+                resetSelect(qbShowtime, 'Chọn Suất');
+                if(qbBtn) qbBtn.disabled = true;
+                
+                if(this.value) {
+                    this.classList.replace('text-secondary', 'text-dark');
+                    fetch(`/api/quick-booking/dates?movieId=${qbMovie.value}&cinemaId=${this.value}`)
+                        .then(res => res.json())
+                        .then(dates => {
+                            dates.forEach(d => qbDate.insertAdjacentHTML('beforeend', `<option value="${d.dateValue}">${d.displayDate}</option>`));
+                            unlockSelect(qbDate);
+                        });
+                } else {
+                    this.classList.replace('text-dark', 'text-secondary');
+                }
+            });
+
+            // BƯỚC 5: Chọn Ngày -> Load Suất
+            qbDate.addEventListener('change', function() {
+                resetSelect(qbShowtime, 'Chọn Suất');
+                if(qbBtn) qbBtn.disabled = true;
+                
+                if(this.value) {
+                    this.classList.replace('text-secondary', 'text-dark');
+                    fetch(`/api/quick-booking/showtimes?movieId=${qbMovie.value}&cinemaId=${qbCinema.value}&date=${this.value}`)
+                        .then(res => res.json())
+                        .then(times => {
+                            times.forEach(t => qbShowtime.insertAdjacentHTML('beforeend', `<option value="${t.showtimeId}">${t.timeDisplay}</option>`));
+                            unlockSelect(qbShowtime);
+                        });
+                } else {
+                    this.classList.replace('text-dark', 'text-secondary');
+                }
+            });
+
+            // BƯỚC 6: Chọn Suất -> Enable Nút
+            qbShowtime.addEventListener('change', function() {
+                if(this.value) {
+                    this.classList.replace('text-secondary', 'text-dark');
+                    if(qbBtn) qbBtn.disabled = false;
+                } else {
+                    this.classList.replace('text-dark', 'text-secondary');
+                    if(qbBtn) qbBtn.disabled = true;
+                }
+            });
+        });
+
+        // BƯỚC 7: Xử lý Chuyển hướng sang Giao diện chọn ghế
+        function submitQuickBooking() {
+            const qbShowtime = document.getElementById('qb-showtime');
+            if (qbShowtime && qbShowtime.value) window.location.href = `/book/showtime/${qbShowtime.value}`;
         }
     </script>
 </body>

@@ -32,6 +32,6 @@ public class Cinema {
     @Column(name = "SoDienThoai", length = 15)
     private String soDienThoai;
 
-    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "cinema", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Room> dsPhong;
 }

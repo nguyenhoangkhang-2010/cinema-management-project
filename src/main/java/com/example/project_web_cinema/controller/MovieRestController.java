@@ -62,21 +62,4 @@ public class MovieRestController {
 
         return ResponseEntity.ok(response);
     }
-
-    @GetMapping("/{id}/cinemas")
-    public ResponseEntity<List<Map<String, Object>>> getCinemas(@PathVariable Integer id) {
-        return ResponseEntity.ok(movieService.getCinemasForMovie(id));
-    }
-
-    @GetMapping("/{id}/dates")
-    public ResponseEntity<List<Map<String, Object>>> getDates(@PathVariable Integer id,
-            @RequestParam Integer cinemaId) {
-        return ResponseEntity.ok(movieService.getDatesForMovie(id, cinemaId));
-    }
-
-    @GetMapping("/{id}/showtimes")
-    public ResponseEntity<List<Map<String, Object>>> getShowtimes(@PathVariable Integer id,
-            @RequestParam Integer cinemaId, @RequestParam String date) {
-        return ResponseEntity.ok(movieService.getShowtimesForMovie(id, cinemaId, date));
-    }
 }

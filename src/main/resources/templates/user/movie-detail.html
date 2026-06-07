@@ -6,6 +6,105 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        /* Premium Movie Detail Styles */
+        .hero-banner {
+            position: relative;
+            width: 100%;
+            min-height: 550px;
+            background-size: cover;
+            background-position: center 20%;
+            display: flex;
+            align-items: center;
+        }
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.95) 10%, rgba(15, 23, 42, 0.7) 50%, rgba(15, 23, 42, 0.9) 100%),
+                        linear-gradient(to top, rgba(15, 23, 42, 1) 0%, transparent 100%);
+            backdrop-filter: blur(8px);
+        }
+        .hero-content { position: relative; z-index: 10; padding: 60px 0; }
+        .movie-poster-large {
+            width: 100%; max-width: 320px; border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); 
+            border: 1px solid rgba(255,255,255,0.15);
+            transition: transform 0.4s ease;
+        }
+        .movie-poster-large:hover { transform: scale(1.03); }
+        .badge-age { 
+            background: linear-gradient(135deg, #ef4444, #b91c1c); color: white; 
+            font-weight: 800; padding: 6px 14px; border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
+        }
+        .movie-meta-item {
+            background: rgba(255, 255, 255, 0.1); padding: 6px 14px;
+            border-radius: 20px; backdrop-filter: blur(5px);
+            font-size: 0.95rem; color: #f8fafc; border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* Booking Section */
+        .booking-section-card {
+            background: #ffffff; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            border: 1px solid #f1f5f9; overflow: hidden; position: relative;
+        }
+        .booking-section-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, #dc2626, #f59e0b);
+        }
+        .step-title {
+            font-size: 1.1rem; font-weight: 700; color: #334155; margin-bottom: 1rem; display: flex; align-items: center;
+        }
+        .step-number {
+            background: #f1f5f9; color: #64748b; width: 28px; height: 28px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 0.9rem; font-weight: bold;
+        }
+        .cinema-btn, .date-btn {
+            color: #475569; font-weight: 600; border-radius: 10px; padding: 10px 20px;
+            border: 2px solid #e2e8f0; background: #ffffff; transition: all 0.2s ease; margin: 0 10px 10px 0;
+        }
+        .cinema-btn:hover, .date-btn:hover { border-color: #cbd5e1; background: #f8fafc; }
+        .cinema-btn.active, .date-btn.active { background: #fff1f2; color: #dc2626; border-color: #fca5a5; }
+        
+        .showtime-btn {
+            border: 2px solid #e2e8f0; color: #334155; font-weight: 700; border-radius: 12px; 
+            padding: 12px 24px; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center; display: inline-flex; flex-direction: column; align-items: center;
+            text-decoration: none; background: white; min-width: 100px;
+        }
+        .showtime-btn:hover { 
+            border-color: #dc2626; color: #dc2626; background: #fff1f2; 
+            transform: translateY(-3px); box-shadow: 0 6px 15px rgba(220, 38, 38, 0.15);
+        }
+        .showtime-btn .time { font-size: 1.3rem; line-height: 1; margin-bottom: 4px; }
+        .showtime-btn .room { font-size: 0.8rem; color: #64748b; font-weight: 500; }
+        .showtime-btn:hover .room { color: #dc2626; }
+
+        /* Tabs & Sidebar */
+        .nav-tabs.premium-tabs { border-bottom: 2px solid #e2e8f0; gap: 15px; }
+        .premium-tabs .nav-link {
+            border: none; color: #64748b; font-weight: 700; font-size: 1.1rem;
+            padding: 12px 20px; position: relative; background: transparent;
+        }
+        .premium-tabs .nav-link::after {
+            content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+            height: 3px; background: #dc2626; transform: scaleX(0); transition: transform 0.3s ease; border-radius: 3px 3px 0 0;
+        }
+        .premium-tabs .nav-link:hover { color: #334155; }
+        .premium-tabs .nav-link.active { color: #dc2626; }
+        .premium-tabs .nav-link.active::after { transform: scaleX(1); }
+
+        .related-movie-card {
+            display: flex; background: white; padding: 12px; border-radius: 16px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f1f5f9;
+            transition: all 0.3s ease; text-decoration: none; color: inherit;
+        }
+        .related-movie-card:hover {
+            transform: translateX(5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #e2e8f0;
+        }
+        .related-movie-img { width: 80px; height: 115px; object-fit: cover; border-radius: 10px; }
+    </style>
 </head>
 <body class="bg-light">
     <div th:replace="~{user/home :: nav}"></div> <!-- Tái sử dụng Navbar nếu được cấu hình dạng Fragment -->
@@ -17,23 +116,29 @@
     <section class="hero-banner" th:style="'background-image: url(' + (${movie.poster != null ? movie.poster : 'https://placehold.co/1200x500'}) + ');'">
         <div class="container hero-content text-white">
             <div class="row align-items-center">
-                <div class="col-md-3 text-center text-md-start mb-4 mb-md-0">
+                <div class="col-md-3 col-lg-3 text-center mb-4 mb-md-0 position-relative">
                     <img th:src="${movie.poster != null ? movie.poster : 'https://placehold.co/300x450'}" class="movie-poster-large" alt="Poster">
                 </div>
-                <div class="col-md-9">
-                    <h1 class="display-4 fw-bold text-uppercase mb-3" th:text="${movie.tenPhim}">Tên Phim</h1>
-                    <div class="d-flex flex-wrap align-items-center gap-3 mb-4 fs-5">
+                <div class="col-md-9 col-lg-8 offset-lg-1">
+                    <h1 class="display-4 fw-bold text-uppercase mb-3 text-white" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.5);" th:text="${movie.tenPhim}">Tên Phim</h1>
+                    <div class="d-flex flex-wrap align-items-center gap-3 mb-4">
                         <span class="badge-age">T<span th:text="${movie.doTuoi}">18</span></span>
-                        <span><i class="bi bi-clock me-1 text-warning"></i> <span th:text="${movie.thoiLuong}">120</span> phút</span>
-                        <span><i class="bi bi-globe me-1 text-info"></i> <span th:text="${movie.quocGia}">Quốc Gia</span></span>
-                        <span th:if="${movie.ngayKhoiChieu != null}"><i class="bi bi-calendar-event me-1 text-success"></i> <span th:text="${#temporals.format(movie.ngayKhoiChieu, 'dd/MM/yyyy')}"></span></span>
+                        <div class="movie-meta-item"><i class="bi bi-clock me-2 text-warning"></i><span th:text="${movie.thoiLuong}">120</span> phút</div>
+                        <div class="movie-meta-item"><i class="bi bi-globe-americas me-2 text-info"></i><span th:text="${movie.quocGia}">Quốc Gia</span></div>
+                        <div class="movie-meta-item" th:if="${movie.ngayKhoiChieu != null}"><i class="bi bi-calendar-event me-2 text-success"></i><span th:text="${#temporals.format(movie.ngayKhoiChieu, 'dd/MM/yyyy')}"></span></div>
                     </div>
                     <p class="fs-6 text-light opacity-75 mb-2"><strong class="text-white">Đạo diễn:</strong> <span th:text="${movie.daoDien}">Đạo diễn</span></p>
+                    <p class="fs-6 text-light opacity-75 mb-4"><strong class="text-white">Trạng thái:</strong> 
+                        <span th:if="${movie.trangThai.name() == 'DangChieu'}" class="text-success fw-bold">Đang chiếu</span>
+                        <span th:if="${movie.trangThai.name() == 'SapChieu'}" class="text-warning fw-bold">Sắp chiếu</span>
+                        <span th:if="${movie.trangThai.name() == 'NgungChieu'}" class="text-danger fw-bold">Ngừng chiếu</span>
+                        <span th:if="${movie.trangThai.name() == 'Online'}" class="text-info fw-bold">Phim Online</span>
+                    </p>
                     
-                    <div class="mt-5 d-flex gap-3">
-                        <a th:if="${movie.trangThai.name() == 'DangChieu'}" href="#booking-section" class="btn btn-danger btn-lg fw-bold px-5 rounded-pill shadow-lg"><i class="bi bi-ticket-perforated-fill me-2"></i> ĐẶT VÉ NGAY</a>
-                        <a th:if="${movie.trangThai.name() == 'SapChieu'}" href="#booking-section" class="btn btn-warning btn-lg fw-bold px-5 rounded-pill shadow-lg text-dark"><i class="bi bi-bookmark-star-fill me-2"></i> ĐẶT TRƯỚC</a>
-                        <a th:if="${movie.trailer != null}" th:href="${movie.trailer}" target="_blank" class="btn btn-outline-light btn-lg fw-bold px-4 rounded-pill"><i class="bi bi-play-circle-fill me-2"></i> XEM TRAILER</a>
+                    <div class="mt-4 d-flex flex-wrap gap-3">
+                        <a th:if="${movie.trangThai.name() == 'DangChieu'}" href="#booking-section" class="btn btn-danger btn-lg fw-bold px-5 py-3 rounded-pill shadow-lg" style="background: linear-gradient(135deg, #dc2626, #b91c1c); border: none;"><i class="bi bi-ticket-perforated-fill me-2 fs-5"></i> MUA VÉ NGAY</a>
+                        <a th:if="${movie.trangThai.name() == 'SapChieu'}" href="#booking-section" class="btn btn-warning btn-lg fw-bold px-5 py-3 rounded-pill shadow-lg text-dark"><i class="bi bi-bookmark-star-fill me-2 fs-5"></i> ĐẶT TRƯỚC</a>
+                        <a th:if="${movie.trailer != null}" th:href="${movie.trailer}" target="_blank" class="btn btn-outline-light btn-lg fw-bold px-4 py-3 rounded-pill" style="border-width: 2px;"><i class="bi bi-play-circle-fill me-2 fs-5"></i> XEM TRAILER</a>
                     </div>
                 </div>
             </div>
@@ -47,32 +152,32 @@
             <!-- CỘT TRÁI: Booking & Nội dung phim -->
             <div class="col-lg-8">
                 <!-- KHU VỰC LỊCH CHIẾU (AJAX FLOW CGV STYLE) -->
-                <div id="booking-section" class="bg-white p-4 rounded-4 shadow-sm mb-5 border" th:if="${movie.trangThai.name() == 'DangChieu' or movie.trangThai.name() == 'SapChieu'}">
+                <div id="booking-section" class="booking-section-card p-4 p-md-5 mb-5" th:if="${movie.trangThai.name() == 'DangChieu' or movie.trangThai.name() == 'SapChieu'}">
                     <h4 class="fw-bold text-dark border-bottom pb-3 mb-4"><i class="bi bi-calendar2-week-fill text-danger me-2"></i>Lịch Chiếu Phim</h4>
                     
                     <!-- Bước 1: Chọn Rạp -->
                     <div class="mb-4">
-                        <h6 class="fw-bold text-secondary mb-3">1. Chọn Rạp Chiếu</h6>
-                        <div id="cinema-list" class="booking-tabs d-flex flex-wrap">
-                            <div class="skeleton-box skeleton-btn" style="width: 150px;"></div>
-                            <div class="skeleton-box skeleton-btn" style="width: 180px;"></div>
-                            <div class="skeleton-box skeleton-btn" style="width: 120px;"></div>
+                        <div class="step-title"><span class="step-number">1</span> Chọn Rạp Chiếu</div>
+                        <div id="cinema-list" class="d-flex flex-wrap">
+                            <div class="skeleton-box skeleton-btn" style="width: 150px; height: 44px; border-radius: 10px;"></div>
+                            <div class="skeleton-box skeleton-btn" style="width: 180px; height: 44px; border-radius: 10px;"></div>
+                            <div class="skeleton-box skeleton-btn" style="width: 120px; height: 44px; border-radius: 10px;"></div>
                         </div>
                     </div>
                     
                     <!-- Bước 2: Chọn Ngày -->
                     <div class="mb-4">
-                        <h6 class="fw-bold text-secondary mb-3">2. Chọn Ngày Chiếu</h6>
-                        <div id="date-list" class="booking-tabs d-flex flex-wrap">
-                            <div class="text-muted"><i class="bi bi-arrow-up-circle me-1"></i>Vui lòng chọn rạp trước.</div>
+                        <div class="step-title"><span class="step-number">2</span> Chọn Ngày Chiếu</div>
+                        <div id="date-list" class="d-flex flex-wrap">
+                            <div class="text-muted fst-italic"><i class="bi bi-arrow-up-circle me-2"></i>Vui lòng chọn rạp trước.</div>
                         </div>
                     </div>
                     
                     <!-- Bước 3: Chọn Suất Chiếu -->
                     <div>
-                        <h6 class="fw-bold text-secondary mb-3">3. Chọn Suất Chiếu</h6>
-                        <div id="showtime-list" class="d-flex flex-wrap gap-2">
-                            <div class="text-muted w-100"><i class="bi bi-info-circle me-1"></i>Vui lòng chọn rạp và ngày.</div>
+                        <div class="step-title"><span class="step-number">3</span> Chọn Suất Chiếu</div>
+                        <div id="showtime-list" class="d-flex flex-wrap gap-3">
+                            <div class="text-muted w-100 fst-italic"><i class="bi bi-info-circle me-2"></i>Vui lòng chọn rạp và ngày.</div>
                         </div>
                     </div>
                 </div>
@@ -86,13 +191,13 @@
                 </div>
 
                 <!-- TABS NỘI DUNG VÀ ĐÁNH GIÁ -->
-                <ul class="nav nav-tabs fs-5 fw-bold mb-4" id="movieInfoTabs" role="tablist">
-                    <li class="nav-item"><button class="nav-link active text-dark" data-bs-toggle="tab" data-bs-target="#desc">Nội Dung Phim</button></li>
-                    <li class="nav-item"><button class="nav-link text-dark" data-bs-toggle="tab" data-bs-target="#review">Đánh Giá</button></li>
+                <ul class="nav nav-tabs premium-tabs mb-4" id="movieInfoTabs" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#desc">Nội Dung Phim</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#review">Đánh Giá Từ Khách Hàng</button></li>
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="desc">
-                        <p class="text-secondary lh-lg fs-6" th:text="${movie.moTa}">Mô tả phim...</p>
+                        <p class="text-secondary lh-lg fs-6 text-justify" th:text="${movie.moTa}">Mô tả phim...</p>
                     </div>
                     <div class="tab-pane fade" id="review">
                         <div class="text-center py-5 text-muted bg-white rounded-3 border border-dashed">
@@ -106,17 +211,17 @@
 
             <!-- CỘT PHẢI: PHIM LIÊN QUAN -->
             <div class="col-lg-4">
-                <h5 class="fw-bold mb-4 border-start border-danger border-4 ps-2 text-uppercase">Phim Liên Quan</h5>
+                <h5 class="fw-bold mb-4 border-start border-danger border-4 ps-3 text-uppercase" style="color: #1e293b;">Phim Liên Quan</h5>
                 <div class="d-flex flex-column gap-3">
-                    <div th:each="rm : ${relatedMovies}" class="d-flex bg-white p-2 rounded-3 shadow-sm border border-light position-relative" style="transition: 0.3s;" onmouseover="this.style.transform='translateX(5px)'" onmouseout="this.style.transform='translateX(0)'">
-                        <img th:src="${rm.poster != null ? rm.poster : 'https://placehold.co/100x150'}" class="rounded" style="width: 70px; height: 100px; object-fit: cover;">
-                        <div class="ms-3 d-flex flex-column justify-content-center">
-                            <h6 class="fw-bold text-dark text-truncate mb-1" style="max-width: 180px;" th:text="${rm.tenPhim}">Tên phim</h6>
-                            <span class="badge bg-secondary w-auto align-self-start mb-2" th:text="${rm.trangThai}"></span>
-                            <a th:href="@{'/movies/detail/' + ${rm.maPhim}}" class="text-danger fw-bold text-decoration-none small stretched-link">Xem chi tiết <i class="bi bi-arrow-right"></i></a>
+                    <a th:each="rm : ${relatedMovies}" th:href="@{'/movies/detail/' + ${rm.maPhim}}" class="related-movie-card">
+                        <img th:src="${rm.poster != null ? rm.poster : 'https://placehold.co/100x150'}" class="related-movie-img">
+                        <div class="ms-3 d-flex flex-column justify-content-center w-100 overflow-hidden">
+                            <h6 class="fw-bold text-dark text-truncate mb-2" th:text="${rm.tenPhim}">Tên phim</h6>
+                            <span class="badge bg-danger bg-opacity-10 text-danger w-auto align-self-start mb-2 border border-danger border-opacity-25" style="border-radius: 6px; padding: 5px 10px;" th:text="${rm.trangThai}"></span>
+                            <span class="text-danger fw-bold small mt-auto">Xem chi tiết <i class="bi bi-arrow-right"></i></span>
                         </div>
-                    </div>
-                    <div th:if="${#lists.isEmpty(relatedMovies)}" class="text-muted small fst-italic">Không tìm thấy phim liên quan.</div>
+                    </a>
+                    <div th:if="${#lists.isEmpty(relatedMovies)}" class="text-muted small fst-italic p-3 bg-white rounded-3 border">Không tìm thấy phim liên quan.</div>
                 </div>
             </div>
         </div>
@@ -124,11 +229,38 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Xử lý luồng Booking AJAX (Rạp -> Ngày -> Suất) -->
+    <script th:replace="~{user/home :: megaMenuScript}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const movieId = document.getElementById('movie-context').dataset.movieId;
             let selectedCinemaId = null;
+
+            // Bổ sung: Tải thông tin chi tiết phim (Đánh giá, Thể loại) từ API Monolithic
+            fetch(`/api/movies/${movieId}`)
+                .then(res => res.json())
+                .then(data => {
+                    // 1. Render Khối Đánh Giá Khách Hàng
+                    const reviewTab = document.getElementById('review');
+                    if (reviewTab && data.tongSoLuotDanhGia > 0) {
+                        reviewTab.innerHTML = `
+                            <div class="text-center py-5 bg-white rounded-3 border shadow-sm">
+                                <h2 class="display-3 fw-bold text-danger mb-0">${data.diemDanhGiaTrungBinh.toFixed(1)} <i class="bi bi-star-fill text-warning fs-3"></i></h2>
+                                <p class="text-muted fs-5 mt-2">Dựa trên <strong>${data.tongSoLuotDanhGia}</strong> lượt đánh giá</p>
+                                <button class="btn btn-outline-danger fw-bold mt-3 px-4 py-2 rounded-pill">Viết Đánh Giá Của Bạn</button>
+                            </div>
+                        `;
+                    }
+                    
+                    // 2. Render Thể Loại Phim (Thêm vào phần Meta Tag dưới Banner)
+                    const metaContainer = document.querySelector('.movie-meta-item').parentNode;
+                    if (metaContainer && data.theLoai && data.theLoai.length > 0) {
+                        const genreDiv = document.createElement('div');
+                        genreDiv.className = 'movie-meta-item';
+                        genreDiv.innerHTML = `<i class="bi bi-tags-fill me-2 text-primary"></i>${data.theLoai.join(', ')}`;
+                        metaContainer.appendChild(genreDiv);
+                    }
+                }).catch(err => console.error("Lỗi fetch chi tiết phim:", err));
 
             // Bắt đầu tải rạp
             if(document.getElementById('cinema-list')) {
@@ -142,21 +274,21 @@
                         }
                         
                         cinemaList.innerHTML = cinemas.map((c, index) => 
-                            `<button class="btn nav-link ${index === 0 ? 'active' : ''}" onclick="selectCinema(this, ${c.maRap})">${c.tenRap}</button>`
+                            `<button class="cinema-btn ${index === 0 ? 'active' : ''}" onclick="selectCinema(this, ${c.maRap})">${c.tenRap}</button>`
                         ).join('');
                         
                         // Tự động load ngày cho rạp đầu tiên
-                        selectCinema(cinemaList.querySelector('.nav-link'), cinemas[0].maRap);
+                        selectCinema(cinemaList.querySelector('.cinema-btn'), cinemas[0].maRap);
                     })
                     .catch(err => console.error(err));
             }
 
             window.selectCinema = function(btn, cinemaId) {
-                document.querySelectorAll('#cinema-list .nav-link').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.cinema-btn').forEach(el => el.classList.remove('active'));
                 btn.classList.add('active');
                 selectedCinemaId = cinemaId;
                 
-                document.getElementById('date-list').innerHTML = '<div class="skeleton-box skeleton-btn" style="width: 100px;"></div><div class="skeleton-box skeleton-btn" style="width: 100px;"></div>';
+                document.getElementById('date-list').innerHTML = '<div class="skeleton-box skeleton-btn" style="width: 100px; height: 44px; border-radius: 10px;"></div><div class="skeleton-box skeleton-btn" style="width: 100px; height: 44px; border-radius: 10px;"></div>';
                 document.getElementById('showtime-list').innerHTML = '';
 
                 fetch(`/api/movies/${movieId}/dates?cinemaId=${cinemaId}`)
@@ -168,19 +300,19 @@
                             return;
                         }
                         dateList.innerHTML = dates.map((d, index) => 
-                            `<button class="btn nav-link ${index === 0 ? 'active' : ''}" onclick="selectDate(this, '${d.date}')">${d.displayDate}</button>`
+                            `<button class="date-btn ${index === 0 ? 'active' : ''}" onclick="selectDate(this, '${d.date}')">${d.displayDate}</button>`
                         ).join('');
                         
                         // Tự động load giờ chiếu cho ngày đầu tiên
-                        selectDate(dateList.querySelector('.nav-link'), dates[0].date);
+                        selectDate(dateList.querySelector('.date-btn'), dates[0].date);
                     });
             }
 
             window.selectDate = function(btn, dateStr) {
-                document.querySelectorAll('#date-list .nav-link').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('.date-btn').forEach(el => el.classList.remove('active'));
                 btn.classList.add('active');
                 
-                document.getElementById('showtime-list').innerHTML = '<div class="skeleton-box skeleton-btn" style="width: 90px; height: 60px;"></div><div class="skeleton-box skeleton-btn" style="width: 90px; height: 60px;"></div>';
+                document.getElementById('showtime-list').innerHTML = '<div class="skeleton-box skeleton-btn" style="width: 100px; height: 65px; border-radius: 12px;"></div><div class="skeleton-box skeleton-btn" style="width: 100px; height: 65px; border-radius: 12px;"></div>';
 
                 fetch(`/api/movies/${movieId}/showtimes?cinemaId=${selectedCinemaId}&date=${dateStr}`)
                     .then(res => res.json())
@@ -192,8 +324,8 @@
                         }
                         timeList.innerHTML = times.map(t => 
                             `<a href="/book/showtime/${t.maSuatChieu}" class="showtime-btn shadow-sm">
-                                <span class="fs-5">${t.gioBatDau}</span>
-                                <small>${t.tenPhong}</small>
+                                <span class="time">${t.gioBatDau}</span>
+                                <span class="room">${t.tenPhong}</span>
                             </a>`
                         ).join('');
                     });

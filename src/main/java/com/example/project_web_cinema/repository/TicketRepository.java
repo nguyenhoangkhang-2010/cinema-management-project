@@ -22,4 +22,8 @@ public interface TicketRepository extends JpaRepository<Tickets, Integer> {
             "JOIN GHE g ON v.MaGhe = g.MaGhe " +
             "WHERE tk.Email = :email AND dv.TrangThai != 'DaHuy'", nativeQuery = true)
     List<Object[]> findTicketHistoryByEmail(@Param("email") String email);
+
+    // Đếm tổng số vé đã thanh toán thành công của 1 tài khoản
+    @Query("SELECT COUNT(t) FROM Tickets t JOIN t.bookTickets b WHERE b.account.maTaiKhoan = :accountId AND b.trangThaiDatVe = com.example.project_web_cinema.entity.booktickets.TrangThaiDatVe.DaThanhToan")
+    Integer countPurchasedTicketsByAccountId(@Param("accountId") Integer accountId);
 }

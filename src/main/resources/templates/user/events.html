@@ -8,20 +8,9 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" th:href="@{/}">Cinema <span class="text-warning">All Star</span></a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang Chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/store}">Star Shop</a></li>
-                    <li class="nav-item"><a class="nav-link fw-bold text-warning" th:href="@{/events}">Sự Kiện</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/khuyen-mai}">Khuyến Mãi</a></li>
-                    <li class="nav-item"><a class="nav-link" th:href="@{/phim-online}">Phim Online</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    
+    <!-- Nhúng Header Chuẩn -->
+    <div th:replace="~{user/home :: nav}"></div>
 
     <div class="container py-5">
         <h2 class="fw-bold mb-5 text-primary text-center">SỰ KIỆN ĐẶC BIỆT</h2>
@@ -56,6 +45,10 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Load Script cho Mega Menu -->
+    <script th:replace="~{user/home :: megaMenuScript}"></script>
 
     <script>
         const timerEl = document.querySelector('.countdown-timer');

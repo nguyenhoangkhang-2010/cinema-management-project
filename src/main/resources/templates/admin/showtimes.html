@@ -6,6 +6,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/admin_home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-common.css}">
 </head>
 <body>
     <div class="admin-container">
@@ -15,8 +16,29 @@
                 <h4 class="m-0 fw-bold text-primary"><i class="bi bi-calendar3 me-2"></i>Quản Lý Suất Chiếu</h4>
             </nav>
             <div class="container-fluid p-4">
-                <div th:if="${success}" class="alert alert-success alert-dismissible fade show"><i class="bi bi-check-circle-fill me-2"></i><span th:text="${success}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
-                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show"><i class="bi bi-exclamation-triangle-fill me-2"></i><span th:text="${error}"></span><button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+
+                <!-- Tích hợp SweetAlert2 -->
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script th:inline="javascript">
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const successMsg = /*[[${success}]]*/ null;
+                        const errorMsg = /*[[${error}]]*/ null;
+
+                        if (successMsg) {
+                            Swal.fire({
+                                icon: 'success', title: 'Thành công!', text: successMsg,
+                                showConfirmButton: false, timer: 2500, toast: true, position: 'top-end'
+                            });
+                        }
+
+                        if (errorMsg) {
+                            Swal.fire({
+                                icon: 'error', title: 'Thất bại!', text: errorMsg,
+                                confirmButtonColor: '#0d6efd'
+                            });
+                        }
+                    });
+                </script>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <form th:action="@{/admin/showtimes}" method="get" class="d-flex gap-2">
@@ -28,7 +50,7 @@
                     <a th:href="@{/admin/showtimes/add}" class="btn btn-primary fw-bold"><i class="bi bi-plus-circle me-1"></i> Thêm Suất Chiếu</a>
                 </div>
 
-                <div class="card border-0 shadow-sm rounded-4">
+                <div class="card border-0 shadow-sm table-container">
                     <div class="card-body p-0">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-dark">
@@ -56,8 +78,8 @@
                                     </td>
                                     <td class="text-danger fw-bold" th:text="${#numbers.formatDecimal(st.giaVe, 0, 'COMMA', 0, 'POINT')} + ' đ'">50,000 đ</td>
                                     <td class="text-end pe-4">
-                                        <a th:href="@{/admin/showtimes/edit/{id}(id=${st.maSuatChieu})}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-square"></i></a>
-                                        <a th:href="@{/admin/showtimes/delete/{id}(id=${st.maSuatChieu})}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xóa suất chiếu này?');"><i class="bi bi-trash"></i></a>
+                                        <a th:href="@{/admin/showtimes/edit/{id}(id=${st.maSuatChieu})}" class="btn btn-sm btn-outline-primary btn-action me-1"><i class="bi bi-pencil-square"></i> Sửa</a>
+                                        <a th:href="@{/admin/showtimes/delete/{id}(id=${st.maSuatChieu})}" class="btn btn-sm btn-outline-danger btn-action" th:onclick="confirmDeleteAction(event, this.href, 'Xóa suất chiếu?', 'Hành động này không thể hoàn tác!')"><i class="bi bi-trash"></i> Xóa</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -78,5 +100,25 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function confirmDeleteAction(event, url, titleText, messageText) {
+            event.preventDefault();
+            Swal.fire({
+                title: titleText,
+                text: messageText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy bỏ',
+                borderRadius: '16px'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
 </body>
 </html>

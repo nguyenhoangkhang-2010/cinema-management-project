@@ -19,6 +19,9 @@
             <li th:classappend="${activeMenu == 'movies' ? 'active' : ''}">
                 <a th:href="@{/admin/movies}"><i class="bi bi-film me-2"></i> Quản Lý Phim</a>
             </li>
+            <li th:classappend="${activeMenu == 'categories' ? 'active' : ''}">
+                <a th:href="@{/admin/categories}"><i class="bi bi-tags-fill me-2"></i> Quản Lý Thể Loại</a>
+            </li>
             <li th:classappend="${activeMenu == 'showtimes' ? 'active' : ''}">
                 <a th:href="@{/admin/showtimes}"><i class="bi bi-calendar3 me-2"></i> Quản Lý Suất Chiếu</a>
             </li>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thể loại phim</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/admin_home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-common.css}">
+</head>
+<body>
+<div class="admin-container">
+    <div th:replace="~{admin/sidebar :: sidebar('categories')}"></div>
+
+    <div class="w-100 flex-grow-1 d-flex flex-column bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
+            <div class="d-flex align-items-center">
+                <h4 class="m-0 fw-bold text-dark"><i class="bi bi-tags-fill text-primary me-2"></i>Quản Lý Thể Loại Phim</h4>
+            </div>
+            <div class="ms-auto d-flex align-items-center">
+                <span class="me-3 fw-medium text-secondary">Xin chào, <b class="text-dark">Quản Trị Viên</b></span>
+            </div>
+        </nav>
+
+        <div class="container-fluid p-4 flex-grow-1">
+
+            <!-- Tích hợp SweetAlert2 -->
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script th:inline="javascript">
+                document.addEventListener('DOMContentLoaded', function () {
+                    const successMsg = /*[[${success}]]*/ null;
+                    const errorMsg = /*[[${error}]]*/ null;
+
+                    if (successMsg) {
+                        Swal.fire({
+                            icon: 'success', title: 'Thành công!', text: successMsg,
+                            showConfirmButton: false, timer: 2500, toast: true, position: 'top-end'
+                        });
+                    }
+
+                    if (errorMsg) {
+                        Swal.fire({
+                            icon: 'error', title: 'Thất bại!', text: errorMsg,
+                            confirmButtonColor: '#0d6efd'
+                        });
+                    }
+                });
+            </script>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <form th:action="@{/admin/categories}" method="get" class="d-flex gap-2">
+                    <input type="text" name="search" th:value="${search}" class="form-control" placeholder="Tìm kiếm tên thể loại...">
+                    <button type="submit" class="btn btn-dark"><i class="bi bi-search"></i> Lọc</button>
+                    <a th:href="@{/admin/categories}" class="btn btn-outline-secondary"><i class="bi bi-arrow-clockwise"></i></a>
+                </form>
+                <a th:href="@{/admin/categories/add}" class="btn btn-primary fw-bold shadow-sm">
+                    <i class="bi bi-plus-lg me-1"></i> Thêm Thể Loại
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-sm table-container">
+                <div class="card-body p-0">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="ps-4 py-3">Mã Thể Loại</th>
+                                <th>Tên Thể Loại</th>
+                                <th class="text-center">Số phim đang sử dụng</th>
+                                <th class="text-center pe-4">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="cat : ${categories.content}">
+                                <td class="ps-4 fw-bold text-secondary">#[[${cat.maTheLoai}]]</td>
+                                <td class="fw-bold text-dark" th:text="${cat.tenLoai}"></td>
+                                <td class="text-center">
+                                    <span class="badge bg-info text-dark rounded-pill px-3" th:text="${cat.soPhimDangSuDung}"></span>
+                                </td>
+                                <td class="text-center pe-4">
+                                    <a th:href="@{'/admin/categories/edit/' + ${cat.maTheLoai}}" class="btn btn-sm btn-outline-primary btn-action me-1"><i class="bi bi-pencil-square"></i> Sửa</a>
+                                    <form th:action="@{'/admin/categories/delete/' + ${cat.maTheLoai}}" method="post" class="d-inline" onsubmit="confirmDeleteForm(event, this, 'Xóa thể loại?', 'Bạn có chắc chắn muốn xóa thể loại này không?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger btn-action"><i class="bi bi-trash"></i> Xóa</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(categories.content)}">
+                                <td colspan="4" class="text-center text-muted py-4">Không tìm thấy dữ liệu thể loại phim.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Phân trang -->
+            <div class="d-flex justify-content-center mt-4" th:if="${categories.totalPages > 1}">
+                <nav>
+                    <ul class="pagination pagination-sm shadow-sm">
+                        <li class="page-item" th:classappend="${categories.first ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/categories(page=${currentPage - 1}, search=${search})}">&laquo;</a>
+                        </li>
+                        <li class="page-item" th:each="i : ${#numbers.sequence(1, categories.totalPages)}" th:classappend="${currentPage == i ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/admin/categories(page=${i}, search=${search})}" th:text="${i}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${categories.last ? 'disabled' : ''}">
+                            <a class="page-link" th:href="@{/admin/categories(page=${currentPage + 1}, search=${search})}">&raquo;</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function confirmDeleteForm(event, form, titleText, messageText) {
+            event.preventDefault();
+            Swal.fire({
+                title: titleText,
+                text: messageText,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy bỏ',
+                borderRadius: '16px'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        }
+    </script>
+</body>
+</html>
