@@ -42,7 +42,14 @@ public class UserPaymentController {
 
     @GetMapping("/user/history")
     public String bookingHistory(Authentication authentication, Model model) {
-        model.addAttribute("history", userPaymentService.getHistory(authentication.getName()));
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login"; // Bắt buộc đăng nhập
+        }
+        try {
+            model.addAttribute("history", userPaymentService.getHistory(authentication.getName()));
+        } catch (Exception e) {
+            model.addAttribute("history", java.util.Collections.emptyList());
+        }
         return "user/history";
     }
 }

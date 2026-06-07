@@ -64,12 +64,12 @@ public class UserPaymentServiceImpl implements UserPaymentService {
             dto.setMaDatVe((Integer) row[0]);
             dto.setTenPhim((String) row[1]);
             dto.setPoster((String) row[2]);
-            dto.setNgayChieu(row[3].toString());
-            dto.setGioBatDau(row[4].toString());
+            dto.setNgayChieu(row[3] != null ? row[3].toString() : "");
+            dto.setGioBatDau(row[4] != null ? row[4].toString() : "");
             dto.setTenPhong((String) row[5]);
             dto.setTenRap((String) row[6]);
-            dto.setNgayDat(row[7].toString());
-            dto.setTongTien(((Number) row[8]).doubleValue());
+            dto.setNgayDat(row[7] != null ? row[7].toString() : "");
+            dto.setTongTien(row[8] != null ? ((Number) row[8]).doubleValue() : 0.0);
             dto.setTrangThai((String) row[9]);
             dto.setDanhSachGhe((String) row[10]);
             list.add(dto);

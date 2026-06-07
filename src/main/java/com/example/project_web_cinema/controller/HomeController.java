@@ -4,8 +4,6 @@ import com.example.project_web_cinema.entity.movie.Movie;
 import com.example.project_web_cinema.entity.movie.TrangThaiPhim;
 import com.example.project_web_cinema.repository.MovieRepository;
 import com.example.project_web_cinema.service.HomeService;
-import com.example.project_web_cinema.service.MovieService;
-import com.example.project_web_cinema.service.PromotionService;
 import com.example.project_web_cinema.service.UserStoreService;
 
 import org.springframework.stereotype.Controller;
