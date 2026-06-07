@@ -139,41 +139,34 @@
     <!-- PHIM ĐANG CHIẾU NỔI BẬT -->
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
-<<<<<<< HEAD
-            <h3 class="m-0 fw-bold border-start border-warning border-4 ps-3">PHIM ĐANG CHIẾU NỔI BẬT</h3>
+            <h3 class="m-0 fw-bold border-start border-warning border-4 ps-3 text-dark" style="letter-spacing: 0.5px;">PHIM ĐANG CHIẾU NỔI BẬT</h3>
             <a th:href="@{/store}" class="text-decoration-none text-danger fw-bold">Xem tất cả <i class="bi bi-chevron-right"></i></a>
         </div>
-
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col" th:each="movie : ${homeData.hotMovies}">
-                <div class="card border-0 bg-transparent movie-card h-100 shadow-sm">
-                    <div class="position-relative">
-                        <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/350x500?text=No+Poster'"
-                             class="card-img-top rounded-top" alt="Poster Phim" style="height: 450px; object-fit: cover;">
-                        <div class="position-absolute top-0 end-0 m-2">
-                            <span class="badge bg-warning text-dark fs-6"><i class="bi bi-star-fill me-1"></i><span th:text="${#numbers.formatDecimal(movie.avgRating, 1, 1)}"></span></span>
+        <div class="row movie-grid-container">
+            <th:block th:if="${phimDangChieu != null and !#lists.isEmpty(phimDangChieu)}">
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-5" th:each="movie : ${phimDangChieu}">
+                    <div class="card border-0 movie-card-premium h-100">
+                        <div class="poster-wrapper">
+                            <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/350x500?text=No+Poster'"
+                                 class="custom-movie-poster" alt="Poster Phim">
                         </div>
-                    </div>
-
-                    <div class="card-body bg-white rounded-bottom d-flex flex-column">
-                        <h5 class="card-title fw-bold text-dark text-truncate mb-2" th:text="${movie.tenPhim}">Tên phim</h5>
-                        <p class="text-muted small mb-3">
-                            <i class="bi bi-clock me-1"></i><span th:text="${movie.thoiLuong != null ? movie.thoiLuong + ' phút' : 'N/A'}"></span>
-                            <span class="mx-2">|</span>
-                            <i class="bi bi-people me-1"></i><span th:text="${movie.voteCount} + ' đánh giá'"></span>
-                        </p>
-                            
-                        <div class="mt-auto">
-                            <a th:href="@{'/book/' + ${movie.maPhim}}" class="btn btn-outline-danger fw-bold w-100">ĐẶT VÉ</a>
+                        <div class="card-body movie-info-wrap d-flex flex-column justify-content-between">
+                            <h6 class="movie-title-premium text-truncate" th:text="${movie.tenPhim}">Tên phim mẫu</h6>
+                            <div class="mt-2">
+                                <a th:href="@{'/book/' + ${movie.maPhim}}" class="btn btn-booking-premium w-100 d-flex align-items-center justify-content-center" sec:authorize="isAuthenticated()">
+                                    <i class="bi bi-ticket-perforated-fill me-2"></i> Đặt Vé Ngay
+                                </a>
+                                <a th:href="@{/login}" class="btn btn-login-remind w-100 text-uppercase" sec:authorize="!isAuthenticated()">
+                                    <i class="bi bi-lock-fill me-1"></i> Đăng nhập để đặt
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="container py-5" th:if="${homeData.hotMovies == null or #lists.isEmpty(homeData.hotMovies)}">
-                <div class="d-flex justify-content-center align-items-center flex-column py-5">
-                    <i class="bi bi-film fs-1 text-muted mb-3"></i>
-                    <p class="fw-bold text-muted fs-5">Hệ thống hiện tại chưa có phim nổi bật!</p>
-                </div>
+            </th:block>
+            <div class="col-12 text-center py-5 text-muted" th:if="${phimDangChieu == null or #lists.isEmpty(phimDangChieu)}">
+                <i class="bi bi-film fs-1 text-secondary d-block mb-3"></i>
+                <p class="fw-medium mb-0">Hệ thống hiện tại chưa có lịch chiếu phim nào mới!</p>
             </div>
         </div>
     </div>
@@ -203,35 +196,6 @@
                         Hệ thống hiện tại chưa có lịch chiếu phim nào mới!
                     </p>
                 </div>
-=======
-            <h3 class="m-0 fw-bold border-start border-warning border-4 ps-3 text-dark" style="letter-spacing: 0.5px;">PHIM ĐANG CHIẾU</h3>
-        </div>
-        <div class="row movie-grid-container">
-            <th:block th:if="${phimDangChieu != null and !#lists.isEmpty(phimDangChieu)}">
-                <div class="col-sm-6 col-md-4 col-lg-3 mb-5" th:each="movie : ${phimDangChieu}">
-                    <div class="card border-0 movie-card-premium h-100">
-                        <div class="poster-wrapper">
-                            <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/350x500?text=No+Poster'"
-                                 class="custom-movie-poster" alt="Poster Phim">
-                        </div>
-                        <div class="card-body movie-info-wrap d-flex flex-column justify-content-between">
-                            <h6 class="movie-title-premium text-truncate" th:text="${movie.tenPhim}">Tên phim mẫu</h6>
-                            <div class="mt-2">
-                                <a th:href="@{'/book/' + ${movie.maPhim}}" class="btn btn-booking-premium w-100 d-flex align-items-center justify-content-center" sec:authorize="isAuthenticated()">
-                                    <i class="bi bi-ticket-perforated-fill me-2"></i> Đặt Vé Ngay
-                                </a>
-                                <a th:href="@{/login}" class="btn btn-login-remind w-100 text-uppercase" sec:authorize="!isAuthenticated()">
-                                    <i class="bi bi-lock-fill me-1"></i> Đăng nhập để đặt
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </th:block>
-            <div class="col-12 text-center py-5 text-muted" th:if="${phimDangChieu == null or #lists.isEmpty(phimDangChieu)}">
-                <i class="bi bi-film fs-1 text-secondary d-block mb-3"></i>
-                <p class="fw-medium mb-0">Hệ thống hiện tại chưa có lịch chiếu phim nào mới!</p>
->>>>>>> origin/feature-them-phim
             </div>
         </div>
     </div>
