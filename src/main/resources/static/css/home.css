@@ -259,3 +259,15 @@
 }
 .showtime-btn:hover { border-color: #dc3545; color: #dc3545; background: #fff5f5; transform: translateY(-2px); }
 .showtime-btn small { display: block; font-size: 0.75rem; color: #6c757d; margin-top: 5px; }
+
+/* Hiệu ứng Skeleton Loading cho khu vực đặt vé */
+@keyframes skeleton-loading {
+    0% { background-color: #e2e5e7; }
+    50% { background-color: #f1f3f5; }
+    100% { background-color: #e2e5e7; }
+}
+.skeleton-box {
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 6px; display: inline-block; color: transparent !important;
+    min-height: 38px; pointer-events: none; border: none !important; margin-right: 10px; margin-bottom: 10px;
+}

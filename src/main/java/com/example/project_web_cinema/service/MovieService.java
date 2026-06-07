@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -92,61 +93,47 @@ public class MovieService {
     }
 
     public List<Map<String, Object>> getCinemasForMovie(Integer maPhim) {
-        Movie movie = movieRepository.findById(maPhim).orElse(null);
-        if (movie == null)
-            return new ArrayList<>();
-
-        List<MovieScreening> screenings = movieScreeningRepository
-                .findShowtimesWithFilters(movie.getTenPhim(), null, PageRequest.of(0, 100)).getContent();
-
-        // Extract thông tin rạp (Lọc trùng lặp bằng Set)
-        return screenings.stream()
-                .filter(s -> s.getNgayChieu() != null && !s.getNgayChieu().isBefore(LocalDate.now()))
-                .map(s -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("maRap", s.getRoom().getCinema().getMaRap());
-                    map.put("tenRap", s.getRoom().getCinema().getTenRap());
-                    return map;
-                })
-                .distinct()
-                .collect(Collectors.toList());
+        List<Object[]> results = movieScreeningRepository.findDistinctCinemasByMovieId(maPhim);
+        return results.stream().map(row -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("maRap", row[0]);
+            map.put("tenRap", row[1]);
+            return map;
+        }).collect(Collectors.toList());
     }
 
     public List<Map<String, Object>> getDatesForMovie(Integer maPhim, Integer cinemaId) {
-        Movie movie = movieRepository.findById(maPhim).orElse(null);
-        if (movie == null)
-            return new ArrayList<>();
+        List<LocalDate> dates = movieScreeningRepository.findDistinctDatesByMovieAndCinema(maPhim, cinemaId);
+        return dates.stream().map(date -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("date", date.toString());
 
-        List<MovieScreening> screenings = movieScreeningRepository
-                .findShowtimesWithFilters(movie.getTenPhim(), null, PageRequest.of(0, 100)).getContent();
+            String display = "";
+            if (date.equals(LocalDate.now())) {
+                display = "Hôm nay, ";
+            } else if (date.equals(LocalDate.now().plusDays(1))) {
+                display = "Ngày mai, ";
+            }
+            display += date.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM"));
 
-        return screenings.stream()
-                .filter(s -> s.getNgayChieu() != null && !s.getNgayChieu().isBefore(LocalDate.now())
-                        && s.getRoom().getCinema().getMaRap().equals(cinemaId))
-                .map(MovieScreening::getNgayChieu).distinct().sorted()
-                .map(date -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("date", date.toString());
-                    map.put("displayDate", date.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM")));
-                    return map;
-                }).collect(Collectors.toList());
+            map.put("displayDate", display);
+            return map;
+        }).collect(Collectors.toList());
     }
 
     public List<Map<String, Object>> getShowtimesForMovie(Integer maPhim, Integer cinemaId, String dateStr) {
         LocalDate date = LocalDate.parse(dateStr);
-        return movieScreeningRepository
-                .findShowtimesWithFilters(movieRepository.findById(maPhim).get().getTenPhim(), null,
-                        PageRequest.of(0, 100))
-                .getContent()
-                .stream()
-                .filter(s -> s.getNgayChieu() != null && s.getNgayChieu().equals(date)
-                        && s.getRoom().getCinema().getMaRap().equals(cinemaId))
-                .sorted(Comparator.comparing(s -> s.getGioBatDau().toString()))
-                .map(s -> {
+        List<Object[]> results = movieScreeningRepository.findShowtimesByMovieAndCinemaAndDate(maPhim, cinemaId, date);
+        LocalTime now = LocalTime.now();
+        boolean isToday = date.equals(LocalDate.now());
+
+        return results.stream()
+                .filter(row -> !isToday || ((LocalTime) row[1]).isAfter(now))
+                .map(row -> {
                     Map<String, Object> map = new HashMap<>();
-                    map.put("maSuatChieu", s.getMaSuatChieu());
-                    map.put("gioBatDau", s.getGioBatDau().toString().substring(0, 5));
-                    map.put("tenPhong", s.getRoom().getTenPhong());
+                    map.put("maSuatChieu", row[0]);
+                    map.put("gioBatDau", row[1].toString().substring(0, 5));
+                    map.put("tenPhong", row[2]);
                     return map;
                 }).collect(Collectors.toList());
     }
