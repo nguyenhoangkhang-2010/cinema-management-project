@@ -60,7 +60,6 @@
             cursor: pointer;
         }
 
-        /* Màu sắc pastel cho các Badge Trạng Thái */
         .bg-warning-subtle { background-color: #fef3c7 !important; }
         .text-warning-mapping { color: #d97706 !important; }
         .bg-success-subtle { background-color: #dcfce7 !important; }
@@ -140,12 +139,12 @@
                                     <span th:if="${movie.ngayKhoiChieu == null}" class="text-muted small">Chưa cập nhật</span>
                                 </td>
                                 <td class="text-center">
-                                            <span class="badge badge-custom"
-                                                  th:classappend="${movie.trangThai.name() == 'DangChieu' ? 'bg-success-subtle text-success border border-success-subtle' :
-                                                                 (movie.trangThai.name() == 'SapChieu' ? 'bg-warning-subtle text-warning-mapping border border-warning-subtle' :
-                                                                 (movie.trangThai.name() == 'NgungChieu' ? 'bg-danger-subtle text-danger border border-danger-subtle' :
-                                                                 'bg-primary-subtle text-primary border border-primary-subtle'))}"
-                                                  th:text="${movie.trangThai.name() == 'DangChieu' ? 'Đang Chiếu' : (movie.trangThai.name() == 'SapChieu' ? 'Sắp Chiếu' : (movie.trangThai.name() == 'NgungChieu' ? 'Ngừng Chiếu' : 'Chiếu Online'))}">Đang Chiếu</span>
+                                    <span class="badge badge-custom"
+                                          th:classappend="${movie.trangThai.name() == 'DangChieu' ? 'bg-success-subtle text-success border border-success-subtle' :
+                                                         (movie.trangThai.name() == 'SapChieu' ? 'bg-warning-subtle text-warning-mapping border border-warning-subtle' :
+                                                         (movie.trangThai.name() == 'NgungChieu' ? 'bg-danger-subtle text-danger border border-danger-subtle' :
+                                                         'bg-primary-subtle text-primary border border-primary-subtle'))}"
+                                          th:text="${movie.trangThai.name() == 'DangChieu' ? 'Đang Chiếu' : (movie.trangThai.name() == 'SapChieu' ? 'Sắp Chiếu' : (movie.trangThai.name() == 'NgungChieu' ? 'Ngừng Chiếu' : 'Chiếu Online'))}">Đang Chiếu</span>
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="d-inline-flex">
@@ -197,7 +196,6 @@
 </div>
 
 <script>
-    // Hàm tích chọn tất cả Checkbox
     function toggleSelectAll(master) {
         const checkboxes = document.getElementsByClassName('movie-checkbox');
         for (let i = 0; i < checkboxes.length; i++) {
@@ -206,7 +204,6 @@
         updateSelectCount();
     }
 
-    // Hàm cập nhật số lượng dòng đã chọn và ẩn/hiện nút xóa hàng loạt
     function updateSelectCount() {
         const checkboxes = document.getElementsByClassName('movie-checkbox');
         const masterCheckbox = document.getElementById('selectAll');
@@ -228,9 +225,8 @@
         }
     }
 
-    // 1. Popup SweetAlert2: Xác nhận Xóa TỪNG bộ phim riêng lẻ
     function confirmDeleteSingle(event, url) {
-        event.preventDefault(); // Chặn hành động click nhảy link mặc định
+        event.preventDefault();
 
         Swal.fire({
             title: 'Xác nhận xóa phim?',
@@ -244,12 +240,11 @@
             borderRadius: '16px'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = url; // Điều hướng đến URL xóa thật sự trong Controller Java
+                window.location.href = url;
             }
         });
     }
 
-    // 2. Popup SweetAlert2: Xác nhận Xóa HÀNG LOẠT khi tích checkbox
     function deleteSelectedMovies() {
         const currentCount = document.getElementById('selectCount').innerText;
 
@@ -265,7 +260,7 @@
             borderRadius: '16px'
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('bulkDeleteForm').submit(); // Gửi form POST hàng loạt lên Backend
+                document.getElementById('bulkDeleteForm').submit();
             }
         });
     }

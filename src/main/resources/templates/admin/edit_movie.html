@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Thêm Phim Mới - All Star Cinema</title>
+    <title>Chỉnh Sửa Phim - All Star Cinema</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/admin_home.css}">
@@ -19,7 +19,7 @@
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
         }
         .form-label { color: #495057; margin-bottom: 0.4rem; }
-        .preview-box { background: #ffffff; border: 2px dashed #dee2e6; border-radius: 16px; padding: 1.5rem; transition: all 0.3s ease; }
+        .preview-box { background: #ffffff; border: 2px dashed #dee2e6; border-radius: 16px; padding: 1.5rem; }
         .poster-img { max-height: 360px; object-fit: cover; border-radius: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
     </style>
 </head>
@@ -32,7 +32,7 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 px-4 shadow-sm border-bottom">
             <div class="d-flex align-items-center">
                 <h4 class="m-0 fw-bold text-dark">
-                    <i class="bi bi-camera-reels-fill text-primary me-2"></i>Quản Lý Danh Sách Phim
+                    <i class="bi bi-pencil-square text-primary me-2"></i>Chỉnh Sửa Thông Tin Phim
                 </h4>
             </div>
             <div class="ms-auto d-flex align-items-center">
@@ -50,38 +50,38 @@
             <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
                 <div class="card-body p-4 p-md-5">
                     <div class="border-bottom pb-3 mb-4">
-                        <h5 class="fw-bold m-0 text-dark">Thông tin phim mới</h5>
-                        <p class="text-muted small m-0">Vui lòng điền đầy đủ các thông tin cốt lõi của bộ phim dưới đây.</p>
+                        <h5 class="fw-bold m-0 text-dark" th:text="${'Cập nhật bộ phim: ' + movie.tenPhim}">Chỉnh sửa phim</h5>
+                        <p class="text-muted small m-0">Thay đổi các thông tin cần thiết và bấm lưu để cập nhật vào hệ thống.</p>
                     </div>
 
-                    <form th:action="@{/admin/movies/add}" th:object="${movie}" method="post">
+                    <form th:action="@{/admin/movies/edit/{id}(id=${movie.maPhim})}" th:object="${movie}" method="post">
                         <div class="row g-4">
 
                             <div class="col-lg-8">
                                 <div class="mb-3">
                                     <label for="tenPhim" class="form-label fw-semibold">Tên Bộ Phim <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="tenPhim" th:field="*{tenPhim}" required placeholder="Nhập tên phim chính thức...">
+                                    <input type="text" class="form-control" id="tenPhim" th:field="*{tenPhim}" required>
                                 </div>
 
                                 <div class="row g-3">
                                     <div class="col-md-6 mb-3">
                                         <label for="daoDien" class="form-label fw-semibold">Đạo Diễn</label>
-                                        <input type="text" class="form-control" id="daoDien" th:field="*{daoDien}" placeholder="Tên người đạo diễn...">
+                                        <input type="text" class="form-control" id="daoDien" th:field="*{daoDien}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="quocGia" class="form-label fw-semibold">Quốc Gia</label>
-                                        <input type="text" class="form-control" id="quocGia" th:field="*{quocGia}" placeholder="Ví dụ: Việt Nam, Mỹ, Hàn Quốc...">
+                                        <input type="text" class="form-control" id="quocGia" th:field="*{quocGia}">
                                     </div>
                                 </div>
 
                                 <div class="row g-3">
                                     <div class="col-md-4 mb-3">
                                         <label for="thoiLuong" class="form-label fw-semibold">Thời Lượng (Phút) <span class="text-danger">*</span></label>
-                                        <input type="number" class="form-control" id="thoiLuong" th:field="*{thoiLuong}" required min="1" placeholder="120">
+                                        <input type="number" class="form-control" id="thoiLuong" th:field="*{thoiLuong}" required min="1">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="doTuoi" class="form-label fw-semibold">Giới Hạn Độ Tuổi</label>
-                                        <input type="number" class="form-control" id="doTuoi" th:field="*{doTuoi}" min="0" placeholder="0">
+                                        <input type="number" class="form-control" id="doTuoi" th:field="*{doTuoi}" min="0">
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="trangThai" class="form-label fw-semibold">Trạng Thái Chiếu <span class="text-danger">*</span></label>
@@ -97,32 +97,34 @@
                                 <div class="row g-3" id="dateFieldsGroup">
                                     <div class="col-md-6 mb-3">
                                         <label for="ngayKhoiChieu" class="form-label fw-semibold">Ngày Khởi Chiếu <span class="text-danger">*</span></label>
-                                        <input type="date" class="form-control" id="ngayKhoiChieu" th:field="*{ngayKhoiChieu}">
+                                        <input type="date" class="form-control" id="ngayKhoiChieu" name="ngayKhoiChieu"
+                                               th:value="${movie.ngayKhoiChieu != null ? #temporals.format(movie.ngayKhoiChieu, 'yyyy-MM-dd') : ''}">
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="ngayKetThucChieu" class="form-label fw-semibold">Ngày Kết Thúc Dự Kiến</label>
-                                        <input type="date" class="form-control" id="ngayKetThucChieu" th:field="*{ngayKetThucChieu}">
+                                        <input type="date" class="form-control" id="ngayKetThucChieu" name="ngayKetThucChieu"
+                                               th:value="${movie.ngayKetThucChieu != null ? #temporals.format(movie.ngayKetThucChieu, 'yyyy-MM-dd') : ''}">
                                     </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="moTa" class="form-label fw-semibold">Mô Tả Nội Dung</label>
-                                    <textarea class="form-control" id="moTa" th:field="*{moTa}" rows="4" placeholder="Nhập tóm tắt kịch bản bộ phim..."></textarea>
+                                    <textarea class="form-control" id="moTa" th:field="*{moTa}" rows="4"></textarea>
                                 </div>
                             </div>
 
                             <div class="col-lg-4 ps-lg-4">
                                 <div class="mb-3">
                                     <label for="poster" class="form-label fw-semibold">Đường Dẫn URL Poster (Ảnh)</label>
-                                    <input type="text" class="form-control" id="poster" th:field="*{poster}" placeholder="https://..." oninput="updatePosterPreview()">
+                                    <input type="text" class="form-control" id="poster" th:field="*{poster}" oninput="updatePosterPreview()">
                                 </div>
                                 <div class="mb-4">
                                     <label for="trailer" class="form-label fw-semibold">Đường Dẫn URL Trailer (Youtube)</label>
-                                    <input type="text" class="form-control" id="trailer" th:field="*{trailer}" placeholder="Nhập link rút gọn để tránh quá tải...">
+                                    <input type="text" class="form-control" id="trailer" th:field="*{trailer}">
                                 </div>
 
                                 <div class="preview-box text-center">
-                                    <span class="d-block small fw-bold text-secondary text-uppercase mb-3">Xem trước ảnh poster</span>
+                                    <span class="d-block small fw-bold text-secondary text-uppercase mb-3">Poster Hiện Tại</span>
                                     <img id="posterPreview" src="https://placehold.co/300x450?text=No+Poster" class="img-fluid poster-img" alt="Preview">
                                 </div>
                             </div>
@@ -131,7 +133,7 @@
                         <div class="border-top pt-4 mt-4 d-flex justify-content-end align-items-center">
                             <a th:href="@{/admin/movies}" class="btn btn-light fw-medium px-4 py-2 me-2 rounded-3 text-secondary">Hủy bỏ</a>
                             <button type="submit" class="btn btn-primary fw-bold px-4 py-2 rounded-3 shadow-sm">
-                                <i class="bi bi-cloud-arrow-up-fill me-1"></i> Lưu dữ liệu phim
+                                <i class="bi bi-check-circle-fill me-1"></i> Lưu Thay Đổi
                             </button>
                         </div>
                     </form>
@@ -152,23 +154,11 @@
             ngayKhoiChieuInput.removeAttribute('required');
         } else {
             dateFieldsGroup.style.display = 'flex';
-            if (ngayKhoiChieuInput.value !== "") {
-                ngayKhoiChieuInput.setAttribute('required', 'required');
-            }
+            ngayKhoiChieuInput.setAttribute('required', 'required');
         }
     }
 
-    document.getElementById('trangThai').addEventListener('change', function() {
-        const dateFieldsGroup = document.getElementById('dateFieldsGroup');
-        const ngayKhoiChieuInput = document.getElementById('ngayKhoiChieu');
-        if (this.value === 'Online') {
-            dateFieldsGroup.style.display = 'none';
-            ngayKhoiChieuInput.removeAttribute('required');
-        } else {
-            dateFieldsGroup.style.display = 'flex';
-            ngayKhoiChieuInput.setAttribute('required', 'required');
-        }
-    });
+    document.getElementById('trangThai').addEventListener('change', toggleDateFields);
 
     window.addEventListener('DOMContentLoaded', toggleDateFields);
 
