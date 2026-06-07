@@ -46,7 +46,7 @@ public class Movie {
     @Column(name = "QuocGia", length = 50)
     private String quocGia;
     @Lob
-    @Column(name = "MoTa")
+    @Column(name = "MoTa", columnDefinition = "TEXT")
     private String moTa;
     @Min(0)
     @Column(name = "DoTuoi")
