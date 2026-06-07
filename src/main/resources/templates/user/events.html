@@ -1,70 +1,317 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Sự Kiện - Cinema All Star</title>
+    <title>Sự Kiện & Ưu Đãi - Cinema All Star</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/events.css}">
 </head>
-<body class="bg-light">
-    
-    <!-- Nhúng Header Chuẩn -->
-    <div th:replace="~{user/home :: nav}"></div>
+<body class="bg-premium-light">
 
+<nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand fw-bold" th:href="@{/}">Cinema <span class="text-warning">All Star</span></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-bold">
+                <li class="nav-item"><a class="nav-link" th:href="@{/}">Trang Chủ</a></li>
+                <li class="nav-item dropdown position-static mega-menu-container">
+                    <a class="nav-link" href="#" id="megaMenuPhim">PHIM <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i></a>
+                    <div class="dropdown-menu mega-menu shadow-lg border-0 mt-0 p-0 overflow-hidden">
+                        <div class="container-fluid p-0">
+                            <div class="row g-0">
+                                <div class="col-md-3 bg-light p-4 border-end">
+                                    <div class="nav flex-column nav-pills gap-2" role="tablist">
+                                        <button class="nav-link text-start fw-bold active" data-bs-toggle="pill" data-bs-target="#megaDangChieu" type="button" role="tab">PHIM ĐANG CHIẾU</button>
+                                        <button class="nav-link text-start fw-bold" data-bs-toggle="pill" data-bs-target="#megaSapChieu" type="button" role="tab">PHIM SẮP CHIẾU</button>
+                                        <button class="nav-link text-start fw-bold" data-bs-toggle="pill" data-bs-target="#megaOnline" type="button" role="tab">PHIM ONLINE</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-9 p-4">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade show active" id="megaDangChieu" role="tabpanel">
+                                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+                                                <h5 class="fw-bold text-danger m-0">PHIM ĐANG CHIẾU</h5>
+                                                <a th:href="@{/movies/showing}" class="text-decoration-none text-danger small">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+                                            </div>
+                                            <div class="row g-4 mega-content"></div>
+                                        </div>
+                                        <div class="tab-pane fade" id="megaSapChieu" role="tabpanel">
+                                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+                                                <h5 class="fw-bold text-primary m-0">PHIM SẮP CHIẾU</h5>
+                                                <a th:href="@{/movies/coming-soon}" class="text-decoration-none text-primary small">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+                                            </div>
+                                            <div class="row g-4 mega-content"></div>
+                                        </div>
+                                        <div class="tab-pane fade" id="megaOnline" role="tabpanel">
+                                            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+                                                <h5 class="fw-bold text-success m-0">PHIM ONLINE</h5>
+                                                <a th:href="@{/movies/online}" class="text-decoration-none text-success small">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+                                            </div>
+                                            <div class="row g-4 mega-content"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/store}">Star Shop</a></li>
+                <li class="nav-item"><a class="nav-link text-warning" th:href="@{/events}">Sự Kiện</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/khuyen-mai}">Khuyến Mãi</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/phim-online}">Phim Online</a></li>
+            </ul>
+            <div sec:authorize="!isAuthenticated()" class="d-flex align-items-center">
+                <a th:href="@{/login}" class="btn btn-outline-dark fw-bold me-2 px-4">Đăng Nhập</a>
+                <a th:href="@{/register}" class="btn btn-warning fw-bold px-4">Đăng Ký</a>
+            </div>
+            <div sec:authorize="isAuthenticated()" class="dropdown position-relative">
+                <div class="d-flex align-items-center avatar-circle-wrap ms-3" tabindex="0">
+                    <i class="bi bi-person-fill fs-4 text-secondary"></i>
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end custom-profile-menu shadow-lg">
+                    <li class="px-3 py-2 border-bottom mb-2 text-center bg-light rounded-top">
+                        <span class="fw-bold d-block text-dark user-name-text" sec:authentication="name">User</span>
+                    </li>
+                    <li><a class="dropdown-item py-2 fw-medium" th:href="@{/profile}"><i class="bi bi-person-lines-fill me-2 text-secondary"></i>Hồ Sơ Của Tôi</a></li>
+                    <li><a class="dropdown-item py-2 fw-medium" href="#"><i class="bi bi-ticket-perforated me-2 text-secondary"></i>Lịch Sử Đặt Vé</a></li>
+                    <li sec:authorize="hasRole('Admin')"><a class="dropdown-item py-2 fw-bold text-primary" th:href="@{/admin/dashboard}"><i class="bi bi-speedometer2 me-2"></i>Quản Lý Hệ Thống</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="dropdown-item py-2 fw-bold text-danger"><i class="bi bi-box-arrow-right me-2"></i>Đăng Xuất</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="main-scroll-stack">
     <div class="container py-5">
-        <h2 class="fw-bold mb-5 text-primary text-center">SỰ KIỆN ĐẶC BIỆT</h2>
-        
-        <!-- KHUYẾN MÃI NỔI BẬT (FEATURED) -->
-        <h4 class="fw-bold mb-4 border-start border-warning border-4 ps-3">TOP 3 KHUYẾN MÃI SỐC</h4>
-        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-            <div class="col" th:each="promo : ${featuredPromos}">
-                <div class="card bg-dark text-white border-0 shadow-lg rounded-4 overflow-hidden h-100">
-                    <img th:src="${promo.poster}" class="card-img-top opacity-50" style="height: 200px; object-fit: cover;" alt="Promo">
-                    <div class="card-img-overlay d-flex flex-column justify-content-center text-center">
-                        <h4 class="fw-bold text-warning" th:text="${promo.tenKhuyenMai}"></h4>
-                        <h1 class="display-5 fw-bold text-danger my-3">GIẢM <span th:text="${#numbers.formatDecimal(promo.phanTramGiam, 0, 0)}"></span>%</h1>
-                        <p class="text-light small">Áp dụng từ: <span th:text="${#temporals.format(promo.ngayBatDau, 'dd/MM')}"></span> đến <span th:text="${#temporals.format(promo.ngayKetThuc, 'dd/MM')}"></span></p>
+        <div class="mb-5 border-bottom pb-3">
+            <h1 class="cinema-parc-title m-0">Sự Kiện</h1>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6" th:each="promo : ${featuredPromos}">
+                <div class="parc-event-card border-glow-effect d-flex rounded-3 overflow-hidden bg-white cursor-pointer"
+                     th:data-title="${promo.tenKhuyenMai}"
+                     th:data-discount="${#numbers.formatDecimal(promo.phanTramGiam, 0, 0)}"
+                     th:data-poster="${promo.poster}"
+                     onclick="openPromoModal(this)">
+                    <div class="parc-img-wrap-contain">
+                        <img th:src="${promo.poster}" alt="Promo">
+                    </div>
+                    <div class="parc-info-wrap p-4 d-flex flex-column justify-content-between position-relative overflow-hidden">
+                        <div class="shimmer-line"></div>
+                        <div>
+                            <span class="parc-category-tag text-danger">HOT DEAL</span>
+                            <h4 class="parc-title mt-1" th:text="${promo.tenKhuyenMai}">Tên</h4>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            <i class="bi bi-geo-alt-fill text-muted small"></i>
+                            <span class="text-secondary fs-7 fw-medium">Hệ thống rạp All Star</span>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="col-md-6" th:each="promo : ${activePromos}">
+                <div class="parc-event-card border-glow-effect d-flex rounded-3 overflow-hidden bg-white cursor-pointer"
+                     th:data-title="${promo.tenKhuyenMai}"
+                     th:data-discount="${#numbers.formatDecimal(promo.phanTramGiam, 0, 0)}"
+                     th:data-poster="https://images.unsplash.com/photo-1578496781985-452d4a934d50?q=80&w=600"
+                     onclick="openPromoModal(this)">
+                    <div class="parc-img-wrap-contain">
+                        <img src="https://images.unsplash.com/photo-1578496781985-452d4a934d50?q=80&w=600" alt="Bắp nước">
+                    </div>
+                    <div class="parc-info-wrap p-4 d-flex flex-column justify-content-between position-relative overflow-hidden">
+                        <div class="shimmer-line"></div>
+                        <div>
+                            <span class="parc-category-tag text-success">STAR SHOP ƯU ĐÃI</span>
+                            <h4 class="parc-title mt-1" th:text="${promo.tenKhuyenMai}">Tên</h4>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mt-2">
+                            <i class="bi bi-geo-alt-fill text-muted small"></i>
+                            <span class="text-secondary fs-7 fw-medium">Quầy bắp nước All Star</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6" th:each="sk : ${danhSachSuKien}">
+                <a th:href="@{'/movies/detail/' + ${sk.loaiSuKien == 'movie-event' ? 28 : 28}}" class="text-decoration-none text-dark">
+                    <div class="parc-event-card border-glow-effect d-flex rounded-3 overflow-hidden bg-white">
+                        <div class="parc-img-wrap-contain">
+                            <img th:src="${sk.anhBanner}" alt="Movie Event">
+                        </div>
+                        <div class="parc-info-wrap p-4 d-flex flex-column justify-content-between position-relative overflow-hidden">
+                            <div class="shimmer-line"></div>
+                            <div>
+                                <span class="parc-category-tag text-primary" th:text="${sk.tag}">TAG</span>
+                                <h4 class="parc-title mt-1" th:text="${sk.tieuDe}">Tiêu đề</h4>
+                                <p class="text-muted fs-7 line-clamp-2 mt-2" th:text="${sk.tomTat}">Mô tả</p>
+                            </div>
+                            <div class="d-flex align-items-center gap-2 mt-2">
+                                <i class="bi bi-geo-alt-fill text-muted small"></i>
+                                <span class="text-secondary fs-7 fw-medium">Suất chiếu đặc biệt</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
+    </div>
 
+    <footer class="magazine-footer-premium">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-4 text-start text-dark">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-ticket-perforated-fill fs-3"></i>
+                        <span class="fw-bold fs-4">All Star Cinema</span>
+                    </div>
+                    <p class="text-secondary small">Nhận thông báo sớm nhất về lịch chiếu suất đặc biệt và các chương trình ưu đãi bỏng ngô mỗi tuần tại trường HUIT và hệ thống rạp.</p>
+                    <button class="btn btn-dark rounded-pill px-4 py-2 small fw-bold">Đăng ký nhận tin</button>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="footer-branch-box bg-blue-premium p-4 rounded-4 text-white position-relative">
+                        <span class="branch-badge">ALL STAR HUIT</span>
+                        <p class="mt-3 mb-1 small fw-medium"><i class="bi bi-geo-alt me-1"></i>140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+                        <p class="small opacity-75"><i class="bi bi-telephone me-1"></i>028 3816 1673</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-2 border-white border-opacity-20">
+                            <span class="fs-7 fw-bold">Rạp Phim Học Đường</span>
+                            <div class="d-flex gap-2">
+                                <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="footer-branch-box bg-purple-premium p-4 rounded-4 text-white position-relative">
+                        <span class="branch-badge">ALL STAR CENTER</span>
+                        <p class="mt-3 mb-1 small fw-medium"><i class="bi bi-geo-alt me-1"></i>Trường Chinh, Tân Bình, TP. Hồ Chí Minh</p>
+                        <p class="small opacity-75"><i class="bi bi-telephone me-1"></i>1900 6060</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-2 border-white border-opacity-20">
+                            <span class="fs-7 fw-bold">Trung Tâm Điện Ảnh</span>
+                            <div class="d-flex gap-2">
+                                <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center border-top mt-5 pt-4 text-muted small">
+                <p class="m-0">&copy; 2024 - 2026 Cinema All Star. Tất cả quyền được bảo lưu.</p>
+                <div class="d-flex gap-3 mt-2 mt-md-0">
+                    <a href="#" class="text-decoration-none text-muted">Chính sách bảo mật</a>
+                    <a href="#" class="text-decoration-none text-muted">Điều khoản sử dụng</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
 
-        <!-- KHUYẾN MÃI ĐANG DIỄN RA -->
-        <h4 class="fw-bold mb-4 border-start border-success border-4 ps-3">KHUYẾN MÃI ĐANG DIỄN RA</h4>
-        <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-            <div class="col" th:each="promo : ${activePromos}">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body p-4 text-center">
-                        <h5 class="fw-bold text-primary mb-3" th:text="${promo.tenKhuyenMai}"></h5>
-                        <h2 class="text-danger fw-bold mb-3">GIẢM <span th:text="${#numbers.formatDecimal(promo.phanTramGiam, 0, 0)}"></span>%</h2>
-                        <p class="text-muted small">Hạn cuối: <span th:text="${#temporals.format(promo.ngayKetThuc, 'dd/MM/yyyy')}"></span></p>
+<div class="reveal-typography-container">
+    <h1 class="giant-reveal-text" id="revealText">NHỮNG SUẤT CHIẾU<br>BỨT PHÁ KHUNG HÌNH</h1>
+</div>
+
+<div class="modal fade" id="promoDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 rounded-4 shadow">
+            <div class="modal-body p-0">
+                <div class="row g-0">
+                    <div class="col-md-5 bg-dark d-flex align-items-center justify-content-center" style="background-color: #1a1a1a !important;">
+                        <img id="modalPromoImg" src="" class="w-100 object-fit-contain" style="max-height: 400px;" alt="Poster">
+                    </div>
+                    <div class="col-md-7 p-5 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start">
+                                <span class="badge bg-danger rounded-pill px-3 py-1.5 fw-bold text-uppercase small">ĐẶC QUYỀN VIP</span>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <h3 class="fw-bold text-dark mt-3 mb-2" id="modalPromoTitle">Tên ưu đãi</h3>
+                            <p class="text-muted small">Áp dụng cho toàn bộ thành viên. Xuất trình mã này tại quầy vé để được giảm trừ trực tiếp trên hóa đơn bắp nước hoặc vé phim.</p>
+                            <div class="bg-light p-3 rounded-3 text-center my-4 border border-dashed border-danger">
+                                <span class="text-secondary small d-block mb-1">MÃ GIẢM GIÁ CỦA BẠN</span>
+                                <h2 class="text-danger fw-black font-numeric m-0" id="modalPromoCode">ALLSTAR50</h2>
+                            </div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-outline-secondary w-50 py-2.5 fw-bold rounded-3" data-bs-dismiss="modal">ĐÓNG</button>
+                            <a th:href="@{/store}" class="btn btn-warning w-50 py-2.5 fw-bold rounded-3 text-center d-flex align-items-center justify-content-center">SỬ DỤNG NGAY</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Load Script cho Mega Menu -->
-    <script th:replace="~{user/home :: megaMenuScript}"></script>
+<script>
+    window.addEventListener('scroll', function() {
+        const revealText = document.getElementById('revealText');
+        const container = document.querySelector('.reveal-typography-container');
+        const rect = container.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
 
-    <script>
-        const timerEl = document.querySelector('.countdown-timer');
-        if(timerEl) {
-            const endDate = new Date(timerEl.getAttribute('data-endtime') + "T23:59:59").getTime();
-            setInterval(() => {
-                const now = new Date().getTime();
-                const distance = endDate - now;
-                if(distance >= 0) {
-                    document.getElementById('days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-                    document.getElementById('hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-                    document.getElementById('minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-                    document.getElementById('seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
-                }
-            }, 1000);
+        if (rect.top < windowHeight && rect.bottom > 0) {
+            const scrolledFraction = (windowHeight - rect.top) / (windowHeight + rect.height);
+            revealText.style.letterSpacing = `${-4 + (scrolledFraction * 20)}px`;
+            revealText.style.opacity = Math.min(0.1 + (scrolledFraction * 0.9), 1);
+            revealText.style.transform = `scale(${0.92 + (scrolledFraction * 0.08)})`;
+        } else {
+            revealText.style.letterSpacing = '-4px';
+            revealText.style.opacity = '0.1';
+            revealText.style.transform = 'scale(0.92)';
         }
-    </script>
+    });
+
+    function openPromoModal(element) {
+        document.getElementById('modalPromoTitle').innerText = element.getAttribute('data-title');
+        document.getElementById('modalPromoImg').src = element.getAttribute('data-poster');
+        document.getElementById('modalPromoCode').innerText = "ALLSTAR" + element.getAttribute('data-discount');
+        new bootstrap.Modal(document.getElementById('promoDetailModal')).show();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        fetch('/api/movies/mega-menu')
+            .then(res => res.json())
+            .then(data => {
+                renderMegaMenu('megaDangChieu', data.dangChieu);
+                renderMegaMenu('megaSapChieu', data.sapChieu);
+                renderMegaMenu('megaOnline', data.online);
+            });
+    });
+
+    function renderMegaMenu(containerId, movies) {
+        const el = document.getElementById(containerId);
+        if(!el) return;
+        const container = el.querySelector('.mega-content');
+        if(!container || !movies) return;
+        container.innerHTML = movies.slice(0, 4).map(m => `
+                <div class="col-lg-6 col-md-12">
+                    <a href="/movies/detail/${m.maPhim}" class="text-decoration-none d-flex align-items-start gap-3 p-2 rounded-3 hover-card-mega">
+                        <div class="overflow-hidden rounded-3 shadow-sm flex-shrink-0" style="width: 60px; height: 60px;">
+                            <img src="${m.poster || 'https://placehold.co/150x150'}" class="w-100 h-100 object-fit-cover" alt="${m.tenPhim}">
+                        </div>
+                        <div class="d-flex flex-column text-start flex-grow-1 overflow-hidden">
+                            <h6 class="text-dark fw-bold text-truncate m-0 w-100">${m.tenPhim}</h6>
+                            <span class="text-muted small text-truncate mt-1"><i class="bi bi-person-video me-1"></i>${m.daoDien ? m.daoDien : 'Đang cập nhật'}</span>
+                        </div>
+                    </a>
+                </div>
+            `).join('');
+    }
+</script>
 </body>
 </html>
