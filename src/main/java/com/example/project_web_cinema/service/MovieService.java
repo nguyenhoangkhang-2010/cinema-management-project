@@ -76,6 +76,81 @@ public class MovieService {
                 .collect(Collectors.groupingBy(MovieScreening::getNgayChieu, TreeMap::new, Collectors.toList()));
     }
 
+    // ==========================================
+    // CÁC API MỚI CHO TRANG CHI TIẾT PHIM (AJAX)
+    // ==========================================
+
+    public List<MovieDTO> getRelatedMovies(Integer maPhim, String quocGia) {
+        return movieRepository.findRelatedMovies(maPhim, quocGia, PageRequest.of(0, 4))
+                .getContent().stream().map(movie -> MovieDTO.builder()
+                        .maPhim(movie.getMaPhim())
+                        .tenPhim(movie.getTenPhim())
+                        .poster(movie.getPoster())
+                        .trangThai(movie.getTrangThai())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getCinemasForMovie(Integer maPhim) {
+        Movie movie = movieRepository.findById(maPhim).orElse(null);
+        if (movie == null)
+            return new ArrayList<>();
+
+        List<MovieScreening> screenings = movieScreeningRepository
+                .findShowtimesWithFilters(movie.getTenPhim(), null, PageRequest.of(0, 100)).getContent();
+
+        // Extract thông tin rạp (Lọc trùng lặp bằng Set)
+        return screenings.stream()
+                .filter(s -> s.getNgayChieu() != null && !s.getNgayChieu().isBefore(LocalDate.now()))
+                .map(s -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("maRap", s.getRoom().getCinema().getMaRap());
+                    map.put("tenRap", s.getRoom().getCinema().getTenRap());
+                    return map;
+                })
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getDatesForMovie(Integer maPhim, Integer cinemaId) {
+        Movie movie = movieRepository.findById(maPhim).orElse(null);
+        if (movie == null)
+            return new ArrayList<>();
+
+        List<MovieScreening> screenings = movieScreeningRepository
+                .findShowtimesWithFilters(movie.getTenPhim(), null, PageRequest.of(0, 100)).getContent();
+
+        return screenings.stream()
+                .filter(s -> s.getNgayChieu() != null && !s.getNgayChieu().isBefore(LocalDate.now())
+                        && s.getRoom().getCinema().getMaRap().equals(cinemaId))
+                .map(MovieScreening::getNgayChieu).distinct().sorted()
+                .map(date -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("date", date.toString());
+                    map.put("displayDate", date.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM")));
+                    return map;
+                }).collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> getShowtimesForMovie(Integer maPhim, Integer cinemaId, String dateStr) {
+        LocalDate date = LocalDate.parse(dateStr);
+        return movieScreeningRepository
+                .findShowtimesWithFilters(movieRepository.findById(maPhim).get().getTenPhim(), null,
+                        PageRequest.of(0, 100))
+                .getContent()
+                .stream()
+                .filter(s -> s.getNgayChieu() != null && s.getNgayChieu().equals(date)
+                        && s.getRoom().getCinema().getMaRap().equals(cinemaId))
+                .sorted(Comparator.comparing(s -> s.getGioBatDau().toString()))
+                .map(s -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("maSuatChieu", s.getMaSuatChieu());
+                    map.put("gioBatDau", s.getGioBatDau().toString().substring(0, 5));
+                    map.put("tenPhong", s.getRoom().getTenPhong());
+                    return map;
+                }).collect(Collectors.toList());
+    }
+
     public Optional<Movie> findById(Integer id) {
         return movieRepository.findById(id);
     }

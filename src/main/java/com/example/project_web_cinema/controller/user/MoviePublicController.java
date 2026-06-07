@@ -47,9 +47,9 @@ public class MoviePublicController {
         }
         model.addAttribute("movie", movie);
 
-        if (movie.getTrangThai() == TrangThaiPhim.DangChieu || movie.getTrangThai() == TrangThaiPhim.SapChieu) {
-            model.addAttribute("showtimes", movieService.getGroupedShowtimes(id));
-        }
+        // Lấy 4 Phim liên quan để tăng tỷ lệ chuyển đổi
+        model.addAttribute("relatedMovies", movieService.getRelatedMovies(id, movie.getQuocGia()));
+
         return "user/movie-detail";
     }
 }

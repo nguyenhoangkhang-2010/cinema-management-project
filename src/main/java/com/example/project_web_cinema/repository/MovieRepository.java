@@ -22,6 +22,12 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
         // Lấy đúng 4 phim theo trạng thái, sắp xếp mới nhất (Tránh kéo toàn bộ DB)
         List<Movie> findTop4ByTrangThaiOrderByNgayKhoiChieuDesc(TrangThaiPhim trangThai);
 
+        // Truy vấn Phim Liên Quan (Loại trừ phim hiện tại, ưu tiên cùng Quốc Gia hoặc
+        // Đang Chiếu)
+        @Query("SELECT m FROM Movie m WHERE m.maPhim != :movieId AND (m.quocGia = :quocGia OR m.trangThai = com.example.project_web_cinema.entity.movie.TrangThaiPhim.DangChieu) ORDER BY m.ngayKhoiChieu DESC")
+        Page<Movie> findRelatedMovies(@org.springframework.data.repository.query.Param("movieId") Integer movieId,
+                        @org.springframework.data.repository.query.Param("quocGia") String quocGia, Pageable pageable);
+
         @Query(value = "SELECT COUNT(ma_phim) FROM phim GROUP BY trang_thai ORDER BY trang_thai", nativeQuery = true)
         List<Long> getMovieCountByStatus();
 

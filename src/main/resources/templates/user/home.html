@@ -38,23 +38,42 @@
                     <!-- MEGA MENU PHIM -->
                     <li class="nav-item dropdown position-static mega-menu-container">
                         <a class="nav-link fw-bold" href="#" id="megaMenuPhim">PHIM <i class="bi bi-chevron-down ms-1" style="font-size: 0.8rem;"></i></a>
-                        <div class="dropdown-menu mega-menu shadow-lg border-0 mt-0">
-                            <div class="container">
-                                <div class="row">
-                                    <div class="col-md-4 border-end" id="megaDangChieu">
-                                        <h5 class="fw-bold text-danger border-bottom pb-2">PHIM ĐANG CHIẾU</h5>
-                                        <div class="row g-2 mega-content"></div>
-                                        <a th:href="@{/movies/showing}" class="btn btn-outline-danger btn-sm mt-3 w-100 fw-bold">Xem tất cả</a>
+                        <div class="dropdown-menu mega-menu shadow-lg border-0 mt-0 p-0 overflow-hidden">
+                            <div class="container-fluid p-0">
+                                <div class="row g-0">
+                                    <!-- Cột trái: Phân loại -->
+                                    <div class="col-md-3 bg-light p-4 border-end">
+                                        <div class="nav flex-column nav-pills mega-nav-pills gap-2" role="tablist" aria-orientation="vertical">
+                                            <button class="nav-link text-start fw-bold active" data-bs-toggle="pill" data-bs-target="#megaDangChieu" type="button" role="tab">PHIM ĐANG CHIẾU</button>
+                                            <button class="nav-link text-start fw-bold" data-bs-toggle="pill" data-bs-target="#megaSapChieu" type="button" role="tab">PHIM SẮP CHIẾU</button>
+                                            <button class="nav-link text-start fw-bold" data-bs-toggle="pill" data-bs-target="#megaOnline" type="button" role="tab">PHIM ONLINE</button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 border-end" id="megaSapChieu">
-                                        <h5 class="fw-bold text-primary border-bottom pb-2">PHIM SẮP CHIẾU</h5>
-                                        <div class="row g-2 mega-content"></div>
-                                        <a th:href="@{/movies/coming-soon}" class="btn btn-outline-primary btn-sm mt-3 w-100 fw-bold">Xem tất cả</a>
-                                    </div>
-                                    <div class="col-md-4" id="megaOnline">
-                                        <h5 class="fw-bold text-success border-bottom pb-2">PHIM ONLINE</h5>
-                                        <div class="row g-2 mega-content"></div>
-                                        <a th:href="@{/movies/online}" class="btn btn-outline-success btn-sm mt-3 w-100 fw-bold">Xem tất cả</a>
+                                    <!-- Cột phải: Danh sách phim ảnh dọc -->
+                                    <div class="col-md-9 p-4">
+                                        <div class="tab-content">
+                                            <div class="tab-pane fade show active" id="megaDangChieu" role="tabpanel">
+                                                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+                                                    <h5 class="fw-bold text-danger m-0">PHIM ĐANG CHIẾU</h5>
+                                                    <a th:href="@{/movies/showing}" class="text-decoration-none text-danger fw-bold small">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+                                                </div>
+                                                <div class="row g-4 mega-content"></div>
+                                            </div>
+                                            <div class="tab-pane fade" id="megaSapChieu" role="tabpanel">
+                                                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+                                                    <h5 class="fw-bold text-primary m-0">PHIM SẮP CHIẾU</h5>
+                                                    <a th:href="@{/movies/coming-soon}" class="text-decoration-none text-primary fw-bold small">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+                                                </div>
+                                                <div class="row g-4 mega-content"></div>
+                                            </div>
+                                            <div class="tab-pane fade" id="megaOnline" role="tabpanel">
+                                                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-4">
+                                                    <h5 class="fw-bold text-success m-0">PHIM ONLINE</h5>
+                                                    <a th:href="@{/movies/online}" class="text-decoration-none text-success fw-bold small">Xem tất cả <i class="bi bi-chevron-right"></i></a>
+                                                </div>
+                                                <div class="row g-4 mega-content"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -201,6 +220,14 @@
                     renderMegaMenu('megaOnline', data.online);
                 });
 
+            // Kích hoạt tab trong Mega Menu tự động khi user trỏ chuột qua (UX Chuẩn rạp phim)
+            document.querySelectorAll('.mega-nav-pills .nav-link').forEach(function(pill) {
+                pill.addEventListener('mouseenter', function() {
+                    const tab = new bootstrap.Tab(this);
+                    tab.show();
+                });
+            });
+
             // 2. Load Default Tab (Đang Chiếu)
             loadTabMovies('DangChieu', document.querySelector('.custom-movie-tabs .nav-link.active'));
         });
@@ -208,10 +235,16 @@
         function renderMegaMenu(containerId, movies) {
             const container = document.getElementById(containerId).querySelector('.mega-content');
             container.innerHTML = movies.slice(0, 4).map(m => `
-                <div class="col-6 mb-3 text-center mega-card">
-                    <a href="/movies/detail/${m.maPhim}" class="text-decoration-none">
-                        <img src="${m.poster || 'https://placehold.co/150x220'}" class="w-100 mega-img shadow-sm">
-                        <div class="mega-card-title text-truncate" title="${m.tenPhim}">${m.tenPhim}</div>
+                <div class="col-lg-6 col-md-12">
+                    <a href="/movies/detail/${m.maPhim}" class="text-decoration-none d-flex align-items-start gap-3 p-2 rounded-3 hover-card-mega">
+                        <div class="overflow-hidden rounded-3 shadow-sm flex-shrink-0" style="width: 90px; height: 90px;">
+                            <img src="${m.poster || 'https://placehold.co/150x150'}" class="mega-img-square" alt="${m.tenPhim}">
+                        </div>
+                        <div class="d-flex flex-column text-start flex-grow-1 overflow-hidden pt-1">
+                            <h6 class="mega-card-title text-truncate w-100 mb-1" title="${m.tenPhim}">${m.tenPhim}</h6>
+                            <span class="text-muted small text-truncate mt-1"><i class="bi bi-person-video me-1"></i>${m.daoDien ? m.daoDien : 'Đang cập nhật'}</span>
+                            <span class="text-muted small text-truncate mt-1"><i class="bi bi-calendar3 me-1"></i>${m.ngayKhoiChieu ? m.ngayKhoiChieu : 'Sắp chiếu'}</span>
+                        </div>
                     </a>
                 </div>
             `).join('');

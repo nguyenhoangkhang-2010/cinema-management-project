@@ -30,6 +30,13 @@ public class MovieRestController {
         dto.put("thoiLuong", m.getThoiLuong());
         dto.put("quocGia", m.getQuocGia());
         dto.put("doTuoi", m.getDoTuoi());
+        dto.put("daoDien", m.getDaoDien());
+        if (m.getNgayKhoiChieu() != null) {
+            dto.put("ngayKhoiChieu",
+                    m.getNgayKhoiChieu().format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        } else {
+            dto.put("ngayKhoiChieu", null);
+        }
         return dto;
     }
 
@@ -54,5 +61,22 @@ public class MovieRestController {
                 .stream().map(this::mapToDTO).collect(Collectors.toList());
 
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/{id}/cinemas")
+    public ResponseEntity<List<Map<String, Object>>> getCinemas(@PathVariable Integer id) {
+        return ResponseEntity.ok(movieService.getCinemasForMovie(id));
+    }
+
+    @GetMapping("/{id}/dates")
+    public ResponseEntity<List<Map<String, Object>>> getDates(@PathVariable Integer id,
+            @RequestParam Integer cinemaId) {
+        return ResponseEntity.ok(movieService.getDatesForMovie(id, cinemaId));
+    }
+
+    @GetMapping("/{id}/showtimes")
+    public ResponseEntity<List<Map<String, Object>>> getShowtimes(@PathVariable Integer id,
+            @RequestParam Integer cinemaId, @RequestParam String date) {
+        return ResponseEntity.ok(movieService.getShowtimesForMovie(id, cinemaId, date));
     }
 }
