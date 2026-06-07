@@ -6,6 +6,21 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        .movie-grid-container { padding: 20px 0; }
+        .movie-card-premium { background: #ffffff; border-radius: 16px !important; overflow: hidden; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); position: relative; }
+        .poster-wrapper { position: relative; overflow: hidden; border-radius: 16px 16px 0 0; }
+        .custom-movie-poster { height: 380px; width: 100%; object-fit: cover; transition: transform 0.6s ease; }
+        .movie-card-premium:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(220, 38, 38, 0.15); }
+        .movie-card-premium:hover .custom-movie-poster { transform: scale(1.06); }
+        .movie-info-wrap { padding: 1.25rem 1rem; background: #ffffff; border-top: 1px solid #f8fafc; }
+        .movie-title-premium { font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem; transition: color 0.3s; }
+        .movie-card-premium:hover .movie-title-premium { color: #dc2626; }
+        .btn-booking-premium { background: linear-gradient(135deg, #f59e0b 0%, #dc2626 100%); color: #ffffff !important; font-weight: 700; letter-spacing: 1px; padding: 0.65rem 1rem; border: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3); transition: all 0.3s ease; text-transform: uppercase; font-size: 0.8rem; }
+        .btn-booking-premium:hover { background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); box-shadow: 0 6px 20px rgba(220, 38, 38, 0.5); transform: translateY(-1px); }
+        .btn-login-remind { background-color: #f1f5f9; color: #64748b !important; font-weight: 600; padding: 0.65rem 1rem; border-radius: 12px; border: 1px dashed #cbd5e1; transition: all 0.3s; font-size: 0.8rem; }
+        .btn-login-remind:hover { background-color: #e2e8f0; color: #334155 !important; }
+    </style>
 </head>
 <body class="bg-light">
     <!-- HEADER TỔNG -->
@@ -124,6 +139,7 @@
     <!-- PHIM ĐANG CHIẾU NỔI BẬT -->
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
+<<<<<<< HEAD
             <h3 class="m-0 fw-bold border-start border-warning border-4 ps-3">PHIM ĐANG CHIẾU NỔI BẬT</h3>
             <a th:href="@{/store}" class="text-decoration-none text-danger fw-bold">Xem tất cả <i class="bi bi-chevron-right"></i></a>
         </div>
@@ -187,6 +203,35 @@
                         Hệ thống hiện tại chưa có lịch chiếu phim nào mới!
                     </p>
                 </div>
+=======
+            <h3 class="m-0 fw-bold border-start border-warning border-4 ps-3 text-dark" style="letter-spacing: 0.5px;">PHIM ĐANG CHIẾU</h3>
+        </div>
+        <div class="row movie-grid-container">
+            <th:block th:if="${phimDangChieu != null and !#lists.isEmpty(phimDangChieu)}">
+                <div class="col-sm-6 col-md-4 col-lg-3 mb-5" th:each="movie : ${phimDangChieu}">
+                    <div class="card border-0 movie-card-premium h-100">
+                        <div class="poster-wrapper">
+                            <img th:src="${movie.poster != null and movie.poster != ''} ? ${movie.poster} : 'https://placehold.co/350x500?text=No+Poster'"
+                                 class="custom-movie-poster" alt="Poster Phim">
+                        </div>
+                        <div class="card-body movie-info-wrap d-flex flex-column justify-content-between">
+                            <h6 class="movie-title-premium text-truncate" th:text="${movie.tenPhim}">Tên phim mẫu</h6>
+                            <div class="mt-2">
+                                <a th:href="@{'/book/' + ${movie.maPhim}}" class="btn btn-booking-premium w-100 d-flex align-items-center justify-content-center" sec:authorize="isAuthenticated()">
+                                    <i class="bi bi-ticket-perforated-fill me-2"></i> Đặt Vé Ngay
+                                </a>
+                                <a th:href="@{/login}" class="btn btn-login-remind w-100 text-uppercase" sec:authorize="!isAuthenticated()">
+                                    <i class="bi bi-lock-fill me-1"></i> Đăng nhập để đặt
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+            <div class="col-12 text-center py-5 text-muted" th:if="${phimDangChieu == null or #lists.isEmpty(phimDangChieu)}">
+                <i class="bi bi-film fs-1 text-secondary d-block mb-3"></i>
+                <p class="fw-medium mb-0">Hệ thống hiện tại chưa có lịch chiếu phim nào mới!</p>
+>>>>>>> origin/feature-them-phim
             </div>
         </div>
     </div>
