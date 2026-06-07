@@ -19,12 +19,6 @@ public class UserPageController {
         this.userStoreService = userStoreService;
     }
 
-    @GetMapping({ "/", "/home" })
-    public String home(Model model) {
-        model.addAttribute("homeData", userStoreService.getHomepageData());
-        return "user/home";
-    }
-
     @GetMapping("/store")
     public String store(@RequestParam(required = false) String search,
             @RequestParam(defaultValue = "1") int page, Model model) {
