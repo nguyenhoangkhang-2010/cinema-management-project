@@ -15,6 +15,15 @@
         .seat-badge { background: #dc2626; color: white; padding: 5px 12px; border-radius: 8px; font-weight: bold; margin-right: 5px; margin-bottom: 5px; display: inline-block; }
         .btn-pay { background: linear-gradient(90deg, #dc2626, #f59e0b); color: white; font-weight: 800; font-size: 1.1rem; padding: 15px; border: none; border-radius: 12px; transition: all 0.3s; }
         .btn-pay:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4); color: white; }
+        .hold-seat-label { color: #ffffff; font-weight: 600;}
+        .countdown-time {color: #ff4d4f; font-weight: 700;font-size: 1.1rem; text-shadow: 0 0 10px rgba(255, 77, 79, 0.5);}
+
+        @keyframes blink {
+            50% {
+                opacity: 0.4;
+            }
+        }
+        .countdown-time { color: #ff4d4f; font-weight: 700; text-shadow: 0 0 10px rgba(255, 77, 79, 0.5);}
     </style>
 </head>
 <body class="checkout-container">
@@ -139,7 +148,11 @@
 
                         <button type="submit" class="btn w-100 btn-pay shadow-lg"><i class="bi bi-shield-lock-fill me-2"></i>THANH TOÁN NGAY</button>
                     </form>
-                    <p class="text-center text-muted small mt-3 m-0"><i class="bi bi-clock-history me-1"></i>Thời gian giữ ghế: <strong class="text-warning">10:00</strong></p>
+                    <p class="text-center small mt-3 m-0">
+                        <i class="bi bi-clock-history me-1 text-warning"></i>
+                        <span class="hold-seat-label">Thời gian giữ ghế:</span>
+                        <strong id="countdownTimer" class="countdown-time"></strong>
+                    </p>
                 </div>
             </div>
         </div>
@@ -185,6 +198,41 @@
                 }
             }).catch(err => console.error(err));
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+
+            let timeLeft = 10 * 60;
+            const timerElement = document.getElementById('countdownTimer');
+
+            function updateTimer() {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+
+                timerElement.textContent =
+                    `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeLeft <= 180) {
+                    timerElement.style.color = '#ff0000';
+                    timerElement.style.animation = 'blink 1s infinite';
+                }
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+
+                    alert('Đã hết thời gian giữ ghế!');
+
+                    // Quay lại trang chọn ghế
+                    window.location.href = '/seat-selection';
+
+                    return;
+                }
+
+                timeLeft--;
+            }
+
+            updateTimer();
+            const countdown = setInterval(updateTimer, 1000);
+        });
     </script>
 </body>
 </html>
