@@ -36,57 +36,32 @@ public class AdminShowtimeController {
                 PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "ngayChieu", "gioBatDau"))));
         model.addAttribute("search", search);
         model.addAttribute("ngayChieu", ngayChieu);
+
+        if (!model.containsAttribute("showtime")) {
+            model.addAttribute("showtime", new ShowtimeRequestDTO());
+        }
+        model.addAttribute("movies", movieRepository.findAll());
+        model.addAttribute("rooms", roomRepository.findAll());
+
         return "admin/showtimes";
     }
 
-    @GetMapping("/add")
-    public String addForm(Model model) {
-        model.addAttribute("showtime", new ShowtimeRequestDTO());
-        model.addAttribute("movies", movieRepository.findAll());
-        model.addAttribute("rooms", roomRepository.findAll());
-        return "admin/showtime-add";
-    }
-
-    @PostMapping("/add")
-    public String addSubmit(@Valid @ModelAttribute("showtime") ShowtimeRequestDTO dto, BindingResult result,
-            Model model, RedirectAttributes redirectAttributes) {
+    @PostMapping("/save")
+    public String saveShowtime(@RequestParam(required = false) Integer maSuatChieu,
+            @Valid @ModelAttribute("showtime") ShowtimeRequestDTO dto,
+            BindingResult result, RedirectAttributes redirectAttributes) {
         if (result.hasErrors()) {
-            model.addAttribute("movies", movieRepository.findAll());
-            model.addAttribute("rooms", roomRepository.findAll());
-            return "admin/showtime-add";
-        }
-        try {
-            showtimeService.addShowtime(dto);
-            redirectAttributes.addFlashAttribute("success", "Thêm suất chiếu thành công!");
+            redirectAttributes.addFlashAttribute("error", "Vui lòng nhập đầy đủ thông tin hợp lệ!");
             return "redirect:/admin/showtimes";
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("movies", movieRepository.findAll());
-            model.addAttribute("rooms", roomRepository.findAll());
-            return "admin/showtime-add";
-        }
-    }
-
-    @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable Integer id, Model model) {
-        model.addAttribute("showtime", showtimeService.getShowtimeRequestDTO(id));
-        model.addAttribute("movies", movieRepository.findAll());
-        model.addAttribute("rooms", roomRepository.findAll());
-        model.addAttribute("id", id);
-        return "admin/showtime-edit";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String editSubmit(@PathVariable Integer id, @Valid @ModelAttribute("showtime") ShowtimeRequestDTO dto,
-            BindingResult result, Model model, RedirectAttributes redirectAttributes) {
-        if (result.hasErrors()) {
-            model.addAttribute("movies", movieRepository.findAll());
-            model.addAttribute("rooms", roomRepository.findAll());
-            return "admin/showtime-edit";
         }
         try {
-            showtimeService.updateShowtime(id, dto);
-            redirectAttributes.addFlashAttribute("success", "Cập nhật suất chiếu thành công!");
+            if (maSuatChieu != null) {
+                showtimeService.updateShowtime(maSuatChieu, dto);
+                redirectAttributes.addFlashAttribute("success", "Cập nhật suất chiếu thành công!");
+            } else {
+                showtimeService.addShowtime(dto);
+                redirectAttributes.addFlashAttribute("success", "Thêm suất chiếu thành công!");
+            }
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
@@ -102,5 +77,11 @@ public class AdminShowtimeController {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/admin/showtimes";
+    }
+
+    @GetMapping("/api/{id}")
+    @ResponseBody
+    public ShowtimeRequestDTO getShowtimeApi(@PathVariable Integer id) {
+        return showtimeService.getShowtimeRequestDTO(id);
     }
 }
