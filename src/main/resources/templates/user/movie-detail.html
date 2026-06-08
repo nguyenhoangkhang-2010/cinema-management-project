@@ -274,62 +274,49 @@
             const movieId = document.getElementById('movie-context').dataset.movieId;
             let selectedCinemaId = null;
 
-            // Bổ sung: Tải thông tin chi tiết phim (Đánh giá, Thể loại) từ API Monolithic
-            fetch(`/api/movies/${movieId}`)
+            // Tải danh sách bình luận và tự động tính điểm trung bình
+            fetch(`/api/reviews/movie/${movieId}`)
                 .then(res => res.json())
-                .then(data => {
-                    // 1. Render Khối Đánh Giá Khách Hàng
+                .then(reviews => {
                     const reviewTab = document.getElementById('review');
-                    if (reviewTab && data.tongSoLuotDanhGia > 0) {
+                    if (reviewTab && reviews.length > 0) {
+                        const total = reviews.length;
+                        const avg = reviews.reduce((sum, r) => sum + r.soSao, 0) / total;
+                        
                         reviewTab.innerHTML = `
                             <div class="text-center py-5 bg-white rounded-3 border shadow-sm">
-                                <h2 class="display-3 fw-bold text-danger mb-0">${data.diemDanhGiaTrungBinh.toFixed(1)} <i class="bi bi-star-fill text-warning fs-3"></i></h2>
-                                <p class="text-muted fs-5 mt-2">Dựa trên <strong>${data.tongSoLuotDanhGia}</strong> lượt đánh giá</p>
+                                <h2 class="display-3 fw-bold text-danger mb-0">${avg.toFixed(1)} <i class="bi bi-star-fill text-warning fs-3"></i></h2>
+                                <p class="text-muted fs-5 mt-2">Dựa trên <strong>${total}</strong> lượt đánh giá</p>
                                 <button class="btn btn-outline-danger fw-bold mt-3 px-4 py-2 rounded-pill" onclick="openReviewModal()">Viết Đánh Giá Của Bạn</button>
                             </div>
                             <!-- Vùng hiển thị danh sách bình luận -->
                             <div id="review-list" class="mt-4 text-start"></div>
                         `;
 
-                        // Gọi thêm API lấy danh sách bình luận
-                        fetch(`/api/reviews/movie/${movieId}`)
-                            .then(res => res.json())
-                            .then(reviews => {
-                                const listContainer = document.getElementById('review-list');
-                                if (reviews.length > 0) {
-                                    listContainer.innerHTML = '<h5 class="fw-bold mb-4 border-bottom pb-2 text-dark">Bình luận nổi bật</h5>' + 
-                                        reviews.map(r => `
-                                            <div class="d-flex mb-4 pb-3 border-bottom">
-                                                <div class="me-3">
-                                                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 50px; height: 50px;">
-                                                        ${r.hoTen.charAt(0).toUpperCase()}
-                                                    </div>
-                                                </div>
-                                                <div class="flex-grow-1">
-                                                    <div class="d-flex align-items-center justify-content-between mb-1">
-                                                        <h6 class="fw-bold m-0 text-dark">${r.hoTen}</h6>
-                                                        <span class="text-muted small">${r.ngayDanhGia}</span>
-                                                    </div>
-                                                    <div class="text-warning small mb-2">
-                                                        ${Array(5).fill(0).map((_, i) => `<i class="bi ${i < r.soSao ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}
-                                                    </div>
-                                                    <p class="m-0 text-secondary">${r.binhLuan ? r.binhLuan : '<i>(Người dùng không để lại bình luận)</i>'}</p>
-                                                </div>
-                                            </div>
-                                        `).join('');
-                                }
-                            });
+                        const listContainer = document.getElementById('review-list');
+                        listContainer.innerHTML = '<h5 class="fw-bold mb-4 border-bottom pb-2 text-dark">Bình luận nổi bật</h5>' + 
+                            reviews.map(r => `
+                                <div class="d-flex mb-4 pb-3 border-bottom">
+                                    <div class="me-3">
+                                        <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 50px; height: 50px;">
+                                            ${r.hoTen.charAt(0).toUpperCase()}
+                                        </div>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <h6 class="fw-bold m-0 text-dark">${r.hoTen}</h6>
+                                            <span class="text-muted small">${r.ngayDanhGia}</span>
+                                        </div>
+                                        <div class="text-warning small mb-2">
+                                            ${Array(5).fill(0).map((_, i) => `<i class="bi ${i < r.soSao ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}
+                                        </div>
+                                        <p class="m-0 text-secondary">${r.binhLuan ? r.binhLuan : '<i>(Người dùng không để lại bình luận)</i>'}</p>
+                                    </div>
+                                </div>
+                            `).join('');
                     }
-                    
-                    // 2. Render Thể Loại Phim (Thêm vào phần Meta Tag dưới Banner)
-                    const metaContainer = document.querySelector('.movie-meta-item').parentNode;
-                    if (metaContainer && data.theLoai && data.theLoai.length > 0) {
-                        const genreDiv = document.createElement('div');
-                        genreDiv.className = 'movie-meta-item';
-                        genreDiv.innerHTML = `<i class="bi bi-tags-fill me-2 text-primary"></i>${data.theLoai.join(', ')}`;
-                        metaContainer.appendChild(genreDiv);
-                    }
-                }).catch(err => console.error("Lỗi fetch chi tiết phim:", err));
+                })
+                .catch(err => console.error("Lỗi fetch reviews:", err));
 
             // Bắt đầu tải rạp
             if(document.getElementById('cinema-list')) {
