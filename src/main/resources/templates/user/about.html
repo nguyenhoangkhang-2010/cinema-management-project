@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Về Chúng Tôi - Cinema All Star</title>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;900&family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/about.css}">
+</head>
+<body class="bg-premium-light">
+
+<div th:replace="~{user/home :: nav}"></div>
+
+<div class="main-scroll-stack">
+    <div class="container py-5">
+        <div class="mb-5 border-bottom pb-3">
+            <h1 class="cinema-parc-title m-0">Giới thiệu</h1>
+        </div>
+
+        <div class="row g-5 align-items-center mb-5">
+            <div class="col-lg-6">
+                <span class="parc-category-tag text-danger">Tầm nhìn & Sứ mệnh</span>
+                <h2 class="about-section-heading mt-2 mb-4">Định hình lại trải nghiệm điện ảnh thế hệ mới</h2>
+                <p class="text-secondary about-paragraph">Khởi nguồn từ niềm đam mê bất tận với bộ môn nghệ thuật thứ bảy, Cinema All Star tự hào mang đến một không gian giải trí đỉnh cao cho khán giả. Chúng tôi không chỉ đơn thuần là một rạp chiếu phim, mà là điểm kết nối của những tâm hồn yêu nghệ thuật, nơi công nghệ trình chiếu tiên tiến hòa quyện cùng phong cách thiết kế đậm chất tạp chí đương đại.</p>
+                <p class="text-secondary about-paragraph mt-3">Với hệ thống âm thanh vòm Dolby Atmos chuẩn quốc tế, màn chiếu IMAX kích thước lớn sắc nét cùng kho dữ liệu phim trực tuyến phong phú, All Star mang sứ mệnh nâng tầm mọi giác quan của bạn trong từng khoảnh khắc ánh đèn phòng chiếu vụt tắt.</p>
+            </div>
+            <div class="col-lg-6">
+                <div class="about-hero-image-wrap border-glow-effect rounded-4 overflow-hidden shadow-sm">
+                    <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1200" alt="Cinema">
+                    <div class="shimmer-line"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mt-5">
+            <div class="col-md-4">
+                <div class="about-feature-box p-4 rounded-4 bg-white border border-light h-100">
+                    <div class="feature-icon-box text-danger mb-3"><i class="bi bi-projector-fill fs-2"></i></div>
+                    <h4 class="fw-bold text-dark mb-2">Trình Chiếu 4K UltraHD</h4>
+                    <p class="text-muted small m-0">Mọi khung hình đều chân thực đến từng chi tiết nhỏ nhất nhờ hệ thống máy chiếu laser tối tân nhất hiện nay.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="about-feature-box p-4 rounded-4 bg-white border border-light h-100">
+                    <div class="feature-icon-box text-success mb-3"><i class="bi bi-speakers-fill fs-2"></i></div>
+                    <h4 class="fw-bold text-dark mb-2">Dolby Atmos Surround</h4>
+                    <p class="text-muted small m-0">Hệ thống âm thanh đa chiều chuyển động sống động xung quanh bạn, tạo cảm giác như đang sống trong phim.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="about-feature-box p-4 rounded-4 bg-white border border-light h-100">
+                    <div class="feature-icon-box text-primary mb-3"><i class="bi bi-cup-hot-fill fs-2"></i></div>
+                    <h4 class="fw-bold text-dark mb-2">Ẩm Thực Độc Quyền</h4>
+                    <p class="text-muted small m-0">Trải nghiệm dịch vụ Star Shop bắp nước cao cấp với menu đa dạng được làm mới liên tục mỗi tuần.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="magazine-footer-premium">
+        <div class="container">
+            <div class="row g-4 align-items-center">
+                <div class="col-lg-4 text-start text-dark">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <i class="bi bi-ticket-perforated-fill fs-3"></i>
+                        <span class="fw-bold fs-4">All Star Cinema</span>
+                    </div>
+                    <p class="text-secondary small">Nhận thông báo sớm nhất về lịch chiếu suất đặc biệt và các chương trình ưu đãi bỏng ngô mỗi tuần tại trường HUIT và hệ thống rạp.</p>
+                    <button class="btn btn-dark rounded-pill px-4 py-2 small fw-bold">Đăng ký nhận tin</button>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="footer-branch-box bg-blue-premium p-4 rounded-4 text-white position-relative">
+                        <span class="branch-badge">ALL STAR HUIT</span>
+                        <p class="mt-3 mb-1 small fw-medium"><i class="bi bi-geo-alt me-1"></i>140 Lê Trọng Tấn, Tây Thạnh, Tân Phú, TP. HCM</p>
+                        <p class="small opacity-75"><i class="bi bi-telephone me-1"></i>028 3816 1673</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-2 border-white border-opacity-20">
+                            <span class="fs-7 fw-bold">Rạp Phim Học Đường</span>
+                            <div class="d-flex gap-2">
+                                <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-4">
+                    <div class="footer-branch-box bg-purple-premium p-4 rounded-4 text-white position-relative">
+                        <span class="branch-badge">ALL STAR CENTER</span>
+                        <p class="mt-3 mb-1 small fw-medium"><i class="bi bi-geo-alt me-1"></i>Trường Chinh, Tân Bình, TP. Hồ Chí Minh</p>
+                        <p class="small opacity-75"><i class="bi bi-telephone me-1"></i>1900 6060</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3 border-top pt-2 border-white border-opacity-20">
+                            <span class="fs-7 fw-bold">Trung Tâm Điện Ảnh</span>
+                            <div class="d-flex gap-2">
+                                <a href="#" class="text-white"><i class="bi bi-instagram"></i></a>
+                                <a href="#" class="text-white"><i class="bi bi-facebook"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center border-top mt-5 pt-4 text-muted small">
+                <p class="m-0">&copy; 2024 - 2026 Cinema All Star. Tất cả quyền được bảo lưu.</p>
+                <div class="d-flex gap-3 mt-2 mt-md-0">
+                    <a href="#" class="text-decoration-none text-muted">Chính sách bảo mật</a>
+                    <a href="#" class="text-decoration-none text-muted">Điều khoản sử dụng</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<div class="reveal-typography-container">
+    <h1 class="giant-reveal-text" id="revealText">KHÔNG GIAN ĐIỆN ẢNH<br>VƯỢT MỌI GIỚI HẠN</h1>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:replace="~{user/home :: megaMenuScript}"></script>
+
+<script>
+    window.addEventListener('scroll', function() {
+        const revealText = document.getElementById('revealText');
+        const container = document.querySelector('.reveal-typography-container');
+        const rect = container.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+
+        if (rect.top < windowHeight && rect.bottom > 0) {
+            const scrolledFraction = (windowHeight - rect.top) / (windowHeight + rect.height);
+            revealText.style.letterSpacing = `${-4 + (scrolledFraction * 20)}px`;
+            revealText.style.opacity = Math.min(0.1 + (scrolledFraction * 0.9), 1);
+            revealText.style.transform = `scale(${0.92 + (scrolledFraction * 0.08)})`;
+        } else {
+            revealText.style.letterSpacing = '-4px';
+            revealText.style.opacity = '0.1';
+            revealText.style.transform = 'scale(0.92)';
+        }
+    });
+</script>
+</body>
+</html>

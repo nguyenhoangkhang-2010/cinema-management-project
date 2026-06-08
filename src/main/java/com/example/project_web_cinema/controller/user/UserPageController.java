@@ -117,4 +117,9 @@ public class UserPageController {
         model.addAttribute("promotion", userStoreService.getPromotionDetail(id));
         return "user/promotion-detail";
     }
+
+    @GetMapping("/about")
+    public String about() {
+        return "user/about";
+    }
 }

@@ -83,10 +83,6 @@
                             </div>
                         </div>
                     </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'store') or #strings.contains(#execInfo.templateName, 'shop')} ? 'text-warning' : ''" th:href="@{/star-shop}">Star Shop</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'events')} ? 'text-warning' : ''" th:href="@{/events}">Sự Kiện</a>
                     </li>
@@ -97,7 +93,7 @@
                         <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'online')} ? 'text-warning' : ''" th:href="@{/phim-online}">Phim Online</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'contact')} ? 'text-warning' : ''" href="#">Liên Hệ</a>
+                        <a class="nav-link fw-bold" th:classappend="${#strings.contains(#execInfo.templateName, 'about')} ? 'text-warning' : ''" th:href="@{/about}">Giới Thiệu</a>
                     </li>
                 </ul>
                 
