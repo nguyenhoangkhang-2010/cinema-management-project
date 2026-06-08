@@ -104,6 +104,12 @@
             transform: translateX(5px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); border-color: #e2e8f0;
         }
         .related-movie-img { width: 80px; height: 115px; object-fit: cover; border-radius: 10px; }
+        
+        /* Star Rating Styles */
+        .star-rating i { font-size: 2rem; color: #cbd5e1; cursor: pointer; transition: color 0.2s; }
+        .star-rating i.active, .star-rating i:hover, .star-rating i:hover ~ i { color: #f59e0b; }
+        .star-rating { display: inline-flex; flex-direction: row-reverse; justify-content: center; }
+        .star-rating i:hover ~ i { color: #f59e0b; }
     </style>
 </head>
 <body class="bg-light">
@@ -203,7 +209,7 @@
                         <div class="text-center py-5 text-muted bg-white rounded-3 border border-dashed">
                             <i class="bi bi-chat-square-text fs-1"></i>
                             <p class="mt-2 fw-medium">Chưa có đánh giá nào. Hãy là người đầu tiên!</p>
-                            <button class="btn btn-outline-danger btn-sm fw-bold">Viết Đánh Giá</button>
+                            <button class="btn btn-outline-danger btn-sm fw-bold" onclick="openReviewModal()">Viết Đánh Giá</button>
                         </div>
                     </div>
                 </div>
@@ -227,7 +233,39 @@
         </div>
     </div>
 
+    <!-- Modal Đánh Giá -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header bg-danger text-white rounded-top-4">
+                    <h5 class="modal-title fw-bold">Đánh Giá Phim</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <h6 class="fw-bold mb-3">Bạn đánh giá phim này mấy sao?</h6>
+                    <div class="star-rating mb-4">
+                        <i class="bi bi-star-fill" data-rating="5"></i>
+                        <i class="bi bi-star-fill" data-rating="4"></i>
+                        <i class="bi bi-star-fill" data-rating="3"></i>
+                        <i class="bi bi-star-fill" data-rating="2"></i>
+                        <i class="bi bi-star-fill" data-rating="1"></i>
+                    </div>
+                    <input type="hidden" id="selectedRating" value="0">
+                    
+                    <div class="text-start">
+                        <label class="form-label fw-bold small">Cảm nghĩ của bạn (Không bắt buộc)</label>
+                        <textarea id="reviewComment" class="form-control bg-light" rows="3" placeholder="Chia sẻ trải nghiệm xem phim của bạn..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-danger fw-bold px-5 rounded-pill shadow-sm" onclick="submitReview()">Gửi Đánh Giá</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script th:replace="~{user/home :: megaMenuScript}"></script>
 
@@ -247,9 +285,40 @@
                             <div class="text-center py-5 bg-white rounded-3 border shadow-sm">
                                 <h2 class="display-3 fw-bold text-danger mb-0">${data.diemDanhGiaTrungBinh.toFixed(1)} <i class="bi bi-star-fill text-warning fs-3"></i></h2>
                                 <p class="text-muted fs-5 mt-2">Dựa trên <strong>${data.tongSoLuotDanhGia}</strong> lượt đánh giá</p>
-                                <button class="btn btn-outline-danger fw-bold mt-3 px-4 py-2 rounded-pill">Viết Đánh Giá Của Bạn</button>
+                                <button class="btn btn-outline-danger fw-bold mt-3 px-4 py-2 rounded-pill" onclick="openReviewModal()">Viết Đánh Giá Của Bạn</button>
                             </div>
+                            <!-- Vùng hiển thị danh sách bình luận -->
+                            <div id="review-list" class="mt-4 text-start"></div>
                         `;
+
+                        // Gọi thêm API lấy danh sách bình luận
+                        fetch(`/api/reviews/movie/${movieId}`)
+                            .then(res => res.json())
+                            .then(reviews => {
+                                const listContainer = document.getElementById('review-list');
+                                if (reviews.length > 0) {
+                                    listContainer.innerHTML = '<h5 class="fw-bold mb-4 border-bottom pb-2 text-dark">Bình luận nổi bật</h5>' + 
+                                        reviews.map(r => `
+                                            <div class="d-flex mb-4 pb-3 border-bottom">
+                                                <div class="me-3">
+                                                    <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 50px; height: 50px;">
+                                                        ${r.hoTen.charAt(0).toUpperCase()}
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex align-items-center justify-content-between mb-1">
+                                                        <h6 class="fw-bold m-0 text-dark">${r.hoTen}</h6>
+                                                        <span class="text-muted small">${r.ngayDanhGia}</span>
+                                                    </div>
+                                                    <div class="text-warning small mb-2">
+                                                        ${Array(5).fill(0).map((_, i) => `<i class="bi ${i < r.soSao ? 'bi-star-fill' : 'bi-star'}"></i>`).join('')}
+                                                    </div>
+                                                    <p class="m-0 text-secondary">${r.binhLuan ? r.binhLuan : '<i>(Người dùng không để lại bình luận)</i>'}</p>
+                                                </div>
+                                            </div>
+                                        `).join('');
+                                }
+                            });
                     }
                     
                     // 2. Render Thể Loại Phim (Thêm vào phần Meta Tag dưới Banner)
@@ -330,7 +399,58 @@
                         ).join('');
                     });
             }
+
+            // Logic Ngôi sao Đánh Giá
+            const stars = document.querySelectorAll('.star-rating i');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-rating');
+                    document.getElementById('selectedRating').value = rating;
+                    
+                    stars.forEach(s => s.classList.remove('text-warning'));
+                    stars.forEach(s => {
+                        if(s.getAttribute('data-rating') <= rating) {
+                            s.classList.add('text-warning');
+                        }
+                    });
+                });
+            });
         });
+
+        function openReviewModal() {
+            new bootstrap.Modal(document.getElementById('reviewModal')).show();
+        }
+
+        function submitReview() {
+            const movieId = document.getElementById('movie-context').dataset.movieId;
+            const rating = document.getElementById('selectedRating').value;
+            const comment = document.getElementById('reviewComment').value;
+
+            if (rating == 0) {
+                Swal.fire('Chú ý', 'Vui lòng chọn số sao trước khi đánh giá!', 'warning');
+                return;
+            }
+
+            fetch('/api/reviews/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ movieId: movieId, rating: rating, comment: comment })
+            })
+            .then(res => {
+                if (res.status === 401) {
+                    window.location.href = '/login';
+                    throw new Error("Unauthorized");
+                }
+                return res.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Thành công!', data.message, 'success').then(() => window.location.reload());
+                } else {
+                    Swal.fire('Lỗi', data.message, 'error');
+                }
+            }).catch(err => console.log(err));
+        }
     </script>
 </body>
 </html>

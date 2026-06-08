@@ -22,6 +22,12 @@ public class Rate {
     @Column(name = "SoSao")
     private Integer soSao;
 
+    @Column(name = "BinhLuan")
+    private String binhLuan;
+
+    @Column(name = "NgayDanhGia", insertable = false, updatable = false)
+    private java.time.LocalDateTime ngayDanhGia;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MaTaiKhoan")
     private Account account;
