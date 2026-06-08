@@ -47,14 +47,9 @@
     <!-- NỘI DUNG CHÍNH: KHUYẾN MÃI -->
     <div class="container py-5 flex-grow-1">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="fw-bold m-0 border-start border-warning border-4 ps-3 text-dark">Chương Trình Khuyến Mãi</h2>
-            <!-- Nút Tạo Code Mới: Chỉ Admin mới thấy -->
-            <a sec:authorize="hasRole('Admin')" th:href="@{/admin/promotions/add}" class="btn btn-warning btn-sm text-dark fw-bold shadow-sm">
-                <i class="bi bi-plus-circle me-1"></i>Tạo code mới
-            </a>
+            <h2 class="fw-bold m-0 border-start border-warning border-4 ps-3 text-dark">Chương Trình Khuyến Mãi</h2>            
         </div>
 
-        <!-- Thanh tìm kiếm Khuyến Mãi -->
         <div class="row mb-4">
             <div class="col-md-6 offset-md-3">
                 <div class="input-group shadow-sm rounded-pill overflow-hidden border bg-white">

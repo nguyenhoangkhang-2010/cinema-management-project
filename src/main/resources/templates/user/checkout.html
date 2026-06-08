@@ -126,6 +126,17 @@
                         <input type="hidden" th:each="seat : ${checkout.selectedSeats}" name="seatIds" th:value="${seat.seatId}">
                         <input type="hidden" name="totalAmount" id="submitTotalPrice" th:value="${checkout.totalPrice}">
                         <input type="hidden" name="promoId" id="submitPromoId" th:value="${param.promoId}">
+                        
+                        <div class="mb-4 text-start">
+                            <label class="form-label small fw-bold text-light opacity-75">PHƯƠNG THỨC THANH TOÁN</label>
+                            <select name="paymentMethod" class="form-select bg-dark text-white border-secondary shadow-none" required>
+                                <option value="TienMat" selected>Thanh toán tại quầy (Tiền mặt)</option>
+                                <option value="Momo">Ví điện tử MoMo</option>
+                                <option value="ZaloPay">Ví ZaloPay</option>
+                                <option value="ChuyenKhoan">Chuyển khoản Ngân hàng</option>
+                            </select>
+                        </div>
+
                         <button type="submit" class="btn w-100 btn-pay shadow-lg"><i class="bi bi-shield-lock-fill me-2"></i>THANH TOÁN NGAY</button>
                     </form>
                     <p class="text-center text-muted small mt-3 m-0"><i class="bi bi-clock-history me-1"></i>Thời gian giữ ghế: <strong class="text-warning">10:00</strong></p>
