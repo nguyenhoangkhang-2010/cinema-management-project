@@ -11,6 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +22,9 @@ import java.util.List;
 public class UserService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final TicketRepository ticketRepository;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public UserService(AccountRepository accountRepository, TicketRepository ticketRepository) {
         this.accountRepository = accountRepository;
@@ -78,5 +84,16 @@ public class UserService implements UserDetailsService {
                 .trangThai(account.getTrangThai() != null ? account.getTrangThai().toString() : "HoatDong")
                 .danhSachVe(listVe)
                 .build();
+    }
+
+    @Transactional
+    public void changeUserRole(String email, String role) {
+        int updated = entityManager.createNativeQuery("UPDATE TAIKHOAN SET VaiTro = :role WHERE Email = :email")
+                .setParameter("role", role)
+                .setParameter("email", email)
+                .executeUpdate();
+        if (updated == 0) {
+            throw new RuntimeException("Không tìm thấy tài khoản hoặc cập nhật thất bại!");
+        }
     }
 }
