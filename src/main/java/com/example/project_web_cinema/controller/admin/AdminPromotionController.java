@@ -5,6 +5,7 @@ import com.example.project_web_cinema.service.PromotionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/admin/promotions")
@@ -27,44 +28,53 @@ public class AdminPromotionController {
         model.addAttribute("search", search);
         model.addAttribute("filter", filter);
         model.addAttribute("sort", sort);
+        if (!model.containsAttribute("promotion")) {
+            model.addAttribute("promotion", new Promotion());
+        }
         return "admin/promotions";
     }
 
-    // 2. Gọi giao diện Form thêm mới
-    @GetMapping("/add")
-    public String showAddForm(Model model) {
-        model.addAttribute("promotion", new Promotion());
-        return "admin/promotion/add";
-    }
-
-    // 3. Nhận dữ liệu từ HTML và Lưu vào Database
-    @PostMapping("/add")
-    public String addPromotion(@ModelAttribute("promotion") Promotion promotion) {
-        promotionService.save(promotion);
+    @PostMapping("/save")
+    public String savePromotion(@ModelAttribute("promotion") Promotion promotion,
+            RedirectAttributes redirectAttributes) {
+        try {
+            promotionService.save(promotion);
+            redirectAttributes.addFlashAttribute("success", "Lưu khuyến mãi thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+        }
         return "redirect:/admin/promotions";
     }
 
-    // 4. Hiển thị giao diện Form sửa
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model) {
-        Promotion promotion = promotionService.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid promotion Id:" + id));
-        model.addAttribute("promotion", promotion);
-        return "admin/promotion/edit";
-    }
-
-    // 5. Xử lý lưu thông tin sau khi sửa
-    @PostMapping("/edit/{id}")
-    public String updatePromotion(@PathVariable Integer id, @ModelAttribute("promotion") Promotion promotion) {
-        promotion.setMaKhuyenMai(id); // Ensure the ID is set for update
-        promotionService.save(promotion);
-        return "redirect:/admin/promotions";
+    @GetMapping("/api/{id}")
+    @ResponseBody
+    public java.util.Map<String, Object> getPromotionApi(@PathVariable Integer id) {
+        Promotion p = promotionService.findById(id).orElseThrow();
+        java.util.Map<String, Object> data = new java.util.HashMap<>();
+        data.put("maKhuyenMai", p.getMaKhuyenMai());
+        data.put("tenKhuyenMai", p.getTenKhuyenMai());
+        data.put("phanTramGiam", p.getPhanTramGiam());
+        data.put("soLuong", p.getSoLuong());
+        data.put("ngayBatDau", p.getNgayBatDau());
+        data.put("ngayKetThuc", p.getNgayKetThuc());
+        data.put("poster", p.getPoster());
+        data.put("moTa", p.getMoTa());
+        data.put("trangThaiKhuyenMai",
+                p.getTrangThaiKhuyenMai() != null ? p.getTrangThaiKhuyenMai().name() : "HoatDong");
+        data.put("loaiTaiKhoanToiThieu",
+                p.getLoaiTaiKhoanToiThieu() != null ? p.getLoaiTaiKhoanToiThieu().name() : "Thuong");
+        return data;
     }
 
     // 6. Xóa Khuyến mãi
     @GetMapping("/delete/{id}")
-    public String deletePromotion(@PathVariable Integer id) {
-        promotionService.deleteById(id);
+    public String deletePromotion(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            promotionService.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Xóa khuyến mãi thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Không thể xóa do khuyến mãi này đã có dữ liệu liên kết.");
+        }
         return "redirect:/admin/promotions";
     }
 }

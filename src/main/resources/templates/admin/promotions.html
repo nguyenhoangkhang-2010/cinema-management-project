@@ -49,9 +49,9 @@
                         <button type="submit" class="btn btn-dark btn-sm fw-bold"><i class="bi bi-funnel"></i> Lọc</button>
                         <a th:href="@{/admin/promotions}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-clockwise"></i> Reset</a>
                     </form>
-                    <a th:href="@{/admin/promotions/add}" class="btn btn-primary fw-bold shadow-sm">
+                    <button type="button" class="btn btn-primary fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#promoModal" onclick="resetForm()">
                         <i class="bi bi-plus-circle me-1"></i> Thêm Khuyến Mãi Mới
-                    </a>
+                    </button>
                 </div>
 
                 <div class="card border-0 shadow-sm table-container">
@@ -101,7 +101,9 @@
                                         </th:block>
                                     </td>
                                     <td class="text-end pe-4">
-                                        <a th:href="@{/admin/promotions/edit/{id}(id=${promo.maKhuyenMai})}" class="btn btn-sm btn-outline-primary me-1 btn-action"><i class="bi bi-pencil-square"></i> Sửa</a>
+                                        <button type="button" class="btn btn-sm btn-outline-primary me-1 btn-action" th:attr="onclick='editPromotion(' + ${promo.maKhuyenMai} + ')'">
+                                            <i class="bi bi-pencil-square"></i> Sửa
+                                        </button>
                                         <a th:href="@{/admin/promotions/delete/{id}(id=${promo.maKhuyenMai})}" class="btn btn-sm btn-outline-danger btn-action" th:onclick="confirmDeleteAction(event, this.href, 'Xóa khuyến mãi?', 'Bạn có chắc chắn muốn xóa khuyến mãi này không?')"><i class="bi bi-trash"></i> Xóa</a>
                                     </td>
                                 </tr>
@@ -121,9 +123,112 @@
         </div>
     </div>
 
+    <!-- Modal Thêm/Sửa Khuyến Mãi -->
+    <div class="modal fade" id="promoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <form th:action="@{/admin/promotions/save}" th:object="${promotion}" method="post">
+                    <div class="modal-header bg-warning text-dark rounded-top-4">
+                        <h5 class="modal-title fw-bold" id="modalTitle">Thêm Khuyến Mãi Mới</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <input type="hidden" id="maKhuyenMai" name="maKhuyenMai">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Tên Khuyến Mãi <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="tenKhuyenMai" name="tenKhuyenMai" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">% Giảm (0-100) <span class="text-danger">*</span></label>
+                                <input type="number" step="0.01" max="100" class="form-control" id="phanTramGiam" name="phanTramGiam" required>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label fw-bold">Số Lượng <span class="text-danger">*</span></label>
+                                <input type="number" class="form-control" id="soLuong" name="soLuong" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Ngày Bắt Đầu <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="ngayBatDau" name="ngayBatDau" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Ngày Kết Thúc <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="ngayKetThuc" name="ngayKetThuc" required>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Trạng Thái <span class="text-danger">*</span></label>
+                                <select class="form-select" id="trangThaiKhuyenMai" name="trangThaiKhuyenMai" required>
+                                    <option value="HoatDong">Hoạt Động</option>
+                                    <option value="Ngung">Ngừng</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Tài Khoản Tối Thiểu <span class="text-danger">*</span></label>
+                                <select class="form-select" id="loaiTaiKhoanToiThieu" name="loaiTaiKhoanToiThieu" required>
+                                    <option value="Thuong">Thường</option>
+                                    <option value="VIP">VIP</option>
+                                    <option value="VIP_Pro">VIP Pro</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Link Ảnh Poster</label>
+                                <input type="url" class="form-control" id="poster" name="poster" placeholder="https://...">
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Mô Tả Chi Tiết</label>
+                                <textarea class="form-control" id="moTa" name="moTa" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-warning fw-bold"><i class="bi bi-floppy me-1"></i> Lưu Khuyến Mãi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        function editPromotion(id) {
+            document.getElementById('modalTitle').innerText = 'Cập Nhật Khuyến Mãi';
+            fetch(`/admin/promotions/api/${id}`).then(res => res.json()).then(data => {
+                document.getElementById('maKhuyenMai').value = data.maKhuyenMai;
+                document.getElementById('tenKhuyenMai').value = data.tenKhuyenMai;
+                document.getElementById('phanTramGiam').value = data.phanTramGiam;
+                document.getElementById('soLuong').value = data.soLuong;
+                document.getElementById('ngayBatDau').value = data.ngayBatDau;
+                document.getElementById('ngayKetThuc').value = data.ngayKetThuc;
+                document.getElementById('poster').value = data.poster || '';
+                document.getElementById('moTa').value = data.moTa || '';
+                document.getElementById('trangThaiKhuyenMai').value = data.trangThaiKhuyenMai;
+                document.getElementById('loaiTaiKhoanToiThieu').value = data.loaiTaiKhoanToiThieu;
+                new bootstrap.Modal(document.getElementById('promoModal')).show();
+            }).catch(err => {
+                console.error(err);
+                Swal.fire('Lỗi!', 'Không thể lấy dữ liệu khuyến mãi.', 'error');
+            });
+        }
+        function resetForm() {
+            document.getElementById('modalTitle').innerText = 'Thêm Khuyến Mãi Mới';
+            document.getElementById('maKhuyenMai').value = '';
+            document.getElementById('tenKhuyenMai').value = '';
+            document.getElementById('phanTramGiam').value = '';
+            document.getElementById('soLuong').value = '';
+            document.getElementById('ngayBatDau').value = '';
+            document.getElementById('ngayKetThuc').value = '';
+            document.getElementById('poster').value = '';
+            document.getElementById('moTa').value = '';
+            document.getElementById('trangThaiKhuyenMai').value = 'HoatDong';
+            document.getElementById('loaiTaiKhoanToiThieu').value = 'Thuong';
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const tableBody = document.querySelector('tbody');
             const rows = Array.from(tableBody.querySelectorAll('tr'));
