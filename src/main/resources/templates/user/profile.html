@@ -29,7 +29,7 @@
                 <a th:href="@{/profile}"><i class="bi bi-person-lines-fill me-2"></i>Thông Tin Tài Khoản</a>
             </li>
             <li>
-                <a href="#"><i class="bi bi-ticket-perforated me-2"></i>Lịch Sử Đặt Vé</a>
+                <a th:href="@{/user/history}"><i class="bi bi-ticket-perforated me-2"></i>Lịch Sử Đặt Vé</a>
             </li>
             <li>
                 <a href="#"><i class="bi bi-gift me-2"></i>Khuyến Mãi Của Tôi</a>
@@ -43,9 +43,7 @@
         </div>
     </div>
 
-    <!-- KHU VỰC HIỂN THỊ CHÍNH BÊN PHẢI -->
     <div class="main-content-wrapper flex-grow-1 d-flex flex-column">
-        <!-- Header Bar: Đã tách biệt và làm nổi bật hoàn toàn -->
         <nav class="navbar navbar-expand-lg navbar-dark py-3 px-4">
             <div class="d-flex align-items-center">
                 <h4 class="m-0 fw-bold text-white header-title">Quản Lý Tài Khoản</h4>
@@ -61,7 +59,6 @@
 
         <div class="container-fluid p-4">
             <div class="row g-4">
-                <!-- Form điền chi tiết tài khoản màu trắng sáng rõ ràng -->
                 <div class="col-md-8">
                     <div class="card border-0 profile-details-card p-4 rounded-4">
                         <h5 class="mb-4 fw-bold text-dark border-bottom pb-3">

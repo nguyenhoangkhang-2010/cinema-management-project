@@ -5,6 +5,7 @@ import com.example.project_web_cinema.dto.UserDTO;
 import com.example.project_web_cinema.entity.account.Account;
 import com.example.project_web_cinema.repository.AccountRepository;
 import com.example.project_web_cinema.repository.TicketRepository;
+import com.example.project_web_cinema.dto.BookingHistoryProjection;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,19 +49,19 @@ public class UserService implements UserDetailsService {
         Account account = accountRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Không tìm thấy email: " + email));
 
-        List<Object[]> rawTickets = ticketRepository.findTicketHistoryByEmail(email);
+        List<BookingHistoryProjection> rawTickets = ticketRepository.findTicketHistoryByEmail(email);
         List<TicketDTO> listVe = new ArrayList<>();
 
         if (rawTickets != null) {
-            for (Object[] row : rawTickets) {
+            for (BookingHistoryProjection row : rawTickets) {
                 TicketDTO ve = TicketDTO.builder()
-                        .id((Integer) row[0])
-                        .tenPhim(String.valueOf(row[1]))
-                        .tenPhong(String.valueOf(row[2]))
-                        .tenRap(String.valueOf(row[3]))
-                        .suatChieu(String.valueOf(row[4]))
-                        .danhSachGhe(String.valueOf(row[5]))
-                        .trangThai(String.valueOf(row[6]))
+                        .id(row.getMaDatVe())
+                        .tenPhim(row.getTenPhim())
+                        .tenPhong(row.getTenPhong())
+                        .tenRap(row.getTenRap())
+                        .suatChieu(row.getNgayChieu() + " " + row.getGioBatDau())
+                        .danhSachGhe(row.getDanhSachGhe())
+                        .trangThai(row.getTrangThai())
                         .build();
                 listVe.add(ve);
             }

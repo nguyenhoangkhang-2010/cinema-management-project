@@ -22,4 +22,9 @@ public class BookTicketController {
             return "redirect:/?error=ShowtimeNotFound";
         }
     }
+
+    @GetMapping({ "/book/{id}", "/book/movie/{id}", "/ticket/{id}", "/dat-ve/{id}" })
+    public String redirectToMovieDetail(@PathVariable Integer id) {
+        return "redirect:/movies/detail/" + id;
+    }
 }
